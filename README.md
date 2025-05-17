@@ -191,6 +191,15 @@ docker build -t nextjs-frontend .
 docker run -p 3000:3000 nextjs-frontend
 ```
 
+# 🐳 Docker Compose
+```bash
+# Copy the .env file
+cp .env.example .env
+
+# Build and deploy
+ docker-compose up -d --build
+```
+
 ## 🤝 Contributing
 
 We welcome contributions from the community! Here's how you can help:
