@@ -1,12 +1,12 @@
 /*
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │ @author: Davidson Gomes                                                      │
-│ @author: Victor Calazans - Implementation of Delay node type                 │
-│ @file: /app/agents/workflows/nodes/index.ts                                  │
+│ @author: Victor Calazans - Implementation of Delay node functionality        │
+│ @file: /app/agents/workflows/nodes/components/delay/DelayNode.tsx            │
 │ Developed by: Davidson Gomes                                                 │
-│ Delay node functionality developed by: Victor Calazans                       │
+│ Delay node developed by: Victor Calazans                                     │
 │ Creation date: May 13, 2025                                                  │
-│ Delay implementation date: May 17, 2025                                      │
+│ Delay node implementation date: May 17, 2025                                 │
 │ Contact: contato@evolution-api.com                                           │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │ @copyright © Evolution API 2025. All rights reserved.                        │
@@ -29,81 +29,74 @@
 │ who changed it and the date of modification.                                 │
 └──────────────────────────────────────────────────────────────────────────────┘
 */
-import type { NodeTypes, BuiltInNode, Node } from "@xyflow/react";
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Handle, NodeProps, Position, useEdges } from "@xyflow/react";
+import { Clock } from "lucide-react";
+import { DelayType } from "../../nodeFunctions";
 
-import { ConditionNode } from "./components/condition/ConditionNode";
-import { AgentNode } from "./components/agent/AgentNode";
-import { StartNode, StartNodeType } from "./components/start/StartNode";
-import { MessageNode } from "./components/message/MessageNode";
-import { DelayNode } from "./components/delay/DelayNode";
+import { BaseNode } from "../../BaseNode";
 
-import "./style.css";
-import {
-  ConditionType,
-  MessageType,
-  DelayType,
-} from "./nodeFunctions";
-import { Agent } from "@/types/agent";
+export function DelayNode(props: NodeProps) {
+  const { selected, data } = props;
 
-type AgentNodeType = Node<
-  {
-    label?: string;
-    agent?: Agent;
-  },
-  "agent-node"
->;
+  const edges = useEdges();
 
-type MessageNodeType = Node<
-  {
-    label?: string;
-    message?: MessageType;
-  },
-  "message-node"
->;
+  const isHandleConnected = (handleId: string) => {
+    return edges.some(
+      (edge) => edge.source === props.id && edge.sourceHandle === handleId
+    );
+  };
 
-type DelayNodeType = Node<
-  {
-    label?: string;
-    delay?: DelayType;
-  },
-  "delay-node"
->;
+  const isBottomHandleConnected = isHandleConnected("bottom-handle");
+  
+  const delay = data.delay as DelayType | undefined;
 
-type ConditionNodeType = Node<
-  {
-    label?: string;
-    integration?: string;
-    icon?: string;
-    conditions?: ConditionType[];
-  },
-  "condition-node"
->;
+  return (
+    <BaseNode hasTarget={true} selected={selected || false}>
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Clock size={20} className="text-gray-500 dark:text-gray-400" />
+          <div>
+            <p className="text-md font-medium text-black dark:text-white">
+              {data.label as string}
+            </p>
+          </div>
+        </div>
+        <Clock size={20} className="text-yellow-500" />
+      </div>
 
-export type AppNode =
-  | BuiltInNode
-  | StartNodeType
-  | AgentNodeType
-  | ConditionNodeType
-  | MessageNodeType
-  | DelayNodeType;
+      <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 p-4 text-center text-gray-400 dark:border-gray-700 dark:hover:bg-gray-700 bg-white dark:bg-transparent">
+        {delay ? (
+          <div className="flex flex-col items-center">
+            <p className="font-medium text-black dark:text-white">Delay: {delay.value} {delay.unit}</p>
+            {delay.description && (
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{delay.description}</p>
+            )}
+          </div>
+        ) : (
+          "No delay configured"
+        )}
+      </div>
 
-export type NodeType = AppNode["type"];
-
-export const initialNodes: AppNode[] = [
-  {
-    id: "start-node",
-    type: "start-node",
-    position: { x: -100, y: 100 },
-    data: {
-      label: "Start",
-    },
-  },
-];
-
-export const nodeTypes = {
-  "start-node": StartNode,
-  "agent-node": AgentNode,
-  "message-node": MessageNode,
-  "condition-node": ConditionNode,
-  "delay-node": DelayNode,
-} satisfies NodeTypes;
+      <div className="mt-4 cursor-pointer text-right text-sm text-gray-500 dark:text-gray-400">
+        Next step
+      </div>
+      <Handle
+        style={{
+          borderRadius: "50%",
+          height: "16px",
+          position: "absolute",
+          width: "16px",
+          right: "0px",
+          top: "calc(100% - 25px)",
+          backgroundColor: isBottomHandleConnected ? "#8492A6" : "#f5f5f5",
+          border: "3px solid #8492A6",
+        }}
+        type="source"
+        position={Position.Right}
+        id="bottom-handle"
+      />
+    </BaseNode>
+  );
+} 

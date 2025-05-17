@@ -3,7 +3,9 @@
 │ @author: Davidson Gomes                                                      │
 │ @file: /app/agents/workflows/Canva.tsx                                       │
 │ Developed by: Davidson Gomes                                                 │
-│ Creation date: May 13, 2025                                                  │
+│ Delay node integration developed by: Victor Calazans                         │
+│ Creation date: May 13, 2025                                                  |
+│ Delay implementation date: May 17, 2025                                      │
 │ Contact: contato@evolution-api.com                                           │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │ @copyright © Evolution API 2025. All rights reserved.                        │
@@ -65,6 +67,7 @@ import { Agent, WorkflowData } from "@/types/agent";
 import { updateAgent } from "@/services/agentService";
 import { useToast } from "@/hooks/use-toast";
 import { MessageForm } from "./nodes/components/message/MessageForm";
+import { DelayForm } from "./nodes/components/delay/DelayForm";
 
 const proOptions: ProOptions = { account: "paid-pro", hideAttribution: true };
 
@@ -245,6 +248,8 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
         return `Condition #${order}`;
       case "message-node":
         return `Message #${order}`;
+      case "delay-node":
+        return `Delay #${order}`;
       default:
         return "Node";
     }
@@ -525,6 +530,15 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
               )}
               {selectedNode.type === "message-node" && (
                 <MessageForm
+                  selectedNode={selectedNode}
+                  handleUpdateNode={handleUpdateNode}
+                  setEdges={setEdges}
+                  setIsOpen={setIsOpen}
+                  setSelectedNode={setSelectedNode}
+                />
+              )}
+              {selectedNode.type === "delay-node" && (
+                <DelayForm
                   selectedNode={selectedNode}
                   handleUpdateNode={handleUpdateNode}
                   setEdges={setEdges}
