@@ -1,9 +1,12 @@
 /*
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │ @author: Davidson Gomes                                                      │
+│ @author: Victor Calazans - Implementation of Delay types                     │
 │ @file: /app/agents/workflows/nodes/nodeFunctions.ts                          │
 │ Developed by: Davidson Gomes                                                 │
+│ Delay node functionality developed by: Victor Calazans                       │
 │ Creation date: May 13, 2025                                                  │
+│ Delay implementation date: May 17, 2025                                      │
 │ Contact: contato@evolution-api.com                                           │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │ @copyright © Evolution API 2025. All rights reserved.                        │
@@ -36,9 +39,22 @@ export enum MessageTypeEnum {
   TEXT = "text",
 }
 
+export enum DelayUnitEnum {
+  SECONDS = "seconds",
+  MINUTES = "minutes",
+  HOURS = "hours",
+  DAYS = "days",
+}
+
 export type MessageType = {
   type: MessageTypeEnum;
   content: string;
+};
+
+export type DelayType = {
+  value: number;
+  unit: DelayUnitEnum;
+  description?: string;
 };
 
 export type ConditionType = {

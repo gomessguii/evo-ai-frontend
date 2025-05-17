@@ -3,7 +3,9 @@
 │ @author: Davidson Gomes                                                      │
 │ @file: /app/agents/workflows/CanvaMenu.tsx                                   │
 │ Developed by: Davidson Gomes                                                 │
+│ Delay node menu option developed by: Victor Calazans                         │
 │ Creation date: May 13, 2025                                                  │
+│ Delay implementation date: May 17, 2025                                      │
 │ Contact: contato@evolution-api.com                                           │
 ├──────────────────────────────────────────────────────────────────────────────┤
 │ @copyright © Evolution API 2025. All rights reserved.                        │
@@ -176,6 +178,17 @@ function CanvaMenu({
                   >
                     <FilterIcon size={20} className="text-blue-500" />
                     <span>Condition</span>
+                  </div>
+                  <div
+                    className="flex cursor-pointer items-center justify-between rounded-lg border-2 border-dashed p-4 border-gray-700 hover:bg-gray-700"
+                    draggable={true}
+                    onDragStart={(event) => {
+                      handleDragStart(event, "delay-node");
+                    }}
+                    onClick={() => handleItemClick("delay-node")}
+                  >
+                    <Clock size={20} className="text-yellow-500" />
+                    <span>Delay</span>
                   </div>
                 </div>
               </div>
