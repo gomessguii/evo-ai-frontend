@@ -768,7 +768,7 @@ Args: ${
             <Button
               onClick={() => setIsNewChatDialogOpen(false)}
               variant="outline"
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333]"
+              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
             >
               Cancel
             </Button>
@@ -792,7 +792,7 @@ Args: ${
             <Button
               onClick={() => setIsDeleteDialogOpen(false)}
               variant="outline"
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333]"
+              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
             >
               Cancel
             </Button>

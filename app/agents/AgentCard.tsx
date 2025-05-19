@@ -249,7 +249,7 @@ export function AgentCard({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex-1 rounded-none h-12 text-zinc-400 hover:text-white hover:bg-zinc-800"
+                className="flex-1 rounded-none h-12 text-zinc-400 hover:text-white hover:bg-zinc-800 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
               >
                 <Settings className="h-4 w-4 mr-2" />
                 Configure
@@ -257,57 +257,57 @@ export function AgentCard({
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-zinc-900 border-zinc-800 text-white"
+              className="bg-zinc-900 border-zinc-800 text-zinc-300"
             >
               {agent.type === "workflow" && onWorkflow && (
                 <DropdownMenuItem
-                  className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800"
+                  className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
                   onClick={() => onWorkflow(agent.id)}
                 >
-                  <Workflow className="h-4 w-4 mr-2" />
-                  Open Workflow
+                  <Workflow className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
+                  <span className="text-zinc-300 group-hover:text-white">Open Workflow</span>
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem
-                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800"
+                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
                 onClick={() =>
                   router.push(
                     `/documentation?agent_url=${agent.agent_card_url?.replace("/.well-known/agent.json", "") || ""}&api_key=${agent.config?.api_key}`
                   )
                 }
               >
-                <TextSelect className="h-4 w-4 mr-2" />
-                Test A2A
+                <TextSelect className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
+                <span className="text-zinc-300 group-hover:text-white">Test A2A</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800"
+                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
                 onClick={() => onEdit(agent)}
               >
-                <Pencil className="h-4 w-4 mr-2" />
-                Edit
+                <Pencil className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
+                <span className="text-zinc-300 group-hover:text-white">Edit</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800"
+                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
                 onClick={() => onMove(agent)}
               >
-                <MoveRight className="h-4 w-4 mr-2" />
-                Move to Folder
+                <MoveRight className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
+                <span className="text-zinc-300 group-hover:text-white">Move to Folder</span>
               </DropdownMenuItem>
               {onShare && (
                 <DropdownMenuItem
-                  className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800"
+                  className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
                   onClick={() => onShare(agent)}
                 >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share
+                  <Share2 className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
+                  <span className="text-zinc-300 group-hover:text-white">Share</span>
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem
-                className="cursor-pointer text-red-500 hover:bg-zinc-800 hover:text-red-400 focus:bg-zinc-800"
+                className="cursor-pointer text-red-500 hover:bg-zinc-800 hover:text-red-400 focus:bg-zinc-800 group"
                 onClick={() => onDelete(agent)}
               >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
+                <Trash2 className="h-4 w-4 mr-2 text-red-500 group-hover:text-red-400" />
+                <span className="text-red-500 group-hover:text-red-400">Delete</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
