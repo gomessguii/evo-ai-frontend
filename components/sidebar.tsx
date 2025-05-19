@@ -251,7 +251,7 @@ export default function Sidebar() {
             <Button 
               variant="outline" 
               onClick={() => setLogoutDialogOpen(false)}
-              className="border-[#444] text-white hover:bg-[#333] hover:text-white"
+              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
             >
               Cancel
             </Button>

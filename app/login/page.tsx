@@ -103,7 +103,15 @@ export default function LoginPage() {
       }
       router.push("/");
     } catch (error: any) {
-      const errorDetail = error?.response?.data?.detail || "Check your credentials and try again.";
+      let errorDetail = "Check your credentials and try again.";
+      
+      if (error?.response?.data) {
+        if (typeof error.response.data.detail === 'string') {
+          errorDetail = error.response.data.detail;
+        } else if (error.response.data.detail) {
+          errorDetail = JSON.stringify(error.response.data.detail);
+        }
+      }
       
       if (errorDetail === "Email not verified") {
         setIsEmailNotVerified(true);
@@ -141,6 +149,24 @@ export default function LoginPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!registerData.password) {
+      toast({
+        title: "Password required",
+        description: "Please enter a password.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (registerData.password.length < 8) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 8 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (registerData.password !== registerData.confirmPassword) {
       toast({
         title: "Passwords don't match",
@@ -171,11 +197,19 @@ export default function LoginPage() {
         setRedirectSeconds((s) => s - 1);
       }, 1000);
     } catch (error: any) {
+      let errorMessage = "Unable to register. Please try again.";
+      
+      if (error?.response?.data) {
+        if (typeof error.response.data.detail === 'string') {
+          errorMessage = error.response.data.detail;
+        } else if (error.response.data.detail) {
+          errorMessage = JSON.stringify(error.response.data.detail);
+        }
+      }
+      
       toast({
         title: "Error registering",
-        description:
-          error?.response?.data?.detail ||
-          "Unable to register. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -216,11 +250,19 @@ export default function LoginPage() {
         setRedirectSeconds((s) => s - 1);
       }, 1000);
     } catch (error: any) {
+      let errorMessage = "Unable to send the reset password email. Please try again.";
+      
+      if (error?.response?.data) {
+        if (typeof error.response.data.detail === 'string') {
+          errorMessage = error.response.data.detail;
+        } else if (error.response.data.detail) {
+          errorMessage = JSON.stringify(error.response.data.detail);
+        }
+      }
+      
       toast({
         title: "Error sending email",
-        description:
-          error?.response?.data?.detail ||
-          "Unable to send the reset password email. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
