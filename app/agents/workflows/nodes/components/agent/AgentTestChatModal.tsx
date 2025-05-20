@@ -34,7 +34,8 @@ import { useAgentWebSocket } from "@/hooks/use-agent-webSocket";
 import { getAccessTokenFromCookie, cn } from "@/lib/utils";
 import { Agent } from "@/types/agent";
 import { ChatInput } from "@/app/chat/components/ChatInput";
-import { AgentChatMessageList } from "./AgentChatMessageList";
+import { ChatMessage as ChatMessageComponent } from "@/app/chat/components/ChatMessage";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChatPart } from "@/services/sessionService";
 import { FileData } from "@/lib/file-utils";
 import { X, User, Bot, Zap, MessageSquare, Loader2, Code, ExternalLink, Workflow } from "lucide-react";
@@ -287,14 +288,14 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
             
             {/* Side panel */}
             <div 
-                className="fixed right-0 top-0 z-[1000] h-full w-[450px] bg-gradient-to-b from-gray-900 to-gray-950 border-l border-gray-800 shadow-2xl flex flex-col transition-all duration-300 ease-in-out transform"
+                className="fixed right-0 top-0 z-[1000] h-full w-[450px] bg-gradient-to-b from-neutral-900 to-neutral-950 border-l border-neutral-800 shadow-2xl flex flex-col transition-all duration-300 ease-in-out transform"
                 style={{
                     transform: open ? 'translateX(0)' : 'translateX(100%)',
                     boxShadow: '0 0 25px rgba(0, 0, 0, 0.3)',
                 }}
             >
                 {/* Header */}
-                <div className="flex-shrink-0 p-5 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-800">
+                <div className="flex-shrink-0 p-5 bg-gradient-to-r from-neutral-900 to-neutral-800 border-b border-neutral-800">
                     <div className="flex items-start justify-between">
                         <div className="flex-1">
                             <div className="flex items-center mb-1">
@@ -310,7 +311,7 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
                                             {agent.type.toUpperCase()} Agent
                                         </Badge>
                                         {agent.model && (
-                                            <span className="text-xs text-gray-400 bg-gray-800/60 px-2 py-0.5 rounded-md">
+                                            <span className="text-xs text-neutral-400 bg-neutral-800/60 px-2 py-0.5 rounded-md">
                                                 {agent.model}
                                             </span>
                                         )}
@@ -320,27 +321,27 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
                         </div>
                         <button
                             onClick={() => onOpenChange(false)}
-                            className="p-1.5 rounded-full hover:bg-gray-700/50 text-gray-400 hover:text-white transition-colors"
+                            className="p-1.5 rounded-full hover:bg-neutral-700/50 text-neutral-400 hover:text-white transition-colors"
                         >
                             <X size={18} />
                         </button>
                     </div>
                     
                     {agent.description && (
-                        <div className="mt-3 text-sm text-gray-400 bg-gray-800/30 p-3 rounded-md border border-gray-800">
+                        <div className="mt-3 text-sm text-neutral-400 bg-neutral-800/30 p-3 rounded-md border border-neutral-800">
                             {agent.description}
                         </div>
                     )}
                 </div>
                 
                 {/* Chat content */}
-                <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 bg-gradient-to-b from-gray-900/50 to-gray-950">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 bg-gradient-to-b from-neutral-900/50 to-neutral-950">
                     {isInitializing ? (
                         <div className="flex flex-col items-center justify-center h-full">
                             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg mb-4 animate-pulse">
                                 <Zap className="h-5 w-5 text-white" />
                             </div>
-                            <p className="text-gray-400 mb-2">Initializing connection...</p>
+                            <p className="text-neutral-400 mb-2">Initializing connection...</p>
                             <div className="flex items-center space-x-2">
                                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" 
                                     style={{ animationDelay: '0ms' }}></span>
@@ -355,31 +356,57 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
                             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500/20 to-emerald-500/20 flex items-center justify-center shadow-lg mb-5 border border-emerald-500/30">
                                 <MessageSquare className="h-6 w-6 text-emerald-400" />
                             </div>
-                            <h3 className="text-lg font-medium text-gray-300 mb-2">Start the conversation</h3>
-                            <p className="text-gray-500 text-sm max-w-xs">
+                            <h3 className="text-lg font-medium text-neutral-300 mb-2">Start the conversation</h3>
+                            <p className="text-neutral-500 text-sm max-w-xs">
                                 Type a message below to begin chatting with {agent.name}
                             </p>
                         </div>
                     ) : (
-                        <AgentChatMessageList
-                            messages={messages}
-                            agent={agent}
-                            expandedFunctions={expandedFunctions}
-                            toggleFunctionExpansion={toggleFunctionExpansion}
-                            getMessageText={getMessageText}
-                            containsMarkdown={containsMarkdown}
-                        />
+                        <div className="space-y-4 w-full max-w-full">
+                            {messages.map((message) => {
+                                const messageContent = getMessageText(message);
+                                const agentColor = message.author === "user" ? "bg-emerald-500" : "bg-gradient-to-br from-neutral-800 to-neutral-900";
+                                const isExpanded = expandedFunctions[message.id] || false;
+
+                                return (
+                                    <ChatMessageComponent
+                                        key={message.id}
+                                        message={message}
+                                        agentColor={agentColor}
+                                        isExpanded={isExpanded}
+                                        toggleExpansion={toggleFunctionExpansion}
+                                        containsMarkdown={containsMarkdown}
+                                        messageContent={messageContent}
+                                    />
+                                );
+                            })}
+                            
+                            {isSending && (
+                                <div className="flex justify-start">
+                                    <div className="flex gap-3 max-w-[80%]">
+                                        <Avatar
+                                            className="bg-gradient-to-br from-purple-600 to-purple-800 shadow-md border-0"
+                                        >
+                                            <AvatarFallback className="bg-transparent">
+                                                <Bot className="h-4 w-4 text-white" />
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="rounded-lg p-3 bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700/50">
+                                            <div className="flex space-x-2">
+                                                <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce"></div>
+                                                <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></div>
+                                                <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
                 
                 {/* Message input */}
-                <div className="p-3 border-t border-gray-800 bg-gray-900">
-                    {isSending && (
-                        <div className="px-4 py-2 mb-3 rounded-lg bg-gray-800/50 text-sm text-gray-400 flex items-center">
-                            <Loader2 className="h-3 w-3 mr-2 animate-spin text-emerald-400" />
-                            Agent is thinking...
-                        </div>
-                    )}
+                <div className="p-3 border-t border-neutral-800 bg-neutral-900">
                     <ChatInput
                         onSendMessage={handleSendMessageWithFiles}
                         isLoading={isSending}

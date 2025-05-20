@@ -87,31 +87,31 @@ export default function ContextMenu({
         bottom: bottom !== undefined ? `${bottom}px` : undefined,
         zIndex: 10,
       }}
-      className="context-menu rounded-md border p-3 shadow-lg border-gray-700 bg-gray-800"
+      className="context-menu rounded-md border p-3 shadow-lg border-neutral-700 bg-neutral-800"
       {...props}
     >
-      <p className="mb-2 text-sm font-semibold text-gray-200">
+      <p className="mb-2 text-sm font-semibold text-neutral-200">
         Actions
       </p>
       <button
         onClick={duplicateNode}
-        className="mb-1 flex w-full flex-row items-center rounded-md px-2 py-1 text-sm hover:bg-gray-700"
+        className="mb-1 flex w-full flex-row items-center rounded-md px-2 py-1 text-sm hover:bg-neutral-700"
       >
         <Copy
           size={16}
           className="mr-2 flex-shrink-0 text-blue-300"
         />
-        <span className="text-gray-300">Duplicate</span>
+        <span className="text-neutral-300">Duplicate</span>
       </button>
       <button
         onClick={deleteNode}
-        className="flex w-full flex-row items-center rounded-md px-2 py-1 text-sm hover:bg-gray-700"
+        className="flex w-full flex-row items-center rounded-md px-2 py-1 text-sm hover:bg-neutral-700"
       >
         <Trash2
           size={16}
           className="mr-2 flex-shrink-0 text-red-300"
         />
-        <span className="text-gray-300">Delete</span>
+        <span className="text-neutral-300">Delete</span>
       </button>
     </div>
   );

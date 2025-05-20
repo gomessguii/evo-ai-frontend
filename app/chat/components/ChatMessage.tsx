@@ -30,11 +30,12 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChatMessage as ChatMessageType } from "@/services/sessionService";
-import { ChevronDown, ChevronRight, Copy, Check } from "lucide-react";
+import { ChevronDown, ChevronRight, Copy, Check, User, Bot, Terminal } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useState } from "react";
 import { InlineDataAttachments } from "./InlineDataAttachments";
+import { cn } from "@/lib/utils";
 
 interface FunctionMessageContent {
   title: string;
@@ -98,6 +99,34 @@ export function ChatMessage({
     });
   };
 
+  // Generate appropriate avatar content
+  const getAvatar = () => {
+    if (isUser) {
+      return (
+        <Avatar className="bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-md border-0">
+          <AvatarFallback className="bg-transparent">
+            <User className="h-4 w-4 text-white" />
+          </AvatarFallback>
+        </Avatar>
+      );
+    } else {
+      return (
+        <Avatar className={`shadow-md border-0 ${
+          isFunctionMessage 
+            ? "bg-gradient-to-br from-emerald-600 to-emerald-800" 
+            : "bg-gradient-to-br from-purple-600 to-purple-800"
+        }`}>
+          <AvatarFallback className="bg-transparent">
+            {isFunctionMessage ? 
+              <Terminal className="h-4 w-4 text-white" /> : 
+              <Bot className="h-4 w-4 text-white" />
+            }
+          </AvatarFallback>
+        </Avatar>
+      );
+    }
+  };
+
   return (
     <div
       key={message.id}
@@ -112,19 +141,15 @@ export function ChatMessage({
           flexDirection: isUser ? "row-reverse" : "row"
         }}
       >
-        <Avatar className={isUser ? "bg-[#333]" : agentColor}>
-          <AvatarFallback>
-            {isUser ? "U" : message.author[0]}
-          </AvatarFallback>
-        </Avatar>
+        {getAvatar()}
         <div
-          className={`rounded-lg p-3 ${
+          className={`rounded-lg p-3 overflow-hidden relative group shadow-md ${
             isFunctionMessage || isTaskExecutor
-              ? "bg-[#333] text-[#00ff9d] font-mono text-sm"
+              ? "bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700/50 text-emerald-300 font-mono text-sm"
               : isUser
-              ? "bg-[#00ff9d] text-black"
-              : "bg-[#222] text-white"
-          } overflow-hidden relative group`}
+              ? "bg-emerald-500 text-white"
+              : "bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700/50 text-white"
+          }`}
           style={{ 
             wordBreak: "break-word", 
             maxWidth: "calc(100% - 3rem)",
@@ -143,7 +168,7 @@ export function ChatMessage({
                       <div className="flex-1 font-semibold">
                         {(messageContent as FunctionMessageContent).title}
                       </div>
-                      <div className="flex items-center justify-center w-5 h-5 text-[#00ff9d]">
+                      <div className="flex items-center justify-center w-5 h-5 text-emerald-400">
                         {isExpanded ? (
                           <ChevronDown className="h-4 w-4" />
                         ) : (
@@ -157,7 +182,7 @@ export function ChatMessage({
                     <div className="flex-1 font-semibold">
                       Task Execution
                     </div>
-                    <div className="flex items-center justify-center w-5 h-5 text-[#00ff9d]">
+                    <div className="flex items-center justify-center w-5 h-5 text-emerald-400">
                       {isExpanded ? (
                         <ChevronDown className="h-4 w-4" />
                       ) : (
@@ -191,7 +216,7 @@ export function ChatMessage({
                 "author" in messageContent &&
                 messageContent.author !== "user" &&
                 !isTaskExecutor && (
-                  <div className="text-xs text-gray-400 mb-1">
+                  <div className="text-xs text-neutral-400 mb-1">
                     {messageContent.author}
                   </div>
                 )}
@@ -233,7 +258,7 @@ export function ChatMessage({
                     li: ({ ...props }) => <li className="mb-1" {...props} />,
                     a: ({ ...props }) => (
                       <a
-                        className="text-[#00ff9d] underline hover:opacity-80 transition-opacity"
+                        className="text-emerald-300 underline hover:opacity-80 transition-opacity"
                         target="_blank"
                         rel="noopener noreferrer"
                         {...props}
@@ -241,7 +266,7 @@ export function ChatMessage({
                     ),
                     blockquote: ({ ...props }) => (
                       <blockquote
-                        className="border-l-4 border-[#444] pl-4 py-1 italic my-3 text-gray-300"
+                        className="border-l-4 border-[#444] pl-4 py-1 italic my-3 text-neutral-300"
                         {...props}
                       />
                     ),
@@ -255,7 +280,7 @@ export function ChatMessage({
                       if (isInline) {
                         return (
                           <code
-                            className="bg-[#333] px-1.5 py-0.5 rounded text-[#00ff9d] text-sm font-mono"
+                            className="bg-[#333] px-1.5 py-0.5 rounded text-emerald-300 text-sm font-mono"
                             {...props}
                           >
                             {children}
@@ -265,11 +290,11 @@ export function ChatMessage({
 
                       return (
                         <div className="my-3 relative group/code">
-                          <div className="bg-[#1a1a1a] rounded-t-md border-b border-[#333] p-2 text-xs text-gray-400 flex justify-between items-center">
+                          <div className="bg-[#1a1a1a] rounded-t-md border-b border-[#333] p-2 text-xs text-neutral-400 flex justify-between items-center">
                             <span>{match?.[1] || "Code"}</span>
                             <button
                               onClick={copyToClipboard}
-                              className="text-gray-400 hover:text-[#00ff9d] transition-colors"
+                              className="text-neutral-400 hover:text-emerald-300 transition-colors"
                               title="Copy code"
                             >
                               {isCopied ? (
@@ -305,7 +330,7 @@ export function ChatMessage({
                     ),
                     th: ({ ...props }) => (
                       <th
-                        className="px-4 py-2 text-left text-xs font-semibold text-gray-300"
+                        className="px-4 py-2 text-left text-xs font-semibold text-neutral-300"
                         {...props}
                       />
                     ),
@@ -334,7 +359,7 @@ export function ChatMessage({
 
           <button
             onClick={copyToClipboard}
-            className="absolute top-2 right-2 text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 right-2 p-1.5 rounded-full bg-neutral-800/80 text-neutral-400 hover:text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-neutral-700/80"
             title="Copy message"
           >
             {isCopied ? (

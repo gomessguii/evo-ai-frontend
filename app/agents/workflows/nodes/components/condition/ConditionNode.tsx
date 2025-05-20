@@ -107,12 +107,12 @@ export function ConditionNode(props: NodeProps) {
         >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="font-medium text-gray-300">
+              <p className="font-medium text-neutral-300">
                 O campo{" "}
                 <span className="font-semibold text-blue-400">
                   {condition.data.field}
                 </span>{" "}
-                <span className="text-gray-400">
+                <span className="text-neutral-400">
                   {operatorText[condition.data.operator as OperatorType]}
                 </span>{" "}
                 {!["is_defined", "is_not_defined"].includes(
@@ -127,7 +127,7 @@ export function ConditionNode(props: NodeProps) {
             <Handle
               className={cn(
                 "!rounded-full transition-all duration-300",
-                isConnected ? "!bg-blue-500 !border-blue-400" : "!bg-gray-400 !border-gray-500"
+                isConnected ? "!bg-blue-500 !border-blue-400" : "!bg-neutral-400 !border-neutral-500"
               )}
               style={{
                 top: "50%",
@@ -159,7 +159,7 @@ export function ConditionNode(props: NodeProps) {
             <p className="text-lg font-medium text-blue-400">
               {data.label as string}
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-neutral-400">
               Matches {typeText[(data.type as "and" | "or") || "and"]}
             </p>
           </div>
@@ -174,11 +174,11 @@ export function ConditionNode(props: NodeProps) {
         <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-blue-700/40 bg-blue-950/10 p-5 text-center transition-all duration-200 hover:border-blue-600/50 hover:bg-blue-900/20">
           <FilterIcon className="h-8 w-8 text-blue-700/50 mb-2" />
           <p className="text-blue-400">No conditions configured</p>
-          <p className="mt-1 text-xs text-gray-500">Click to add a condition</p>
+          <p className="mt-1 text-xs text-neutral-500">Click to add a condition</p>
         </div>
       )}
 
-      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+      <div className="mt-2 flex items-center justify-end text-sm text-neutral-400 transition-colors">
         <div className="flex items-center space-x-1 rounded-md py-1 px-2">
           <span>Next step</span>
           <ArrowRight className="h-3.5 w-3.5" />
@@ -186,7 +186,7 @@ export function ConditionNode(props: NodeProps) {
         <Handle
           className={cn(
             "!w-3 !h-3 !rounded-full transition-all duration-300",
-            isBottomHandleConnected ? "!bg-blue-500 !border-blue-400" : "!bg-gray-400 !border-gray-500",
+            isBottomHandleConnected ? "!bg-blue-500 !border-blue-400" : "!bg-neutral-400 !border-neutral-500",
             selected && isBottomHandleConnected && "!bg-blue-400 !border-blue-300"
           )}
           style={{

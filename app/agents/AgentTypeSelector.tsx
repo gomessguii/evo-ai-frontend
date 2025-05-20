@@ -82,10 +82,10 @@ export function AgentTypeSelector({
           <SelectItem
             key={type.value}
             value={type.value}
-            className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] text-white focus:!text-white hover:text-[#00ff9d] data-[selected]:!text-[#00ff9d]"
+            className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] text-white focus:!text-white hover:text-emerald-400 data-[selected]:!text-emerald-400"
           >
             <div className="flex items-center gap-2">
-              <type.icon className="h-4 w-4 text-[#00ff9d]" />
+              <type.icon className="h-4 w-4 text-emerald-400" />
               {type.label}
             </div>
           </SelectItem>

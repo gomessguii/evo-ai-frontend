@@ -123,7 +123,7 @@ export function MessageNode(props: NodeProps) {
             </div>
             
             {message.content && (
-              <p className="mt-2 text-xs text-gray-400 line-clamp-2">
+              <p className="mt-2 text-xs text-neutral-400 line-clamp-2">
                 {message.content.slice(0, 80)} {message.content.length > 80 && '...'}
               </p>
             )}
@@ -133,11 +133,11 @@ export function MessageNode(props: NodeProps) {
         <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-orange-700/40 bg-orange-950/10 p-5 text-center transition-all duration-200 hover:border-orange-600/50 hover:bg-orange-900/20">
           <MessageCircle className="h-8 w-8 text-orange-700/50 mb-2" />
           <p className="text-orange-400">No message configured</p>
-          <p className="mt-1 text-xs text-gray-500">Click to configure</p>
+          <p className="mt-1 text-xs text-neutral-500">Click to configure</p>
         </div>
       )}
 
-      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+      <div className="mt-2 flex items-center justify-end text-sm text-neutral-400 transition-colors">
         <div className="flex items-center space-x-1 rounded-md py-1 px-2">
           <span>Next step</span>
           <ArrowRight className="h-3.5 w-3.5" />
@@ -145,7 +145,7 @@ export function MessageNode(props: NodeProps) {
         <Handle
           className={cn(
             "!w-3 !h-3 !rounded-full transition-all duration-300",
-            isBottomHandleConnected ? "!bg-orange-500 !border-orange-400" : "!bg-gray-400 !border-gray-500",
+            isBottomHandleConnected ? "!bg-orange-500 !border-orange-400" : "!bg-neutral-400 !border-neutral-500",
             selected && isBottomHandleConnected && "!bg-orange-400 !border-orange-300"
           )}
           style={{

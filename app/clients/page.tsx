@@ -266,7 +266,7 @@ export default function ClientsPage() {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm} className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]">
+            <Button onClick={resetForm} className="bg-emerald-400 text-black hover:bg-[#00cc7d]">
               <Plus className="mr-2 h-4 w-4" />
               New Client
             </Button>
@@ -275,7 +275,7 @@ export default function ClientsPage() {
             <form onSubmit={handleAddClient}>
               <DialogHeader>
                 <DialogTitle className="text-white">{selectedClient ? "Edit Client" : "New Client"}</DialogTitle>
-                <DialogDescription className="text-gray-400">
+                <DialogDescription className="text-neutral-400">
                   {selectedClient
                     ? "Edit the existing client information."
                     : "Fill in the information to create a new client."}
@@ -283,7 +283,7 @@ export default function ClientsPage() {
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-gray-300">
+                  <Label htmlFor="name" className="text-neutral-300">
                     Name
                   </Label>
                   <Input
@@ -296,7 +296,7 @@ export default function ClientsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-300">
+                  <Label htmlFor="email" className="text-neutral-300">
                     Email
                   </Label>
                   <Input
@@ -315,11 +315,11 @@ export default function ClientsPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setIsDialogOpen(false)}
-                  className="border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+                  className="border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]" disabled={isLoading}>
+                <Button type="submit" className="bg-emerald-400 text-black hover:bg-[#00cc7d]" disabled={isLoading}>
                   {isLoading ? "Saving..." : selectedClient ? "Save Changes" : "Add Client"}
                 </Button>
               </DialogFooter>
@@ -331,12 +331,12 @@ export default function ClientsPage() {
           <AlertDialogContent className="bg-[#1a1a1a] border-[#333] text-white">
             <AlertDialogHeader>
               <AlertDialogTitle>Confirm delete</AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-400">
+              <AlertDialogDescription className="text-neutral-400">
                 Are you sure you want to delete the client "{selectedClient?.name}"? This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="border-[#444] text-gray-300 hover:bg-[#333] hover:text-white">
+              <AlertDialogCancel className="border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white">
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
@@ -357,7 +357,7 @@ export default function ClientsPage() {
         </CardHeader>
         <CardContent>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
             <Input
               placeholder="Search by name or email..."
               value={searchQuery}
@@ -373,12 +373,12 @@ export default function ClientsPage() {
           <Table>
             <TableHeader>
               <TableRow className="border-[#333] hover:bg-[#222]">
-                <TableHead className="text-gray-300">Name</TableHead>
-                <TableHead className="text-gray-300">Email</TableHead>
-                <TableHead className="text-gray-300">Created At</TableHead>
-                <TableHead className="text-gray-300">Users</TableHead>
-                <TableHead className="text-gray-300">Agents</TableHead>
-                <TableHead className="text-gray-300 text-right">Actions</TableHead>
+                <TableHead className="text-neutral-300">Name</TableHead>
+                <TableHead className="text-neutral-300">Email</TableHead>
+                <TableHead className="text-neutral-300">Created At</TableHead>
+                <TableHead className="text-neutral-300">Users</TableHead>
+                <TableHead className="text-neutral-300">Agents</TableHead>
+                <TableHead className="text-neutral-300 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -386,21 +386,21 @@ export default function ClientsPage() {
                 filteredClients.map((client) => (
                   <TableRow key={client.id} className="border-[#333] hover:bg-[#222]">
                     <TableCell className="font-medium text-white">{client.name}</TableCell>
-                    <TableCell className="text-gray-300">{client.email}</TableCell>
-                    <TableCell className="text-gray-300">
+                    <TableCell className="text-neutral-300">{client.email}</TableCell>
+                    <TableCell className="text-neutral-300">
                       {new Date(client.created_at).toLocaleDateString("pt-BR")}
                     </TableCell>
-                    <TableCell className="text-gray-300">
+                    <TableCell className="text-neutral-300">
                       <div className="flex items-center">
-                        <Users className="h-4 w-4 mr-1 text-[#00ff9d]" />
+                        <Users className="h-4 w-4 mr-1 text-emerald-400" />
                         {client.users_count ?? 0}
                       </div>
                     </TableCell>
-                    <TableCell className="text-gray-300">{client.agents_count ?? 0}</TableCell>
+                    <TableCell className="text-neutral-300">{client.agents_count ?? 0}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0 text-gray-300 hover:bg-[#333]">
+                          <Button variant="ghost" className="h-8 w-8 p-0 text-neutral-300 hover:bg-[#333]">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
@@ -411,14 +411,14 @@ export default function ClientsPage() {
                             className="cursor-pointer hover:bg-[#333]"
                             onClick={() => handleEditClient(client)}
                           >
-                            <Edit className="mr-2 h-4 w-4 text-[#00ff9d]" />
+                            <Edit className="mr-2 h-4 w-4 text-emerald-400" />
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="cursor-pointer hover:bg-[#333]"
                             onClick={() => handleImpersonateClient(client)}
                           >
-                            <UserPlus className="mr-2 h-4 w-4 text-[#00ff9d]" />
+                            <UserPlus className="mr-2 h-4 w-4 text-emerald-400" />
                             Enter as client
                           </DropdownMenuItem>
                           <DropdownMenuItem
@@ -438,7 +438,7 @@ export default function ClientsPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-gray-500">
+                  <TableCell colSpan={6} className="h-24 text-center text-neutral-500">
                     No clients found.
                   </TableCell>
                 </TableRow>

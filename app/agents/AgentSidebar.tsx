@@ -77,7 +77,7 @@ export function AgentSidebar({
       {visible && (
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-40 bg-[#222] p-2 rounded-md text-[#00ff9d] hover:bg-[#333] hover:text-[#00ff9d] shadow-md transition-all"
+          className="absolute right-4 top-4 z-40 bg-[#222] p-2 rounded-md text-emerald-400 hover:bg-[#333] hover:text-emerald-400 shadow-md transition-all"
           aria-label="Hide folders"
         >
           <X className="h-5 w-5" />
@@ -91,20 +91,20 @@ export function AgentSidebar({
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-white flex items-center">
-            <Folder className="h-5 w-5 mr-2 text-[#00ff9d]" />
+            <Folder className="h-5 w-5 mr-2 text-emerald-400" />
             Folders
           </h2>
           <div className="flex space-x-1">
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 text-gray-400 hover:text-[#00ff9d] hover:bg-[#222]"
+              className="h-8 w-8 p-0 text-neutral-400 hover:text-emerald-400 hover:bg-[#222]"
               onClick={onAddFolder}
             >
               <FolderPlus className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
-              className="h-8 w-8 p-0 text-gray-400 hover:text-[#00ff9d] hover:bg-[#222]"
+              className="h-8 w-8 p-0 text-neutral-400 hover:text-emerald-400 hover:bg-[#222]"
               onClick={onClose}
             >
               <X className="h-5 w-5" />
@@ -116,8 +116,8 @@ export function AgentSidebar({
           <button
             className={`w-full text-left px-3 py-2 rounded-md flex items-center ${
               selectedFolderId === null
-                ? "bg-[#333] text-[#00ff9d]"
-                : "text-gray-300 hover:bg-[#222] hover:text-white"
+                ? "bg-[#333] text-emerald-400"
+                : "text-neutral-300 hover:bg-[#222] hover:text-white"
             }`}
             onClick={() => onSelectFolder(null)}
           >
@@ -130,8 +130,8 @@ export function AgentSidebar({
               <button
                 className={`flex-1 text-left px-3 py-2 rounded-md flex items-center ${
                   selectedFolderId === folder.id
-                    ? "bg-[#333] text-[#00ff9d]"
-                    : "text-gray-300 hover:bg-[#222] hover:text-white"
+                    ? "bg-[#333] text-emerald-400"
+                    : "text-neutral-300 hover:bg-[#222] hover:text-white"
                 }`}
                 onClick={() => onSelectFolder(folder.id)}
               >
@@ -145,7 +145,7 @@ export function AgentSidebar({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 p-0 text-gray-400 hover:text-white hover:bg-[#222]"
+                      className="h-7 w-7 p-0 text-neutral-400 hover:text-white hover:bg-[#222]"
                     >
                       <CircleEllipsis className="h-4 w-4" />
                     </Button>

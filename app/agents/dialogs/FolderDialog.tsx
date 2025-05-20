@@ -96,7 +96,7 @@ export function FolderDialog({
           <DialogTitle>
             {editingFolder ? "Edit Folder" : "New Folder"}
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             {editingFolder
               ? "Update the existing folder information"
               : "Fill in the information to create a new folder"}
@@ -105,7 +105,7 @@ export function FolderDialog({
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="folder-name" className="text-gray-300">
+            <Label htmlFor="folder-name" className="text-neutral-300">
               Folder Name
             </Label>
             <Input
@@ -119,7 +119,7 @@ export function FolderDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="folder-description" className="text-gray-300">
+            <Label htmlFor="folder-description" className="text-neutral-300">
               Description (optional)
             </Label>
             <Textarea
@@ -137,13 +137,13 @@ export function FolderDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+            className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             disabled={!folder.name || isLoading}
           >
             {isLoading ? (

@@ -120,10 +120,10 @@ export function DelayForm({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-gray-700 flex-shrink-0">
+      <div className="p-4 border-b border-neutral-700 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-md font-medium text-gray-200">Delay Duration</h3>
+            <h3 className="text-md font-medium text-neutral-200">Delay Duration</h3>
             <Badge
               variant="outline"
               className="text-xs bg-yellow-900/20 text-yellow-400 border-yellow-700/50"
@@ -140,10 +140,10 @@ export function DelayForm({
               })
             }
           >
-            <SelectTrigger className="w-[120px] h-8 bg-gray-800 border-gray-700 text-gray-200">
+            <SelectTrigger className="w-[120px] h-8 bg-neutral-800 border-neutral-700 text-neutral-200">
               <SelectValue placeholder="Unit" />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700 text-gray-200">
+            <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
               <SelectItem value={DelayUnitEnum.SECONDS}>Seconds</SelectItem>
               <SelectItem value={DelayUnitEnum.MINUTES}>Minutes</SelectItem>
               <SelectItem value={DelayUnitEnum.HOURS}>Hours</SelectItem>
@@ -161,8 +161,8 @@ export function DelayForm({
                 <Clock size={18} className="text-yellow-300" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-gray-200">Time Delay</h3>
-                <p className="text-sm text-gray-400 mt-1">
+                <h3 className="font-medium text-neutral-200">Time Delay</h3>
+                <p className="text-sm text-neutral-400 mt-1">
                   Pause workflow execution for a specified amount of time
                 </p>
               </div>
@@ -175,7 +175,7 @@ export function DelayForm({
               id="delay-value"
               type="number"
               min="1"
-              className="bg-gray-700 border-gray-600"
+              className="bg-neutral-700 border-neutral-600"
               value={delay.value}
               onChange={(e) =>
                 setDelay({
@@ -190,7 +190,7 @@ export function DelayForm({
             <Label htmlFor="delay-description">Description (optional)</Label>
             <Textarea
               id="delay-description"
-              className="bg-gray-700 border-gray-600 min-h-[100px] resize-none"
+              className="bg-neutral-700 border-neutral-600 min-h-[100px] resize-none"
               value={delay.description}
               onChange={(e) =>
                 setDelay({
@@ -203,9 +203,9 @@ export function DelayForm({
           </div>
 
           {delay.value > 0 ? (
-            <div className="rounded-md bg-gray-700/50 border border-gray-600 p-3 mt-2">
-              <div className="text-sm font-medium text-gray-400 mb-1">Preview</div>
-              <div className="flex items-start gap-2 p-2 rounded-md bg-gray-800/70">
+            <div className="rounded-md bg-neutral-700/50 border border-neutral-600 p-3 mt-2">
+              <div className="text-sm font-medium text-neutral-400 mb-1">Preview</div>
+              <div className="flex items-start gap-2 p-2 rounded-md bg-neutral-800/70">
                 <div className="rounded-full bg-yellow-900/30 p-1.5 mt-0.5">
                   <HourglassIcon size={15} className="text-yellow-400" />
                 </div>
@@ -215,7 +215,7 @@ export function DelayForm({
                       {getTimeDescription()} delay
                     </span>
                     {delay.description && (
-                      <span className="text-xs text-gray-400 mt-1">
+                      <span className="text-xs text-neutral-400 mt-1">
                         {delay.description}
                       </span>
                     )}
@@ -224,15 +224,15 @@ export function DelayForm({
               </div>
             </div>
           ) : (
-            <div className="rounded-md bg-gray-700/30 border border-gray-600/50 p-4 flex flex-col items-center justify-center text-center">
-              <AlertCircle className="h-6 w-6 text-gray-500 mb-2" />
-              <p className="text-gray-400 text-sm">Please set a valid delay time</p>
+            <div className="rounded-md bg-neutral-700/30 border border-neutral-600/50 p-4 flex flex-col items-center justify-center text-center">
+              <AlertCircle className="h-6 w-6 text-neutral-500 mb-2" />
+              <p className="text-neutral-400 text-sm">Please set a valid delay time</p>
             </div>
           )}
         </div>
       </div>
 
-      <div className="p-4 border-t border-gray-700 flex-shrink-0">
+      <div className="p-4 border-t border-neutral-700 flex-shrink-0">
         <div className="flex gap-2 justify-between">
           <Button
             variant="outline"

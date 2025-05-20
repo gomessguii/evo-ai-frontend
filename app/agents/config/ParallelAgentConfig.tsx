@@ -97,7 +97,7 @@ export function ParallelAgentConfig({
                 key={agentId}
                 className="flex items-center space-x-2 bg-[#2a2a2a] p-3 rounded-md"
               >
-                <GitBranch className="h-5 w-5 text-[#00ff9d]" />
+                <GitBranch className="h-5 w-5 text-emerald-400" />
                 <div className="flex-1">
                   <div className="font-medium text-white truncate">
                     {getAgentNameById(agentId)}
@@ -107,12 +107,12 @@ export function ParallelAgentConfig({
             ))}
           </div>
         ) : (
-          <div className="text-center py-6 text-gray-400">
+          <div className="text-center py-6 text-neutral-400">
             Add agents in the "Sub-Agents" tab to execute in parallel
           </div>
         )}
 
-        <div className="mt-3 text-sm text-gray-400">
+        <div className="mt-3 text-sm text-neutral-400">
           <p>
             All listed agents will be executed simultaneously with the same
             input. The responses will be aggregated according to the selected

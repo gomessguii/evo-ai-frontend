@@ -28,12 +28,13 @@
 */
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Loader2, Bot, Zap } from "lucide-react";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { ChatMessage as ChatMessageType } from "@/services/sessionService";
+import { cn } from "@/lib/utils";
 
 interface FunctionMessageContent {
   title: string;
@@ -73,6 +74,7 @@ export function ChatContainer({
   sessionId,
 }: ChatContainerProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [isInitializing, setIsInitializing] = useState(false);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -86,26 +88,60 @@ export function ChatContainer({
     }
   }, [messages]);
 
+  // Simulate initial loading for smoother UX
+  useEffect(() => {
+    if (sessionId) {
+      setIsInitializing(true);
+      const timer = setTimeout(() => {
+        setIsInitializing(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [sessionId]);
+
+  const isEmpty = messages.length === 0;
+
   return (
-    <div className={`flex-1 flex flex-col overflow-hidden ${containerClassName}`}>
+    <div className={cn(
+      "flex-1 flex flex-col overflow-hidden bg-gradient-to-b from-neutral-900 to-neutral-950",
+      containerClassName
+    )}>
       <div 
-        className={`flex-1 overflow-hidden p-4 pt-2 ${messagesContainerClassName}`}
-        style={{ filter: isLoading ? "blur(2px)" : "none" }}
+        className={cn(
+          "flex-1 overflow-hidden p-5",
+          messagesContainerClassName
+        )}
+        style={{ filter: isLoading && !isInitializing ? "blur(1px)" : "none" }}
       >
         <ScrollArea
           ref={messagesContainerRef}
           className="h-full pr-4"
         >
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-6">
-              <div className="p-3 rounded-full bg-[#222] mb-4">
-                <MessageSquare className="h-6 w-6 text-[#00ff9d]" />
+          {isInitializing ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg mb-4 animate-pulse">
+                <Zap className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-lg font-medium text-white mb-2">
-                {`Chat com ${agentName}`}
+              <p className="text-neutral-400 mb-2">Loading conversation...</p>
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" 
+                  style={{ animationDelay: '0ms' }}></span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce"
+                  style={{ animationDelay: '150ms' }}></span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce"
+                  style={{ animationDelay: '300ms' }}></span>
+              </div>
+            </div>
+          ) : isEmpty ? (
+            <div className="h-full flex flex-col items-center justify-center text-center p-6">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500/20 to-emerald-500/20 flex items-center justify-center shadow-lg mb-5 border border-emerald-500/30">
+                <MessageSquare className="h-6 w-6 text-emerald-400" />
+              </div>
+              <h3 className="text-lg font-medium text-neutral-300 mb-2">
+                {`Chat with ${agentName}`}
               </h3>
-              <p className="text-gray-400 max-w-md">
-                Type your message below to start the conversation.
+              <p className="text-neutral-500 text-sm max-w-md">
+                Type your message below to start the conversation. This chat will help you interact with the agent and explore its capabilities.
               </p>
             </div>
           ) : (
@@ -132,7 +168,16 @@ export function ChatContainer({
         </ScrollArea>
       </div>
 
-      <div className={`p-4 border-t border-[#333] bg-[#1a1a1a] ${inputContainerClassName}`}>
+      <div className={cn(
+        "p-3 border-t border-neutral-800 bg-neutral-900",
+        inputContainerClassName
+      )}>
+        {isLoading && !isInitializing && (
+          <div className="px-4 py-2 mb-3 rounded-lg bg-neutral-800/50 text-sm text-neutral-400 flex items-center">
+            <Loader2 className="h-3 w-3 mr-2 animate-spin text-emerald-400" />
+            Agent is thinking...
+          </div>
+        )}
         <ChatInput 
           onSendMessage={onSendMessage}
           isLoading={isLoading}

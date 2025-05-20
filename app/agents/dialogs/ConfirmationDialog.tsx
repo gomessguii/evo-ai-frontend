@@ -65,12 +65,12 @@ export function ConfirmationDialog({
       <AlertDialogContent className="bg-[#1a1a1a] border-[#333] text-white">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription className="text-gray-400">
+          <AlertDialogDescription className="text-neutral-400">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white">
+          <AlertDialogCancel className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white">
             {cancelText}
           </AlertDialogCancel>
           <AlertDialogAction
@@ -81,7 +81,7 @@ export function ConfirmationDialog({
             className={
               confirmVariant === "destructive"
                 ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                : "bg-emerald-400 text-black hover:bg-[#00cc7d]"
             }
           >
             {confirmText}

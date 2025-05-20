@@ -142,7 +142,7 @@ export function CustomMCPDialog({
           <DialogTitle className="text-white">
             Configure Custom MCP
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             Configure the URL and HTTP headers for the custom MCP.
           </DialogDescription>
         </DialogHeader>
@@ -150,7 +150,7 @@ export function CustomMCPDialog({
         <div className="flex-1 overflow-auto p-4">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="custom-mcp-url" className="text-gray-300">
+              <Label htmlFor="custom-mcp-url" className="text-neutral-300">
                 MCP URL
               </Label>
               <Input
@@ -206,7 +206,7 @@ export function CustomMCPDialog({
                   variant="outline"
                   size="sm"
                   onClick={handleAddHeader}
-                  className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add Header
                 </Button>
@@ -219,13 +219,13 @@ export function CustomMCPDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+            className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             disabled={!customMCP.url}
           >
             {initialCustomMCP?.url ? "Save Custom MCP" : "Add Custom MCP"}

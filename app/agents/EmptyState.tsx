@@ -47,12 +47,12 @@ export function EmptyState({
   const getIcon = () => {
     switch (type) {
       case "empty-folder":
-        return <Folder className="h-16 w-16 text-[#00ff9d]" />;
+        return <Folder className="h-16 w-16 text-emerald-400" />;
       case "search-no-results":
-        return <Search className="h-16 w-16 text-[#00ff9d]" />;
+        return <Search className="h-16 w-16 text-emerald-400" />;
       case "no-agents":
       default:
-        return <Server className="h-16 w-16 text-[#00ff9d]" />;
+        return <Server className="h-16 w-16 text-emerald-400" />;
     }
   };
 
@@ -86,14 +86,14 @@ export function EmptyState({
         {getIcon()}
       </div>
       <h2 className="text-2xl font-semibold text-white mb-3">{getTitle()}</h2>
-      <p className="text-gray-300 mb-6 max-w-md">{getMessage()}</p>
+      <p className="text-neutral-300 mb-6 max-w-md">{getMessage()}</p>
       {onAction && (
         <Button
           onClick={onAction}
           className={
             type === "search-no-results"
               ? "bg-[#222] text-white hover:bg-[#333]"
-              : "bg-[#00ff9d] text-black hover:bg-[#00cc7d] px-6 py-2 hover:shadow-[0_0_15px_rgba(0,255,157,0.2)]"
+              : "bg-emerald-400 text-black hover:bg-[#00cc7d] px-6 py-2 hover:shadow-[0_0_15px_rgba(0,255,157,0.2)]"
           }
         >
           {type === "search-no-results" ? null : (

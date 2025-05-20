@@ -180,7 +180,7 @@ export function ConfigurationTab({
       <div className="border border-[#444] rounded-md p-4 bg-[#222] flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <label
-            className="text-sm text-gray-400 mb-1"
+            className="text-sm text-neutral-400 mb-1"
             htmlFor="agent-card-url"
           >
             Agent URL. This URL can be used to access the agent card externally.
@@ -189,7 +189,7 @@ export function ConfigurationTab({
             <input
               id="agent-card-url"
               type="text"
-              className="w-full bg-[#2a2a2a] border border-[#444] rounded-md px-3 py-2 text-white pr-12 focus:outline-none focus:ring-2 focus:ring-[#00ff9d]/40"
+              className="w-full bg-[#2a2a2a] border border-[#444] rounded-md px-3 py-2 text-white pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
               value={
                 values?.agent_card_url?.replace(
                   "/.well-known/agent.json",
@@ -201,7 +201,7 @@ export function ConfigurationTab({
             />
             <button
               type="button"
-              className="absolute right-2 text-gray-400 hover:text-[#00ff9d] px-1 py-1"
+              className="absolute right-2 text-neutral-400 hover:text-emerald-400 px-1 py-1"
               onClick={async () => {
                 if (values?.agent_card_url) {
                   await navigator.clipboard.writeText(
@@ -228,7 +228,7 @@ export function ConfigurationTab({
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm text-gray-400 mb-1" htmlFor="agent-api_key">
+          <label className="text-sm text-neutral-400 mb-1" htmlFor="agent-api_key">
             Configure the API Key for this agent. This key will be used for
             authentication with external services.
           </label>
@@ -236,7 +236,7 @@ export function ConfigurationTab({
             <input
               id="agent-api_key"
               type={showApiKey ? "text" : "password"}
-              className="w-full bg-[#2a2a2a] border border-[#444] rounded-md px-3 py-2 text-white pr-24 focus:outline-none focus:ring-2 focus:ring-[#00ff9d]/40"
+              className="w-full bg-[#2a2a2a] border border-[#444] rounded-md px-3 py-2 text-white pr-24 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
               value={values.config?.api_key || ""}
               onChange={(e) =>
                 onChange({
@@ -251,7 +251,7 @@ export function ConfigurationTab({
             />
             <button
               type="button"
-              className="absolute right-9 text-gray-400 hover:text-[#00ff9d] px-1 py-1"
+              className="absolute right-9 text-neutral-400 hover:text-emerald-400 px-1 py-1"
               onClick={() => setShowApiKey((v) => !v)}
               tabIndex={-1}
             >
@@ -263,7 +263,7 @@ export function ConfigurationTab({
             </button>
             <button
               type="button"
-              className="absolute right-2 text-gray-400 hover:text-[#00ff9d] px-1 py-1"
+              className="absolute right-2 text-neutral-400 hover:text-emerald-400 px-1 py-1"
               onClick={async () => {
                 if (values.config?.api_key) {
                   await navigator.clipboard.writeText(values.config.api_key);
@@ -297,7 +297,7 @@ export function ConfigurationTab({
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-white">MCP Servers</h3>
           <div className="border border-[#444] rounded-md p-4 bg-[#222]">
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-neutral-400 mb-4">
               Configure the MCP servers that this agent can use.
             </p>
 
@@ -317,7 +317,7 @@ export function ConfigurationTab({
                         <p className="font-medium text-white">
                           {mcpServer?.name || mcpConfig.id}
                         </p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-neutral-400">
                           {mcpServer?.description?.substring(0, 100)}
                           ...
                         </p>
@@ -327,7 +327,7 @@ export function ConfigurationTab({
                               <Badge
                                 key={toolId}
                                 variant="outline"
-                                className="text-xs bg-[#333] text-[#00ff9d] border-[#00ff9d]/30"
+                                className="text-xs bg-[#333] text-emerald-400 border-emerald-400/30"
                               >
                                 {toolId}
                               </Badge>
@@ -340,7 +340,7 @@ export function ConfigurationTab({
                           variant="ghost"
                           size="sm"
                           onClick={() => onConfigureMCP(mcpConfig)}
-                          className="flex items-center text-gray-300 hover:text-[#00ff9d] hover:bg-[#333]"
+                          className="flex items-center text-neutral-300 hover:text-emerald-400 hover:bg-[#333]"
                         >
                           <Settings className="h-4 w-4 mr-1" /> Configure
                         </Button>
@@ -361,7 +361,7 @@ export function ConfigurationTab({
                   variant="outline"
                   size="sm"
                   onClick={() => onOpenMCPDialog(null)}
-                  className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add MCP Server
                 </Button>
@@ -372,7 +372,7 @@ export function ConfigurationTab({
                   <p className="font-medium text-white">
                     No MCP servers configured
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-neutral-400">
                     Add MCP servers for this agent
                   </p>
                 </div>
@@ -380,7 +380,7 @@ export function ConfigurationTab({
                   variant="outline"
                   size="sm"
                   onClick={() => onOpenMCPDialog(null)}
-                  className="border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add
                 </Button>
@@ -392,7 +392,7 @@ export function ConfigurationTab({
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-white">Custom MCPs</h3>
           <div className="border border-[#444] rounded-md p-4 bg-[#222]">
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-neutral-400 mb-4">
               Configure custom MCPs with URL and HTTP headers.
             </p>
 
@@ -406,7 +406,7 @@ export function ConfigurationTab({
                   >
                     <div>
                       <p className="font-medium text-white">{customMCP.url}</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-neutral-400">
                         {Object.keys(customMCP.headers || {}).length > 0
                           ? `${
                               Object.keys(customMCP.headers || {}).length
@@ -419,7 +419,7 @@ export function ConfigurationTab({
                         variant="ghost"
                         size="sm"
                         onClick={() => onConfigureCustomMCP(customMCP)}
-                        className="flex items-center text-gray-300 hover:text-[#00ff9d] hover:bg-[#333]"
+                        className="flex items-center text-neutral-300 hover:text-emerald-400 hover:bg-[#333]"
                       >
                         <Settings className="h-4 w-4 mr-1" /> Configure
                       </Button>
@@ -439,7 +439,7 @@ export function ConfigurationTab({
                   variant="outline"
                   size="sm"
                   onClick={() => onOpenCustomMCPDialog(null)}
-                  className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add Custom MCP
                 </Button>
@@ -450,7 +450,7 @@ export function ConfigurationTab({
                   <p className="font-medium text-white">
                     No custom MCPs configured
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-neutral-400">
                     Add custom MCPs for this agent
                   </p>
                 </div>
@@ -458,7 +458,7 @@ export function ConfigurationTab({
                   variant="outline"
                   size="sm"
                   onClick={() => onOpenCustomMCPDialog(null)}
-                  className="border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add
                 </Button>
@@ -470,7 +470,7 @@ export function ConfigurationTab({
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-white">Agent Tools</h3>
           <div className="border border-[#444] rounded-md p-4 bg-[#222]">
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-neutral-400 mb-4">
               Configure other agents as tools for this agent.
             </p>
             {values.config?.agent_tools &&
@@ -487,7 +487,7 @@ export function ConfigurationTab({
                         <p className="font-medium text-white">
                           {agent?.name || toolId}
                         </p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-neutral-400">
                           {agent?.description || "No description"}
                         </p>
                       </div>
@@ -506,7 +506,7 @@ export function ConfigurationTab({
                   variant="outline"
                   size="sm"
                   onClick={() => setAgentToolDialogOpen(true)}
-                  className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add Agent Tool
                 </Button>
@@ -517,7 +517,7 @@ export function ConfigurationTab({
                   <p className="font-medium text-white">
                     No agent tools configured
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-neutral-400">
                     Add agent tools for this agent
                   </p>
                 </div>
@@ -525,7 +525,7 @@ export function ConfigurationTab({
                   variant="outline"
                   size="sm"
                   onClick={() => setAgentToolDialogOpen(true)}
-                  className="border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add
                 </Button>
@@ -539,7 +539,7 @@ export function ConfigurationTab({
             Custom Tools (HTTP Tools)
           </h3>
           <div className="border border-[#444] rounded-md p-4 bg-[#222]">
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-neutral-400 mb-4">
               Configure HTTP tools for this agent.
             </p>
             {values.config?.custom_tools?.http_tools &&
@@ -552,10 +552,10 @@ export function ConfigurationTab({
                   >
                     <div>
                       <p className="font-medium text-white">{tool.name}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-neutral-400">
                         {tool.method} {tool.endpoint}
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-neutral-400">
                         {tool.description}
                       </p>
                     </div>
@@ -564,7 +564,7 @@ export function ConfigurationTab({
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEditCustomTool(tool, idx)}
-                        className="flex items-center text-gray-300 hover:text-[#00ff9d] hover:bg-[#333]"
+                        className="flex items-center text-neutral-300 hover:text-emerald-400 hover:bg-[#333]"
                       >
                         <span className="mr-1">Edit</span>
                       </Button>
@@ -586,7 +586,7 @@ export function ConfigurationTab({
                     setEditingCustomTool(null);
                     setCustomToolDialogOpen(true);
                   }}
-                  className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add Custom Tool
                 </Button>
@@ -597,7 +597,7 @@ export function ConfigurationTab({
                   <p className="font-medium text-white">
                     No custom tools configured
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-neutral-400">
                     Add HTTP tools for this agent
                   </p>
                 </div>
@@ -608,7 +608,7 @@ export function ConfigurationTab({
                     setEditingCustomTool(null);
                     setCustomToolDialogOpen(true);
                   }}
-                  className="border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                  className="border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
                 >
                   <Plus className="h-4 w-4 mr-1" /> Add
                 </Button>
@@ -712,7 +712,7 @@ export function ConfigurationTab({
       {apiKeyField}
       <div className="flex items-center justify-center h-40">
         <div className="text-center">
-          <p className="text-gray-400">
+          <p className="text-neutral-400">
             Configure the sub-agents in the "Sub-Agents" tab
           </p>
         </div>

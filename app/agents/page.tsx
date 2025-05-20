@@ -445,7 +445,7 @@ export default function AgentsPage() {
             {!isSidebarVisible && (
               <button
                 onClick={() => setIsSidebarVisible(true)}
-                className="mr-2 bg-[#222] p-2 rounded-md text-[#00ff9d] hover:bg-[#333] hover:text-[#00ff9d] shadow-md transition-all"
+                className="mr-2 bg-[#222] p-2 rounded-md text-emerald-400 hover:bg-[#333] hover:text-emerald-400 shadow-md transition-all"
                 aria-label="Show folders"
               >
                 <Folder className="h-5 w-5" />
@@ -469,7 +469,7 @@ export default function AgentsPage() {
               onClick={() => setIsApiKeysDialogOpen(true)}
               className="bg-[#222] text-white hover:bg-[#333] border border-[#444]"
             >
-              <Key className="mr-2 h-4 w-4 text-[#00ff9d]" />
+              <Key className="mr-2 h-4 w-4 text-emerald-400" />
               API Keys
             </Button>
 
@@ -478,7 +478,7 @@ export default function AgentsPage() {
                 resetForm();
                 setIsDialogOpen(true);
               }}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+              className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             >
               <Plus className="mr-2 h-4 w-4" />
               New Agent
@@ -488,7 +488,7 @@ export default function AgentsPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00ff9d]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400"></div>
           </div>
         ) : filteredAgents.length > 0 ? (
           <AgentList

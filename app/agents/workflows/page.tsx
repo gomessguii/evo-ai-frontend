@@ -157,12 +157,12 @@ function WorkflowsContent() {
   return (
     <div className="relative w-full h-screen flex flex-col">
       {/* Header with controls */}
-      <div className="w-full bg-[#121212] py-4 px-6 z-10 flex items-center justify-between border-b border-gray-800">
+      <div className="w-full bg-[#121212] py-4 px-6 z-10 flex items-center justify-between border-b border-neutral-800">
         <div className="flex items-center gap-2">
           <Link href="/agents">
             <Button
               variant="outline"
-              className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
+              className="bg-neutral-800 border-neutral-700 text-neutral-200 hover:bg-neutral-700"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Agents
@@ -170,10 +170,10 @@ function WorkflowsContent() {
           </Link>
 
           {agent && (
-            <div className="bg-gray-800 px-4 py-2 rounded-md">
-              <h2 className="text-gray-200 font-medium">
+            <div className="bg-neutral-800 px-4 py-2 rounded-md">
+              <h2 className="text-neutral-200 font-medium">
                 {agent.name} -{" "}
-                <span className="text-gray-400 text-sm">{agent.type}</span>
+                <span className="text-neutral-400 text-sm">{agent.type}</span>
               </h2>
             </div>
           )}
@@ -182,7 +182,7 @@ function WorkflowsContent() {
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
+            className="bg-neutral-800 border-neutral-700 text-neutral-200 hover:bg-neutral-700"
             onClick={handleSaveWorkflow}
           >
             <Save className="mr-2 h-4 w-4" />
@@ -191,7 +191,7 @@ function WorkflowsContent() {
 
           <Button
             variant="outline"
-            className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
+            className="bg-neutral-800 border-neutral-700 text-neutral-200 hover:bg-neutral-700"
             onClick={handleExportFlow}
           >
             <Download className="mr-2 h-4 w-4" />

@@ -174,7 +174,7 @@ function ResetPasswordPage() {
             <CardFooter>
               <Button
                 type="submit"
-                className="w-full bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                className="w-full bg-emerald-400 text-black hover:bg-[#00cc7d]"
                 disabled={status === "loading"}
               >
                 {status === "loading" ? (
@@ -189,7 +189,7 @@ function ResetPasswordPage() {
             </CardFooter>
           )}
           <div className="mt-4 mb-2 text-center">
-            <Link href="/login" className="text-[#00ff9d] hover:underline">Go to Login</Link>
+            <Link href="/login" className="text-emerald-400 hover:underline">Go to Login</Link>
           </div>
         </form>
       </Card>

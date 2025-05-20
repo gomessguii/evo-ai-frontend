@@ -825,7 +825,7 @@ function DocumentationContent() {
         );
       case "canceled":
         return (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-neutral-100 text-neutral-800">
             Canceled
           </span>
         );
@@ -844,14 +844,14 @@ function DocumentationContent() {
   const renderTypingIndicator = () => {
     if (streamStatus === "working" && !streamComplete) {
       return (
-        <div className="flex items-center space-x-1 mt-2 text-gray-400">
-          <div className="w-2 h-2 rounded-full bg-[#00ff9d] animate-pulse"></div>
+        <div className="flex items-center space-x-1 mt-2 text-neutral-400">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
           <div
-            className="w-2 h-2 rounded-full bg-[#00ff9d] animate-pulse"
+            className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
             style={{ animationDelay: "0.2s" }}
           ></div>
           <div
-            className="w-2 h-2 rounded-full bg-[#00ff9d] animate-pulse"
+            className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
             style={{ animationDelay: "0.4s" }}
           ></div>
         </div>
@@ -865,7 +865,7 @@ function DocumentationContent() {
       <h1 className="text-4xl font-bold text-white mb-2">
         Agent2Agent Protocol
       </h1>
-      <p className="text-gray-400 mb-6">
+      <p className="text-neutral-400 mb-6">
         Documentation and testing lab for the Agent2Agent protocol
       </p>
 
@@ -877,21 +877,21 @@ function DocumentationContent() {
         <TabsList className="bg-[#222] border-b border-[#333] w-full justify-start mb-6">
           <TabsTrigger
             value="docs"
-            className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+            className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
           >
             <BookOpen className="h-4 w-4 mr-2" />
             Documentation
           </TabsTrigger>
           <TabsTrigger
             value="lab"
-            className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+            className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
           >
             <FlaskConical className="h-4 w-4 mr-2" />
             A2A Testing Lab
           </TabsTrigger>
           <TabsTrigger
             value="examples"
-            className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+            className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
           >
             <Code className="h-4 w-4 mr-2" />
             Code Examples
@@ -909,7 +909,7 @@ function DocumentationContent() {
         <TabsContent value="lab">
           <Card className="bg-[#1a1a1a] border-[#333] text-white mb-6">
             <CardHeader>
-              <CardTitle className="text-[#00ff9d]">A2A Testing Lab</CardTitle>
+              <CardTitle className="text-emerald-400">A2A Testing Lab</CardTitle>
               <CardDescription>
                 Test your A2A agent with different communication methods
               </CardDescription>
@@ -919,13 +919,13 @@ function DocumentationContent() {
                 <TabsList className="bg-[#222] border-[#333] mb-4">
                   <TabsTrigger
                     value="http"
-                    className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+                    className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
                   >
                     HTTP Request
                   </TabsTrigger>
                   <TabsTrigger
                     value="stream"
-                    className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+                    className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
                   >
                     Streaming
                   </TabsTrigger>
@@ -982,7 +982,7 @@ function DocumentationContent() {
           {response && labMode === "http" && (
             <Card className="bg-[#1a1a1a] border-[#333] text-white">
               <CardHeader>
-                <CardTitle className="text-[#00ff9d]">Response</CardTitle>
+                <CardTitle className="text-emerald-400">Response</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="relative">
@@ -1016,7 +1016,7 @@ export default function DocumentationPage() {
     <Suspense
       fallback={
         <div className="container mx-auto p-6 bg-[#121212] min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00ff9d]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400"></div>
         </div>
       }
     >

@@ -41,7 +41,7 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
     <div className="space-y-6">
       <Card className="bg-[#1a1a1a] border-[#333] text-white">
         <CardHeader>
-          <CardTitle className="text-[#00ff9d] flex items-center">
+          <CardTitle className="text-emerald-400 flex items-center">
             <Info className="h-5 w-5 mr-2" />
             What is A2A?
           </CardTitle>
@@ -60,7 +60,7 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
               href="https://github.com/google/A2A" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-[#00ff9d] hover:underline flex items-center"
+              className="text-emerald-400 hover:underline flex items-center"
             >
               <span className="mr-2">GitHub: google/A2A</span>
               <ExternalLink className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
               href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-[#00ff9d] hover:underline flex items-center"
+              className="text-emerald-400 hover:underline flex items-center"
             >
               <span className="mr-2">Google Developers Blog: A2A</span>
               <ExternalLink className="h-4 w-4" />
@@ -80,17 +80,17 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
 
       <Card className="bg-[#1a1a1a] border-[#333] text-white">
         <CardHeader>
-          <CardTitle className="text-[#00ff9d]">A2A Communication Methods</CardTitle>
+          <CardTitle className="text-emerald-400">A2A Communication Methods</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <h3 className="text-[#00ff9d] text-lg font-medium mb-2">1. Standard HTTP (tasks/send)</h3>
-            <p className="text-gray-300 mb-2">
+            <h3 className="text-emerald-400 text-lg font-medium mb-2">1. Standard HTTP (tasks/send)</h3>
+            <p className="text-neutral-300 mb-2">
               This method sends a request and receives the complete response at once, after the agent has finished all processing.
             </p>
             <div className="bg-[#222] p-4 rounded-md border border-[#444] space-y-2">
               <h4 className="font-medium text-white">Features:</h4>
-              <ul className="list-disc pl-5 space-y-1 text-gray-300">
+              <ul className="list-disc pl-5 space-y-1 text-neutral-300">
                 <li>Single HTTP request with complete response</li>
                 <li>Wait for the agent to finish all processing</li>
                 <li>Best for simple and quick tasks</li>
@@ -100,13 +100,13 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
           </div>
 
           <div>
-            <h3 className="text-[#00ff9d] text-lg font-medium mb-2">2. Streaming (tasks/sendSubscribe)</h3>
-            <p className="text-gray-300 mb-2">
+            <h3 className="text-emerald-400 text-lg font-medium mb-2">2. Streaming (tasks/sendSubscribe)</h3>
+            <p className="text-neutral-300 mb-2">
               This method uses Server-Sent Events (SSE) to provide real-time updates while the agent processes the request.
             </p>
             <div className="bg-[#222] p-4 rounded-md border border-[#444] space-y-2">
               <h4 className="font-medium text-white">Features:</h4>
-              <ul className="list-disc pl-5 space-y-1 text-gray-300">
+              <ul className="list-disc pl-5 space-y-1 text-neutral-300">
                 <li>Partial responses in real-time</li>
                 <li>Instant feedback for the user</li>
                 <li>Best for chat interfaces and long responses</li>
@@ -116,45 +116,45 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
           </div>
 
           <div className="overflow-x-auto">
-            <h3 className="text-[#00ff9d] text-lg font-medium mb-3">Comparison between methods</h3>
+            <h3 className="text-emerald-400 text-lg font-medium mb-3">Comparison between methods</h3>
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-[#222] border-b border-[#444]">
-                  <th className="p-3 text-left text-gray-300">Feature</th>
-                  <th className="p-3 text-left text-gray-300">tasks/send</th>
-                  <th className="p-3 text-left text-gray-300">tasks/sendSubscribe</th>
+                  <th className="p-3 text-left text-neutral-300">Feature</th>
+                  <th className="p-3 text-left text-neutral-300">tasks/send</th>
+                  <th className="p-3 text-left text-neutral-300">tasks/sendSubscribe</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-gray-300">Response type</td>
-                  <td className="p-3 text-gray-300">Single, complete</td>
-                  <td className="p-3 text-gray-300">Partial event stream</td>
+                  <td className="p-3 text-neutral-300">Response type</td>
+                  <td className="p-3 text-neutral-300">Single, complete</td>
+                  <td className="p-3 text-neutral-300">Partial event stream</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-gray-300">Response time</td>
-                  <td className="p-3 text-gray-300">After complete processing</td>
-                  <td className="p-3 text-gray-300">Real-time, partial</td>
+                  <td className="p-3 text-neutral-300">Response time</td>
+                  <td className="p-3 text-neutral-300">After complete processing</td>
+                  <td className="p-3 text-neutral-300">Real-time, partial</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-gray-300">Implementation complexity</td>
-                  <td className="p-3 text-gray-300">Simple</td>
-                  <td className="p-3 text-gray-300">Moderate</td>
+                  <td className="p-3 text-neutral-300">Implementation complexity</td>
+                  <td className="p-3 text-neutral-300">Simple</td>
+                  <td className="p-3 text-neutral-300">Moderate</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-gray-300">UX for long tasks</td>
-                  <td className="p-3 text-gray-300">Worst (long wait)</td>
-                  <td className="p-3 text-gray-300">Better (continuous feedback)</td>
+                  <td className="p-3 text-neutral-300">UX for long tasks</td>
+                  <td className="p-3 text-neutral-300">Worst (long wait)</td>
+                  <td className="p-3 text-neutral-300">Better (continuous feedback)</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-gray-300">Network resource usage</td>
-                  <td className="p-3 text-gray-300">Lower for short responses</td>
-                  <td className="p-3 text-gray-300">More efficient for long responses</td>
+                  <td className="p-3 text-neutral-300">Network resource usage</td>
+                  <td className="p-3 text-neutral-300">Lower for short responses</td>
+                  <td className="p-3 text-neutral-300">More efficient for long responses</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-gray-300">Ideal use case</td>
-                  <td className="p-3 text-gray-300">Simple APIs, integrations</td>
-                  <td className="p-3 text-gray-300">Chat interfaces, extensive content</td>
+                  <td className="p-3 text-neutral-300">Ideal use case</td>
+                  <td className="p-3 text-neutral-300">Simple APIs, integrations</td>
+                  <td className="p-3 text-neutral-300">Chat interfaces, extensive content</td>
                 </tr>
               </tbody>
             </table>
@@ -164,7 +164,7 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
 
       <Card className="bg-[#1a1a1a] border-[#333] text-white">
         <CardHeader>
-          <CardTitle className="text-[#00ff9d]">JSON-RPC 2.0</CardTitle>
+          <CardTitle className="text-emerald-400">JSON-RPC 2.0</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
@@ -224,7 +224,7 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
       
       <Card className="bg-[#1a1a1a] border-[#333] text-white">
         <CardHeader>
-          <CardTitle className="text-[#00ff9d]">JSON-RPC 2.0 Specification</CardTitle>
+          <CardTitle className="text-emerald-400">JSON-RPC 2.0 Specification</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -250,7 +250,7 @@ export function DocumentationSection({ copyToClipboard }: DocumentationSectionPr
 
       <Card className="bg-[#1a1a1a] border-[#333] text-white">
         <CardHeader>
-          <CardTitle className="text-[#00ff9d]">Response format</CardTitle>
+          <CardTitle className="text-emerald-400">Response format</CardTitle>
         </CardHeader>
         <CardContent className="pt-0 space-y-6">
           <div>

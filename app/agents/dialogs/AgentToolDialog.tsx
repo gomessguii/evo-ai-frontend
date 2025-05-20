@@ -83,7 +83,7 @@ export function AgentToolDialog({
       <DialogContent className="sm:max-w-[420px] max-h-[90vh] overflow-hidden flex flex-col bg-[#1a1a1a] border-[#333]">
         <DialogHeader>
           <DialogTitle className="text-white">Add Agent Tool</DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             Select an agent to add as a tool.
           </DialogDescription>
         </DialogHeader>
@@ -92,11 +92,11 @@ export function AgentToolDialog({
             placeholder="Search agent by name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="mb-2 bg-[#222] border-[#444] text-white placeholder:text-gray-400"
+            className="mb-2 bg-[#222] border-[#444] text-white placeholder:text-neutral-400"
           />
           <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
             {filteredAgents.length === 0 && (
-              <div className="text-gray-400 text-sm text-center py-6">No agents found.</div>
+              <div className="text-neutral-400 text-sm text-center py-6">No agents found.</div>
             )}
             {filteredAgents.map((agent) => (
               <button
@@ -105,18 +105,18 @@ export function AgentToolDialog({
                 onClick={() => setSelectedAgentId(agent.id)}
                 className={cn(
                   "w-full flex items-start gap-3 p-3 rounded-md border border-[#333] bg-[#232323] hover:bg-[#222] transition text-left cursor-pointer",
-                  selectedAgentId === agent.id && "border-[#00ff9d] bg-[#1a1a1a] shadow-md"
+                  selectedAgentId === agent.id && "border-emerald-400 bg-[#1a1a1a] shadow-md"
                 )}
               >
                 <div className="flex-1">
                   <div className="font-medium text-white text-base">{agent.name}</div>
-                  <div className="text-xs text-gray-400 mt-1">
+                  <div className="text-xs text-neutral-400 mt-1">
                     {agent.description || "No description"}
                   </div>
-                  <div className="text-[10px] text-gray-500 mt-1">ID: {agent.id}</div>
+                  <div className="text-[10px] text-neutral-500 mt-1">ID: {agent.id}</div>
                 </div>
                 {selectedAgentId === agent.id && (
-                  <span className="ml-2 text-[#00ff9d] font-bold">Selected</span>
+                  <span className="ml-2 text-emerald-400 font-bold">Selected</span>
                 )}
               </button>
             ))}
@@ -126,13 +126,13 @@ export function AgentToolDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+            className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             disabled={!selectedAgentId}
           >
             Add Tool

@@ -111,17 +111,17 @@ const NodeFormWrapper = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-shrink-0 sticky top-0 z-20 bg-gray-800 shadow-md border-b border-gray-700">
+      <div className="flex-shrink-0 sticky top-0 z-20 bg-neutral-800 shadow-md border-b border-neutral-700">
         <div className="p-4 text-center relative">
           <button
-            className="absolute right-2 top-2 text-gray-200 hover:text-white p-1 rounded-full hover:bg-gray-700"
+            className="absolute right-2 top-2 text-neutral-200 hover:text-white p-1 rounded-full hover:bg-neutral-700"
             onClick={() => setSelectedNode(null)}
             aria-label="Close panel"
           >
             <X size={18} />
           </button>
           {!editingLabel ? (
-            <div className="flex items-center justify-center text-xl font-bold text-gray-200">
+            <div className="flex items-center justify-center text-xl font-bold text-neutral-200">
               <span>{selectedNode.data.label}</span>
               {selectedNode.type !== "start-node" && (
                 <Edit
@@ -135,7 +135,7 @@ const NodeFormWrapper = ({
             <input
               type="text"
               value={selectedNode.data.label}
-              className="w-full p-2 text-center text-xl font-bold bg-gray-800 text-gray-200 border border-gray-600 rounded"
+              className="w-full p-2 text-center text-xl font-bold bg-neutral-800 text-neutral-200 border border-neutral-600 rounded"
               onChange={(e) => {
                 handleUpdateNode({
                   ...selectedNode,
@@ -513,7 +513,7 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
         >
           <Background color="#334155" gap={24} size={1.5} />
           <MiniMap
-            className="bg-gray-800/80 border border-gray-700 rounded-lg shadow-lg"
+            className="bg-neutral-800/80 border border-neutral-700 rounded-lg shadow-lg"
             nodeColor={(node) => {
               switch (node.type) {
                 case "start-node":
@@ -582,7 +582,7 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
         )}
 
         <div
-          className="absolute left-0 top-0 z-10 h-full w-[350px] bg-gray-900 shadow-lg transition-all duration-300 ease-in-out border-r border-gray-700 flex flex-col"
+          className="absolute left-0 top-0 z-10 h-full w-[350px] bg-neutral-900 shadow-lg transition-all duration-300 ease-in-out border-r border-neutral-700 flex flex-col"
           style={{
             transform: selectedNode ? "translateX(0)" : "translateX(-100%)",
             opacity: selectedNode ? 1 : 0,

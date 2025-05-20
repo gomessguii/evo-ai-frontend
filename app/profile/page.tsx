@@ -105,7 +105,7 @@ export default function ProfilePage() {
               <div className="flex flex-col items-center">
                 <Avatar className="h-24 w-24 mb-4">
                   <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${userData.name}`} />
-                  <AvatarFallback className="text-2xl bg-[#00ff9d] text-black">
+                  <AvatarFallback className="text-2xl bg-emerald-400 text-black">
                     {(userData.name || "?")
                       .split(" ")
                       .filter(Boolean)
@@ -114,26 +114,26 @@ export default function ProfilePage() {
                   </AvatarFallback>
                 </Avatar>
                 <CardTitle className="text-white text-xl">{userData.name}</CardTitle>
-                <CardDescription className="text-gray-400">{userData.email}</CardDescription>
+                <CardDescription className="text-neutral-400">{userData.email}</CardDescription>
               </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4 text-sm">
-                <div className="flex justify-between text-gray-300">
+                <div className="flex justify-between text-neutral-300">
                   <span>ID:</span>
-                  <span className="text-gray-400 truncate max-w-[180px]">{userData.id}</span>
+                  <span className="text-neutral-400 truncate max-w-[180px]">{userData.id}</span>
                 </div>
-                <div className="flex justify-between text-gray-300">
+                <div className="flex justify-between text-neutral-300">
                   <span>Account Type:</span>
-                  <span className="text-gray-400">{userData.is_admin ? "Administrator" : "Client"}</span>
+                  <span className="text-neutral-400">{userData.is_admin ? "Administrator" : "Client"}</span>
                 </div>
-                <div className="flex justify-between text-gray-300">
+                <div className="flex justify-between text-neutral-300">
                   <span>Email Verified:</span>
-                  <span className="text-gray-400">{userData.email_verified ? "Yes" : "No"}</span>
+                  <span className="text-neutral-400">{userData.email_verified ? "Yes" : "No"}</span>
                 </div>
-                <div className="flex justify-between text-gray-300">
+                <div className="flex justify-between text-neutral-300">
                   <span>Created at:</span>
-                  <span className="text-gray-400">{new Date(userData.created_at).toLocaleDateString("en-US")}</span>
+                  <span className="text-neutral-400">{new Date(userData.created_at).toLocaleDateString("en-US")}</span>
                 </div>
               </div>
             </CardContent>
@@ -145,11 +145,11 @@ export default function ProfilePage() {
             <form onSubmit={handleProfileUpdate}>
               <CardHeader>
                 <CardTitle className="text-white">Profile Information</CardTitle>
-                <CardDescription className="text-gray-400">Update your personal information.</CardDescription>
+                <CardDescription className="text-neutral-400">Update your personal information.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-gray-300">
+                  <Label htmlFor="name" className="text-neutral-300">
                     Name
                   </Label>
                   <Input
@@ -160,7 +160,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-300">
+                  <Label htmlFor="email" className="text-neutral-300">
                     Email
                   </Label>
                   <Input
@@ -175,7 +175,7 @@ export default function ProfilePage() {
               <CardFooter>
                 <Button
                   type="submit"
-                  className="w-full bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                  className="w-full bg-emerald-400 text-black hover:bg-[#00cc7d]"
                   disabled={isLoading}
                 >
                   {isLoading ? "Saving..." : "Save Changes"}

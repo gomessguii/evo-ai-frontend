@@ -29,14 +29,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare, Loader2, Send, Paperclip, X, Image, FileText, File } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { MessageSquare, Loader2, Bot, User } from "lucide-react";
 import { ChatMessage as ChatMessageType } from "@/services/sessionService";
 import { ChatMessage } from "@/app/chat/components/ChatMessage";
-import { FileData, formatFileSize, isImageFile } from "@/lib/file-utils";
-import { useToast } from "@/hooks/use-toast";
+import { FileData } from "@/lib/file-utils";
+import { ChatInput } from "@/app/chat/components/ChatInput";
 
 interface FunctionMessageContent {
   title: string;
@@ -65,12 +63,8 @@ export function SharedChatPanel({
   containsMarkdown,
   sessionId,
 }: SharedChatPanelProps) {
-  const [messageInput, setMessageInput] = useState("");
   const [expandedFunctions, setExpandedFunctions] = useState<Record<string, boolean>>({});
-  const [selectedFiles, setSelectedFiles] = useState<FileData[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -91,229 +85,95 @@ export function SharedChatPanel({
     }));
   };
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!messageInput.trim() && selectedFiles.length === 0) return;
-    
-    onSendMessage(messageInput, selectedFiles.length > 0 ? selectedFiles : undefined);
-    
-    setMessageInput("");
-    setSelectedFiles([]);
-    
-    const textarea = document.querySelector("textarea");
-    if (textarea) textarea.style.height = "auto";
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage(e as unknown as React.FormEvent);
-    }
-  };
-
-  const autoResizeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = e.target;
-    textarea.style.height = "auto";
-    const maxHeight = 10 * 24;
-    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
-    textarea.style.height = `${newHeight}px`;
-    setMessageInput(textarea.value);
-  };
-  
-  const handleFilesSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    
-    const newFiles = Array.from(e.target.files);
-    const maxFileSize = 10 * 1024 * 1024; // 10MB
-    
-    if (selectedFiles.length + newFiles.length > 5) {
-      toast({
-        title: `You can only attach up to 5 files.`,
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const validFiles: FileData[] = [];
-    
-    for (const file of newFiles) {
-      if (file.size > maxFileSize) {
-        toast({
-          title: `The file ${file.name} exceeds the maximum size of ${formatFileSize(maxFileSize)}.`,
-          variant: "destructive",
-        });
-        continue;
-      }
-      
-      try {
-        const reader = new FileReader();
-        
-        const readFile = new Promise<string>((resolve, reject) => {
-          reader.onload = () => {
-            const base64 = reader.result as string;
-            const base64Data = base64.split(',')[1];
-            resolve(base64Data);
-          };
-          reader.onerror = reject;
-        });
-        
-        reader.readAsDataURL(file);
-        
-        const base64Data = await readFile;
-        const previewUrl = URL.createObjectURL(file);
-        
-        validFiles.push({
-          filename: file.name,
-          content_type: file.type,
-          data: base64Data,
-          size: file.size,
-          preview_url: previewUrl
-        });
-      } catch (error) {
-        console.error("Error processing file:", error);
-        toast({
-          title: `Error processing file ${file.name}`,
-          variant: "destructive",
-        });
-      }
-    }
-    
-    if (validFiles.length > 0) {
-      const updatedFiles = [...selectedFiles, ...validFiles];
-      setSelectedFiles(updatedFiles);
-    }
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const openFileSelector = () => {
-    fileInputRef.current?.click();
-  };
-
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div 
-        className="flex-1 overflow-hidden p-4 pt-2"
-        style={{ filter: isLoading ? "blur(2px)" : "none" }}
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-4 bg-neutral-950"
       >
-        <ScrollArea
-          ref={messagesContainerRef}
-          className="h-full pr-4 overflow-x-hidden"
-        >
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-6">
-              <div className="p-3 rounded-full bg-[#222] mb-4">
-                <MessageSquare className="h-6 w-6 text-[#00ff9d]" />
-              </div>
-              <h3 className="text-lg font-medium text-white mb-2">
-                {`Chat com ${agentName}`}
-              </h3>
-              <p className="text-gray-400 max-w-md">
-                Type your message below to start a conversation with this shared agent.
-              </p>
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center mb-4 relative">
+              <Loader2 className="h-6 w-6 text-white animate-spin" />
+              <div className="absolute inset-0 rounded-full blur-md bg-emerald-400/20 animate-pulse"></div>
             </div>
-          ) : (
-            <div className="space-y-6 py-4 flex-1">
-              {messages.map((message) => {
-                const messageContent = getMessageText(message);
-                const agentColor = message.author === "user" ? "bg-[#333]" : "bg-[#00ff9d]";
-                const isExpanded = expandedFunctions[message.id] || false;
-
-                return (
-                  <ChatMessage
-                    key={message.id}
-                    message={message}
-                    agentColor={agentColor}
-                    isExpanded={isExpanded}
-                    toggleExpansion={toggleFunctionExpansion}
-                    containsMarkdown={containsMarkdown}
-                    messageContent={messageContent}
-                    sessionId={sessionId}
-                  />
-                );
-              })}
+            <p className="text-neutral-400 mb-2">Loading conversation...</p>
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="flex flex-col h-full items-center justify-center text-center p-6">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-700/20 flex items-center justify-center shadow-lg mb-5 border border-emerald-500/30">
+              <MessageSquare className="h-6 w-6 text-emerald-400" />
             </div>
-          )}
-        </ScrollArea>
-      </div>
+            <h3 className="text-lg font-medium text-neutral-300 mb-2">
+              {`Chat with ${agentName}`}
+            </h3>
+            <p className="text-neutral-500 text-sm max-w-md">
+              Type your message below to start the conversation. This chat will help you interact with the shared agent and explore its capabilities.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4 w-full max-w-full">
+            {messages.map((message) => {
+              const messageContent = getMessageText(message);
+              const agentColor = message.author === "user" ? "bg-emerald-500" : "bg-gradient-to-br from-neutral-800 to-neutral-900";
+              const isExpanded = expandedFunctions[message.id] || false;
 
-      <form
-        onSubmit={handleSendMessage}
-        className="p-4 border-t border-[#333] bg-[#1a1a1a]"
-      >
-        {selectedFiles.length > 0 && (
-          <div className="flex flex-wrap gap-2 px-2 mb-2">
-            {selectedFiles.map((file, index) => (
-              <div 
-                key={index} 
-                className="flex items-center gap-1 bg-[#333] text-white rounded-md p-1.5 text-xs"
-              >
-                {isImageFile(file.content_type) ? (
-                  <Image className="h-4 w-4 text-[#00ff9d]" />
-                ) : file.content_type === 'application/pdf' ? (
-                  <FileText className="h-4 w-4 text-[#00ff9d]" />
-                ) : (
-                  <File className="h-4 w-4 text-[#00ff9d]" />
-                )}
-                <span className="max-w-[120px] truncate">{file.filename}</span>
-                <span className="text-gray-400">({formatFileSize(file.size)})</span>
-                <button 
-                  type="button"
-                  onClick={() => {
-                    const updatedFiles = selectedFiles.filter((_, i) => i !== index);
-                    setSelectedFiles(updatedFiles);
-                  }}
-                  className="ml-1 text-gray-400 hover:text-white transition-colors"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+              return (
+                <ChatMessage
+                  key={message.id}
+                  message={message}
+                  agentColor={agentColor}
+                  isExpanded={isExpanded}
+                  toggleExpansion={toggleFunctionExpansion}
+                  containsMarkdown={containsMarkdown}
+                  messageContent={messageContent}
+                  sessionId={sessionId}
+                />
+              );
+            })}
+
+            {isSending && (
+              <div className="flex justify-start">
+                <div className="flex gap-3 max-w-[80%]">
+                  <Avatar
+                    className="bg-gradient-to-br from-purple-600 to-purple-800 shadow-md border-0"
+                  >
+                    <AvatarFallback className="bg-transparent">
+                      <Bot className="h-4 w-4 text-white" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="rounded-lg p-3 bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700/50">
+                    <div className="flex space-x-2">
+                      <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce"></div>
+                      <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></div>
+                      <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ))}
+            )}
           </div>
         )}
-      
-        <div className="flex gap-2 items-end">
-          {selectedFiles.length < 5 && (
-            <button
-              type="button"
-              onClick={openFileSelector}
-              className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#333] text-gray-400 hover:text-[#00ff9d] transition-colors"
-              title="Attach file"
-            >
-              <Paperclip className="h-5 w-5" />
-            </button>
-          )}
-          <Textarea
-            value={messageInput}
-            onChange={autoResizeTextarea}
-            onKeyDown={handleKeyDown}
+      </div>
+
+      <div className="px-4 pt-4 pb-6 border-t border-neutral-700 bg-neutral-900">
+        {isSending && !isLoading && (
+          <div className="px-4 py-2 mb-3 rounded-lg bg-neutral-800/50 border border-neutral-700/30 text-sm text-neutral-400 flex items-center">
+            <div className="mr-2 relative">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-400" />
+              <div className="absolute inset-0 blur-sm bg-emerald-400/20 rounded-full animate-pulse"></div>
+            </div>
+            Agent is thinking...
+          </div>
+        )}
+        <div className="rounded-lg bg-neutral-800/20 border border-neutral-700/30 p-1">
+          <ChatInput
+            onSendMessage={onSendMessage}
+            isLoading={isSending || isLoading}
             placeholder="Type your message..."
-            className="flex-1 bg-[#222] border-[#444] text-white resize-none min-h-[44px] max-h-32"
-            disabled={isLoading || isSending}
-          />
-          <Button
-            type="submit"
-            disabled={((!messageInput.trim() && selectedFiles.length === 0) || isLoading || isSending)}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d] h-[44px] px-4"
-          >
-            {isSending ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
-            ) : (
-              <Send className="h-5 w-5" />
-            )}
-          </Button>
-          
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFilesSelected}
-            className="hidden"
-            multiple
           />
         </div>
-      </form>
+      </div>
     </div>
   );
 } 

@@ -129,7 +129,7 @@ function ConditionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-gray-800 border-gray-700 text-gray-200 sm:max-w-[650px]">
+      <DialogContent className="bg-neutral-800 border-neutral-700 text-neutral-200 sm:max-w-[650px]">
         <DialogHeader>
           <DialogTitle>Add New Condition</DialogTitle>
         </DialogHeader>
@@ -144,7 +144,7 @@ function ConditionDialog({
                   className={`flex items-center space-x-3 rounded-md border p-3 cursor-pointer transition-all ${
                     selectedType === type.id
                       ? "bg-blue-900/30 border-blue-600"
-                      : "border-gray-700 hover:border-blue-700/50 hover:bg-gray-700/50"
+                      : "border-neutral-700 hover:border-blue-700/50 hover:bg-neutral-700/50"
                   }`}
                   onClick={() => setSelectedType(type.id)}
                 >
@@ -153,10 +153,10 @@ function ConditionDialog({
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium">{type.name}</h4>
-                    <p className="text-xs text-gray-400">{type.description}</p>
+                    <p className="text-xs text-neutral-400">{type.description}</p>
                   </div>
                   {selectedType === type.id && (
-                    <Badge className="bg-blue-600 text-gray-100">Selected</Badge>
+                    <Badge className="bg-blue-600 text-neutral-100">Selected</Badge>
                   )}
                 </div>
               ))}
@@ -167,7 +167,7 @@ function ConditionDialog({
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">Configuration</Label>
               {selectedType === "previous-output" && (
-                <div className="flex items-center gap-2 text-sm text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-neutral-400">
                   <span>Output field</span>
                   <ArrowRight className="h-3 w-3" />
                   <span>Operator</span>
@@ -189,10 +189,10 @@ function ConditionDialog({
                     value={selectedField} 
                     onValueChange={setSelectedField}
                   >
-                    <SelectTrigger id="field" className="bg-gray-700 border-gray-600">
+                    <SelectTrigger id="field" className="bg-neutral-700 border-neutral-600">
                       <SelectValue placeholder="Select field" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectContent className="bg-neutral-700 border-neutral-600">
                       {outputFields.map((field) => (
                         <SelectItem key={field.value} value={field.value}>
                           {field.label}
@@ -208,10 +208,10 @@ function ConditionDialog({
                     value={selectedOperator} 
                     onValueChange={setSelectedOperator}
                   >
-                    <SelectTrigger id="operator" className="bg-gray-700 border-gray-600">
+                    <SelectTrigger id="operator" className="bg-neutral-700 border-neutral-600">
                       <SelectValue placeholder="Select operator" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectContent className="bg-neutral-700 border-neutral-600">
                       {operators.map((op) => (
                         <SelectItem key={op.value} value={op.value}>
                           {op.label}
@@ -228,17 +228,17 @@ function ConditionDialog({
                       id="value"
                       value={comparisonValue}
                       onChange={(e) => setComparisonValue(e.target.value)}
-                      className="bg-gray-700 border-gray-600"
+                      className="bg-neutral-700 border-neutral-600"
                     />
                   </div>
                 )}
 
-                <div className="rounded-md bg-gray-700/50 border border-gray-600 p-3 mt-4">
-                  <div className="text-sm font-medium text-gray-400 mb-1">Preview</div>
+                <div className="rounded-md bg-neutral-700/50 border border-neutral-600 p-3 mt-4">
+                  <div className="text-sm font-medium text-neutral-400 mb-1">Preview</div>
                   <div className="text-sm">
                     <span className="text-blue-400 font-medium">{getFieldLabel(selectedField)}</span>
                     {" "}
-                    <span className="text-gray-300">{getOperatorLabel(selectedOperator)}</span>
+                    <span className="text-neutral-300">{getOperatorLabel(selectedOperator)}</span>
                     {" "}
                     {!["is_defined", "is_not_defined"].includes(selectedOperator) && (
                       <span className="text-emerald-400 font-medium">"{comparisonValue || "(empty)"}"</span>
@@ -254,7 +254,7 @@ function ConditionDialog({
           <Button 
             variant="outline" 
             onClick={() => onOpenChange(false)}
-            className="border-gray-600 text-gray-200 hover:bg-gray-700"
+            className="border-neutral-600 text-neutral-200 hover:bg-neutral-700"
           >
             Cancel
           </Button>

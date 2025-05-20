@@ -47,17 +47,17 @@ export function SearchInput({
 }: SearchInputProps) {
   return (
     <div className={`relative ${className}`}>
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
       <Input
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         autoComplete="off"
-        className="pl-10 w-full bg-[#222] border-[#444] text-white focus:border-[#00ff9d] focus:ring-[#00ff9d]/10"
+        className="pl-10 w-full bg-[#222] border-[#444] text-white focus:border-emerald-400 focus:ring-emerald-400/10"
       />
       {value && (
         <button
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
           onClick={() => onChange("")}
         >
           <X className="h-4 w-4" />

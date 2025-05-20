@@ -95,10 +95,10 @@ export default function SecurityPage() {
       <div className="max-w-2xl mx-auto">
         <Card className="bg-[#1a1a1a] border-[#333]">
           <CardHeader className="flex flex-row items-center gap-4">
-            <Shield className="w-8 h-8 text-[#00ff9d]" />
+            <Shield className="w-8 h-8 text-emerald-400" />
             <div>
               <CardTitle className="text-white">Account Security</CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-neutral-400">
                 Manage your account security settings
               </CardDescription>
             </div>
@@ -107,7 +107,7 @@ export default function SecurityPage() {
           <form onSubmit={handlePasswordUpdate}>
             <CardContent className="space-y-4">
               <div className="space-y-1">
-                <Label htmlFor="current-password" className="text-gray-300">
+                <Label htmlFor="current-password" className="text-neutral-300">
                   Current Password
                 </Label>
                 <Input
@@ -120,7 +120,7 @@ export default function SecurityPage() {
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="new-password" className="text-gray-300">
+                <Label htmlFor="new-password" className="text-neutral-300">
                   New Password
                 </Label>
                 <Input
@@ -133,7 +133,7 @@ export default function SecurityPage() {
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="confirm-password" className="text-gray-300">
+                <Label htmlFor="confirm-password" className="text-neutral-300">
                   Confirm New Password
                 </Label>
                 <Input
@@ -149,7 +149,7 @@ export default function SecurityPage() {
             <CardFooter>
               <Button
                 type="submit"
-                className="w-full bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                className="w-full bg-emerald-400 text-black hover:bg-[#00cc7d]"
                 disabled={isLoading}
               >
                 {isLoading ? "Updating..." : "Update Password"}

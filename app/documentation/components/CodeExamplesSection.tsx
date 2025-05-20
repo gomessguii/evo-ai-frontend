@@ -69,21 +69,21 @@ if __name__ == "__main__":
   return (
     <Card className="bg-[#1a1a1a] border-[#333] text-white">
       <CardHeader>
-        <CardTitle className="text-[#00ff9d]">Code Examples</CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardTitle className="text-emerald-400">Code Examples</CardTitle>
+        <CardDescription className="text-neutral-400">
           Code snippets ready to use with A2A agents
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="curl">
           <TabsList className="bg-[#222] border-[#333] mb-4">
-            <TabsTrigger value="curl" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+            <TabsTrigger value="curl" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
               cURL
             </TabsTrigger>
-            <TabsTrigger value="javascript" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+            <TabsTrigger value="javascript" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
               JavaScript
             </TabsTrigger>
-            <TabsTrigger value="python" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+            <TabsTrigger value="python" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
               Python
             </TabsTrigger>
           </TabsList>
@@ -112,14 +112,14 @@ if __name__ == "__main__":
 
         <div className="mt-8">
           <h3 className="text-xl font-semibold text-white mb-3">Sending files to the agent</h3>
-          <p className="text-gray-400 mb-4">
+          <p className="text-neutral-400 mb-4">
             You can attach files to messages sent to the agent using the A2A protocol. 
             The files are encoded in base64 and incorporated into the message as parts of type &quot;file&quot;.
           </p>
           
           <div className="space-y-6">
             <div>
-              <h4 className="text-lg font-medium text-[#00ff9d] mb-2">Python</h4>
+              <h4 className="text-lg font-medium text-emerald-400 mb-2">Python</h4>
               <CodeBlock
                 text={`import asyncio
 import base64
@@ -182,7 +182,7 @@ if __name__ == '__main__':
             </div>
             
             <div>
-              <h4 className="text-lg font-medium text-[#00ff9d] mb-2">JavaScript/TypeScript</h4>
+              <h4 className="text-lg font-medium text-emerald-400 mb-2">JavaScript/TypeScript</h4>
               <CodeBlock
                 text={`// Function to convert file to base64
 async function fileToBase64(file) {
@@ -263,7 +263,7 @@ async function sendMessageWithFiles() {
             </div>
             
             <div>
-              <h4 className="text-lg font-medium text-[#00ff9d] mb-2">Curl</h4>
+              <h4 className="text-lg font-medium text-emerald-400 mb-2">Curl</h4>
               <CodeBlock
                 text={`# Convert file to base64
 FILE_PATH="example.jpg"

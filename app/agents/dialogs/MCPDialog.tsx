@@ -134,7 +134,7 @@ export function MCPDialog({
           <DialogTitle className="text-white">
             Configure MCP Server
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             Select a MCP server and configure its tools.
           </DialogDescription>
         </DialogHeader>
@@ -142,7 +142,7 @@ export function MCPDialog({
         <div className="flex-1 overflow-auto p-4">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="mcp-select" className="text-gray-300">
+              <Label htmlFor="mcp-select" className="text-neutral-300">
                 MCP Server
               </Label>
               <Select
@@ -157,10 +157,10 @@ export function MCPDialog({
                     <SelectItem
                       key={mcp.id}
                       value={mcp.id}
-                      className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-[#00ff9d] data-[selected]:!text-[#00ff9d]"
+                      className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-emerald-400 data-[selected]:!text-emerald-400"
                     >
                       <div className="flex items-center gap-2">
-                        <Server className="h-4 w-4 text-[#00ff9d]" />
+                        <Server className="h-4 w-4 text-emerald-400" />
                         {mcp.name}
                       </div>
                     </SelectItem>
@@ -173,10 +173,10 @@ export function MCPDialog({
               <>
                 <div className="border border-[#444] rounded-md p-3 bg-[#222]">
                   <p className="font-medium text-white">{selectedMCP.name}</p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-neutral-400">
                     {selectedMCP.description?.substring(0, 100)}...
                   </p>
-                  <div className="mt-2 text-xs text-gray-400">
+                  <div className="mt-2 text-xs text-neutral-400">
                     <p>
                       <strong>Type:</strong> {selectedMCP.type}
                     </p>
@@ -201,7 +201,7 @@ export function MCPDialog({
                           >
                             <Label
                               htmlFor={`env-${key}`}
-                              className="text-right text-gray-300"
+                              className="text-right text-neutral-300"
                             >
                               {key}
                             </Label>
@@ -238,11 +238,11 @@ export function MCPDialog({
                             id={`tool-${tool.id}`}
                             checked={selectedMCPTools.includes(tool.id)}
                             onCheckedChange={() => toggleMCPTool(tool.id)}
-                            className="data-[state=checked]:bg-[#00ff9d] data-[state=checked]:border-[#00ff9d]"
+                            className="data-[state=checked]:bg-emerald-400 data-[state=checked]:border-emerald-400"
                           />
                           <Label
                             htmlFor={`tool-${tool.id}`}
-                            className="text-sm text-gray-300"
+                            className="text-sm text-neutral-300"
                           >
                             {tool.name}
                           </Label>
@@ -260,13 +260,13 @@ export function MCPDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+            className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             disabled={!selectedMCP}
           >
             Add MCP

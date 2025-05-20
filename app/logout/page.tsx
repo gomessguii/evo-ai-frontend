@@ -62,10 +62,10 @@ export default function LogoutPage() {
       <Card className="bg-[#1a1a1a] border-[#333] w-full max-w-md p-8">
         <CardContent className="flex flex-col items-center justify-center gap-4">
           <div className="w-16 h-16 rounded-full bg-[#222] flex items-center justify-center animate-pulse">
-            <LogOut className="h-8 w-8 text-[#00ff9d]" />
+            <LogOut className="h-8 w-8 text-emerald-400" />
           </div>
           <h2 className="text-white text-xl font-medium mt-4">Logging out...</h2>
-          <p className="text-gray-400 text-center">
+          <p className="text-neutral-400 text-center">
             You are being logged out of the system.
           </p>
         </CardContent>

@@ -92,7 +92,7 @@ const getAgentTypeColor = (type: string): string => {
     workflow: "bg-yellow-800 text-black",
     task: "bg-green-800 text-white",
   };
-  return colorMap[type] || "bg-gray-800 text-white";
+  return colorMap[type] || "bg-neutral-800 text-white";
 };
 
 export function TaskAgentConfig({
@@ -406,13 +406,13 @@ export function TaskAgentConfig({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium text-white flex items-center">
-            <List className="mr-2 h-5 w-5 text-[#00ff9d]" />
+            <List className="mr-2 h-5 w-5 text-emerald-400" />
             {singleTask ? "Task" : "Tasks"}
           </h3>
         </div>
 
         <div className="border border-[#444] rounded-md p-4 bg-[#222]">
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-neutral-400 mb-4">
             {singleTask
               ? "Configure the task that will be executed by the agent."
               : "Configure the sequential tasks that will be executed by the team of agents."}
@@ -438,17 +438,17 @@ export function TaskAgentConfig({
                           {renderAgentTypeBadge(task.agent_id)}
                         </h4>
                       </div>
-                      <p className="text-sm text-gray-300 mt-1">
+                      <p className="text-sm text-neutral-300 mt-1">
                         {task.description}
                       </p>
                       {task.expected_output && (
                         <div className="mt-2">
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-neutral-400">
                             Expected output:
                           </span>
                           <Badge
                             variant="outline"
-                            className="ml-2 bg-[#333] text-[#00ff9d] border-[#00ff9d]/30"
+                            className="ml-2 bg-[#333] text-emerald-400 border-emerald-400/30"
                           >
                             {task.expected_output}
                           </Badge>
@@ -456,14 +456,14 @@ export function TaskAgentConfig({
                       )}
                       {task.enabled_tools && task.enabled_tools.length > 0 && (
                         <div className="mt-2">
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-neutral-400">
                             Enabled tools:
                           </span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {task.enabled_tools.map((toolId) => (
                               <Badge
                                 key={toolId}
-                                className="bg-[#333] text-[#00ff9d] border border-[#00ff9d]/30 text-xs"
+                                className="bg-[#333] text-emerald-400 border border-emerald-400/30 text-xs"
                               >
                                 {toolId}
                               </Badge>
@@ -477,7 +477,7 @@ export function TaskAgentConfig({
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEditTask(index)}
-                        className="text-gray-400 hover:text-[#00ff9d] hover:bg-[#333] mr-1"
+                        className="text-neutral-400 hover:text-emerald-400 hover:bg-[#333] mr-1"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -494,7 +494,7 @@ export function TaskAgentConfig({
                   {!singleTask &&
                     index < (values.config?.tasks?.length || 0) - 1 && (
                       <div className="flex justify-center my-2">
-                        <ArrowDown className="h-4 w-4 text-gray-400" />
+                        <ArrowDown className="h-4 w-4 text-neutral-400" />
                       </div>
                     )}
                 </div>
@@ -502,8 +502,8 @@ export function TaskAgentConfig({
             </div>
           ) : (
             <div className="text-center py-4 mb-4 bg-[#2a2a2a] rounded-md">
-              <p className="text-gray-400">No tasks configured</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-neutral-400">No tasks configured</p>
+              <p className="text-xs text-neutral-500">
                 {singleTask
                   ? "Add a task to define the agent's behavior"
                   : "Add tasks to define the workflow of the team"}
@@ -527,7 +527,7 @@ export function TaskAgentConfig({
                     variant="ghost"
                     size="sm"
                     onClick={handleCancelEdit}
-                    className="text-gray-400 hover:text-[#00ff9d] hover:bg-[#333]"
+                    className="text-neutral-400 hover:text-emerald-400 hover:bg-[#333]"
                   >
                     <X className="h-4 w-4 mr-1" /> Cancel
                   </Button>
@@ -538,7 +538,7 @@ export function TaskAgentConfig({
                 <div>
                   <Label
                     htmlFor="agent_id"
-                    className="text-xs text-gray-400 mb-1 block"
+                    className="text-xs text-neutral-400 mb-1 block"
                   >
                     Agent
                   </Label>
@@ -554,7 +554,7 @@ export function TaskAgentConfig({
                     <SelectContent className="bg-[#2a2a2a] border-[#444] text-white p-0">
                       <div className="sticky top-0 z-10 p-2 bg-[#2a2a2a] border-b border-[#444]">
                         <div className="relative">
-                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
                           <Input
                             placeholder="Search agents..."
                             className="bg-[#333] border-[#444] text-white h-8 pl-8"
@@ -588,7 +588,7 @@ export function TaskAgentConfig({
                             </SelectItem>
                           ))
                         ) : (
-                          <div className="text-gray-500 px-4 py-2 text-center">
+                          <div className="text-neutral-500 px-4 py-2 text-center">
                             No agents found
                           </div>
                         )}
@@ -600,7 +600,7 @@ export function TaskAgentConfig({
                 <div className="col-span-2">
                   <Label
                     htmlFor="description"
-                    className="text-xs text-gray-400 mb-1 block"
+                    className="text-xs text-neutral-400 mb-1 block"
                   >
                     Task description
                   </Label>
@@ -615,17 +615,17 @@ export function TaskAgentConfig({
                     />
                     <button
                       type="button"
-                      className="absolute top-3 right-5 text-gray-400 hover:text-[#00ff9d] focus:outline-none"
+                      className="absolute top-3 right-5 text-neutral-400 hover:text-emerald-400 focus:outline-none"
                       onClick={handleExpandDescription}
                     >
                       <Maximize2 className="h-4 w-4" />
                     </button>
                   </div>
-                  <div className="mt-1 text-xs text-gray-400">
+                  <div className="mt-1 text-xs text-neutral-400">
                     <span className="inline-block h-3 w-3 mr-1">ℹ️</span>
                     <span>
                       Use {"{"}content{"}"} to insert the user's input.
-                      <span className="ml-2 text-[#00ff9d]">
+                      <span className="ml-2 text-emerald-400">
                         Click to expand editor.
                       </span>
                     </span>
@@ -636,7 +636,7 @@ export function TaskAgentConfig({
               <div>
                 <Label
                   htmlFor="expected_output"
-                  className="text-xs text-gray-400 mb-1 block"
+                  className="text-xs text-neutral-400 mb-1 block"
                 >
                   Expected output (optional)
                 </Label>
@@ -653,14 +653,14 @@ export function TaskAgentConfig({
 
               {newTask.enabled_tools && newTask.enabled_tools.length > 0 && (
                 <div className="mt-3">
-                  <Label className="text-xs text-gray-400 mb-1 block">
+                  <Label className="text-xs text-neutral-400 mb-1 block">
                     Selected tools:
                   </Label>
                   <div className="flex flex-wrap gap-1">
                     {newTask.enabled_tools.map((toolId) => (
                       <Badge
                         key={toolId}
-                        className="bg-[#333] text-[#00ff9d] border border-[#00ff9d]/30"
+                        className="bg-[#333] text-emerald-400 border border-emerald-400/30"
                       >
                         {toolId}
                       </Badge>
@@ -678,7 +678,7 @@ export function TaskAgentConfig({
                     if (newTask.agent_id) setIsToolsModalOpen(true);
                   }}
                   disabled={!newTask.agent_id}
-                  className="border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 px-3"
+                  className="border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 px-3"
                 >
                   <PenTool className="h-4 w-4 mr-2" /> 
                   Configure tools
@@ -687,7 +687,7 @@ export function TaskAgentConfig({
                 <Button
                   onClick={handleAddTask}
                   disabled={!newTask.agent_id || !newTask.description}
-                  className="bg-[#222] text-[#00ff9d] border border-[#00ff9d] hover:bg-[#00ff9d]/10"
+                  className="bg-[#222] text-emerald-400 border border-emerald-400 hover:bg-emerald-400/10"
                 >
                   <Save className="h-4 w-4 mr-1" />{" "}
                   {isEditing ? "Update task" : "Add task"}
@@ -711,7 +711,7 @@ export function TaskAgentConfig({
             <Textarea
               value={expandedDescription}
               onChange={(e) => setExpandedDescription(e.target.value)}
-              className="flex-1 min-h-full bg-[#222] border-[#444] text-white p-4 focus:border-[#00ff9d] focus:ring-[#00ff9d] focus:ring-opacity-50 resize-none"
+              className="flex-1 min-h-full bg-[#222] border-[#444] text-white p-4 focus:border-emerald-400 focus:ring-emerald-400 focus:ring-opacity-50 resize-none"
               placeholder="Enter detailed description for the task..."
             />
           </div>
@@ -720,13 +720,13 @@ export function TaskAgentConfig({
             <Button
               variant="outline"
               onClick={() => setIsDescriptionModalOpen(false)}
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+              className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSaveExpandedDescription}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+              className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             >
               <Save className="h-4 w-4 mr-2" />
               Save description
@@ -744,7 +744,7 @@ export function TaskAgentConfig({
           </DialogHeader>
 
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
             <Input
               placeholder="Search tools..."
               className="bg-[#222] border-[#444] text-white pl-9"
@@ -764,7 +764,7 @@ export function TaskAgentConfig({
                     id={tool.id}
                     checked={isToolEnabled(tool.id)}
                     onCheckedChange={() => handleToggleTool(tool.id)}
-                    className="border-[#444] data-[state=checked]:bg-[#00ff9d] data-[state=checked]:text-black"
+                    className="border-[#444] data-[state=checked]:bg-emerald-400 data-[state=checked]:text-black"
                   />
                   <Label
                     htmlFor={tool.id}
@@ -772,13 +772,13 @@ export function TaskAgentConfig({
                   >
                     {tool.name}
                   </Label>
-                  <Badge className="bg-[#333] text-[#00ff9d]">{tool.id}</Badge>
+                  <Badge className="bg-[#333] text-emerald-400">{tool.id}</Badge>
                 </div>
               ))
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-400">No tools available</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-neutral-400">No tools available</p>
+                <p className="text-xs text-neutral-500">
                   The tools are obtained from the selected agents in the tasks.
                 </p>
               </div>
@@ -788,7 +788,7 @@ export function TaskAgentConfig({
           <DialogFooter>
             <Button
               onClick={handleSaveTools}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+              className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             >
               <Save className="h-4 w-4 mr-2" />
               Save settings

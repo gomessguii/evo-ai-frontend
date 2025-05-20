@@ -30,7 +30,8 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Plus, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Loader2, ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface SharedSession {
   id: string;
@@ -95,11 +96,11 @@ export function SharedSessionList({
 
   if (isCollapsed) {
     return (
-      <div className="w-10 border-r border-[#333] bg-[#1a1a1a] flex flex-col items-center">
+      <div className="w-10 border-r border-neutral-800 bg-neutral-900 flex flex-col items-center">
         <Button
           variant="ghost"
           size="icon"
-          className="mt-4 text-gray-400 hover:text-white hover:bg-[#333]"
+          className="mt-4 text-neutral-400 hover:text-emerald-400 hover:bg-neutral-800"
           onClick={onToggleCollapse}
         >
           <ChevronRight className="h-5 w-5" />
@@ -109,27 +110,32 @@ export function SharedSessionList({
   }
 
   return (
-    <div className="w-64 border-r border-[#333] flex flex-col bg-[#1a1a1a]">
-      <div className="p-4 border-b border-[#333] flex items-center justify-between">
+    <div className="w-64 border-r border-neutral-800 flex flex-col bg-neutral-900 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="p-4 border-b border-neutral-800 flex items-center justify-between">
         <div className="flex-1">
-          <h3 className="text-sm font-medium text-white">{agentName}</h3>
-          <p className="text-xs text-gray-400">Shared Sessions</p>
+          <h3 className="text-sm font-medium text-white flex items-center gap-2">
+            <div className="p-1 rounded-full bg-emerald-500/20">
+              <MessageSquare className="h-3.5 w-3.5 text-emerald-400" />
+            </div>
+            {agentName}
+          </h3>
+          <p className="text-xs text-neutral-400 mt-1">Shared Sessions</p>
         </div>
         <Button
           variant="ghost"
           size="icon"
-          className="text-gray-400 hover:text-white hover:bg-[#333]"
+          className="text-neutral-400 hover:text-emerald-400 hover:bg-neutral-800"
           onClick={onToggleCollapse}
         >
           <ChevronLeft className="h-5 w-5" />
         </Button>
       </div>
 
-      <div className="p-4 border-b border-[#333]">
+      <div className="p-4 border-b border-neutral-800">
         <div className="flex items-center justify-between mb-4">
           <Button
             onClick={onNewSession}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d] w-full"
+            className="bg-emerald-800 text-emerald-100 hover:bg-emerald-700 border-emerald-700 w-full"
             size="sm"
           >
             <Plus className="h-4 w-4 mr-1" /> New Session
@@ -138,10 +144,10 @@ export function SharedSessionList({
 
         <div className="space-y-2">
           <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
             <Input
               placeholder="Search sessions..."
-              className="pl-8 bg-[#222] border-[#444] text-white"
+              className="pl-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus-visible:ring-emerald-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -149,31 +155,34 @@ export function SharedSessionList({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {isLoading ? (
           <div className="flex justify-center items-center h-24">
-            <Loader2 className="h-5 w-5 text-[#00ff9d] animate-spin" />
+            <Loader2 className="h-5 w-5 text-emerald-400 animate-spin" />
           </div>
         ) : sortedSessions.length > 0 ? (
-          <div className="divide-y divide-[#333]">
+          <div className="px-4 pt-2 space-y-2">
             {sortedSessions.map((session) => (
               <div
                 key={session.id}
-                className={`p-3 hover:bg-[#222] cursor-pointer ${
-                  selectedSession === session.id ? "bg-[#2a2a2a]" : ""
+                className={`p-3 rounded-md cursor-pointer transition-colors ${
+                  selectedSession === session.id
+                    ? "bg-emerald-800/20 border border-emerald-600/40"
+                    : "bg-neutral-800 hover:bg-neutral-700 border border-transparent"
                 }`}
                 onClick={() => setSelectedSession(session.id)}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 rounded-full bg-[#00ff9d] mr-2"></div>
-                    <div className="text-white font-medium truncate max-w-[200px]">
-                      {getDisplayName(session)}
-                    </div>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></div>
+                  <div className="text-neutral-200 font-medium truncate max-w-[180px]">
+                    {getDisplayName(session)}
                   </div>
                 </div>
-                <div className="mt-1">
-                  <div className="text-xs text-gray-500">
+                <div className="mt-1 flex items-center">
+                  <Badge className="bg-neutral-700 text-emerald-400 border-neutral-600 text-xs">
+                    Shared
+                  </Badge>
+                  <div className="text-xs text-neutral-500 ml-auto">
                     {formatDateTime(session.update_time)}
                   </div>
                 </div>
@@ -181,11 +190,11 @@ export function SharedSessionList({
             ))}
           </div>
         ) : searchTerm ? (
-          <div className="p-4 text-center text-gray-400">
+          <div className="text-center py-4 text-neutral-400">
             No results found
           </div>
         ) : (
-          <div className="p-4 text-center text-gray-400">
+          <div className="text-center py-4 text-neutral-400">
             Click "New" to start
           </div>
         )}

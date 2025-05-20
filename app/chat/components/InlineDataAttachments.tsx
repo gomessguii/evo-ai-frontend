@@ -126,7 +126,7 @@ export function InlineDataAttachments({ parts, className = "", sessionId }: Inli
 
   return (
     <div className={`flex flex-col gap-2 mt-2 ${className}`}>
-      <div className="text-xs text-gray-400 mb-1">
+      <div className="text-xs text-neutral-400 mb-1">
         <span>Attached files:</span>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -151,24 +151,24 @@ export function InlineDataAttachments({ parts, className = "", sessionId }: Inli
             <div className="p-2 flex items-center gap-2">
               <div className="flex-shrink-0">
                 {isImageFile(file.content_type) ? (
-                  <Image className="h-4 w-4 text-[#00ff9d]" />
+                  <Image className="h-4 w-4 text-emerald-400" />
                 ) : file.content_type === "application/pdf" ? (
-                  <FileText className="h-4 w-4 text-[#00ff9d]" />
+                  <FileText className="h-4 w-4 text-emerald-400" />
                 ) : (
-                  <File className="h-4 w-4 text-[#00ff9d]" />
+                  <File className="h-4 w-4 text-emerald-400" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-medium truncate max-w-[150px]">
                   {file.filename}
                 </div>
-                <div className="text-[10px] text-gray-400">
+                <div className="text-[10px] text-neutral-400">
                   {formatFileSize(file.size)}
                 </div>
               </div>
               <button
                 onClick={() => downloadFile(file)}
-                className="text-[#00ff9d] hover:text-white transition-colors"
+                className="text-emerald-400 hover:text-white transition-colors"
                 title="Download"
               >
                 <Download className="h-4 w-4" />

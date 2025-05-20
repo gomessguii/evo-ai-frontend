@@ -81,7 +81,7 @@ export function AgentNode(props: NodeProps) {
       case "task":
         return <BookOpenCheck className="h-4 w-4 text-red-400" />;
       default:
-        return <User className="h-4 w-4 text-gray-400" />;
+        return <User className="h-4 w-4 text-neutral-400" />;
     }
   };
 
@@ -90,7 +90,7 @@ export function AgentNode(props: NodeProps) {
     if (model?.includes('gpt-3')) return 'bg-yellow-900/30 text-yellow-400 border-yellow-600/30';
     if (model?.includes('claude')) return 'bg-orange-900/30 text-orange-400 border-orange-600/30';
     if (model?.includes('gemini')) return 'bg-blue-900/30 text-blue-400 border-blue-600/30';
-    return 'bg-gray-800 text-gray-400 border-gray-600/50';
+    return 'bg-neutral-800 text-neutral-400 border-neutral-600/50';
   };
 
   return (
@@ -136,7 +136,7 @@ export function AgentNode(props: NodeProps) {
             )}
             
             {agent.description && (
-              <p className="mt-2 text-xs text-gray-400 line-clamp-2">
+              <p className="mt-2 text-xs text-neutral-400 line-clamp-2">
                 {agent.description.slice(0, 30)} {agent.description.length > 30 && '...'}
               </p>
             )}
@@ -146,11 +146,11 @@ export function AgentNode(props: NodeProps) {
         <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-blue-700/40 bg-blue-950/10 p-5 text-center transition-all duration-200 hover:border-blue-600/50 hover:bg-blue-900/20">
           <User className="h-8 w-8 text-blue-700/50 mb-2" />
           <p className="text-blue-400">Select an agent</p>
-          <p className="mt-1 text-xs text-gray-500">Click to configure</p>
+          <p className="mt-1 text-xs text-neutral-500">Click to configure</p>
         </div>
       )}
 
-      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+      <div className="mt-2 flex items-center justify-end text-sm text-neutral-400 transition-colors">
         <div className="flex items-center space-x-1 rounded-md py-1 px-2">
           <span>Next step</span>
           <ArrowRight className="h-3.5 w-3.5" />
@@ -158,7 +158,7 @@ export function AgentNode(props: NodeProps) {
         <Handle
           className={cn(
             "!w-3 !h-3 !rounded-full transition-all duration-300",
-            isBottomHandleConnected ? "!bg-blue-500 !border-blue-400" : "!bg-gray-400 !border-gray-500",
+            isBottomHandleConnected ? "!bg-blue-500 !border-blue-400" : "!bg-neutral-400 !border-neutral-500",
             selected && isBottomHandleConnected && "!bg-blue-400 !border-blue-300"
           )}
           style={{

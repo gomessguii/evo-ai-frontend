@@ -111,12 +111,12 @@ export function SessionList({
   };
 
   return (
-    <div className="w-64 border-r border-[#333] flex flex-col bg-[#1a1a1a]">
-      <div className="p-4 border-b border-[#333]">
+    <div className="w-64 border-r border-neutral-700 flex flex-col bg-neutral-900">
+      <div className="p-4 border-b border-neutral-700">
         <div className="flex items-center justify-between mb-4">
           <Button
             onClick={() => setIsNewChatDialogOpen(true)}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+            className="bg-emerald-800 text-emerald-100 hover:bg-emerald-700 border-emerald-700"
             size="sm"
           >
             <Plus className="h-4 w-4 mr-1" /> New Conversation
@@ -125,10 +125,10 @@ export function SessionList({
 
         <div className="space-y-2">
           <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
             <Input
               placeholder="Search conversations..."
-              className="pl-8 bg-[#222] border-[#444] text-white"
+              className="pl-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus-visible:ring-emerald-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -138,7 +138,7 @@ export function SessionList({
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-400 hover:text-white hover:bg-[#333]"
+              className="text-neutral-400 hover:text-white hover:bg-neutral-800"
               onClick={() => setShowAgentFilter(!showAgentFilter)}
             >
               <Filter className="h-4 w-4 mr-1" />
@@ -150,7 +150,7 @@ export function SessionList({
                 variant="ghost"
                 size="sm"
                 onClick={() => setSelectedAgentFilter("all")}
-                className="text-gray-400 hover:text-white hover:bg-[#333]"
+                className="text-neutral-400 hover:text-white hover:bg-neutral-800"
               >
                 Clear filter
               </Button>
@@ -163,13 +163,13 @@ export function SessionList({
                 value={selectedAgentFilter}
                 onValueChange={setSelectedAgentFilter}
               >
-                <SelectTrigger className="bg-[#222] border-[#444] text-white">
+                <SelectTrigger className="bg-neutral-800 border-neutral-700 text-neutral-200">
                   <SelectValue placeholder="Filter by agent" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#222] border-[#444] text-white">
+                <SelectContent className="bg-neutral-900 border-neutral-700 text-white">
                   <SelectItem
                     value="all"
-                    className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white hover:text-[#00ff9d] data-[selected]:!text-[#00ff9d]"
+                    className="data-[selected]:bg-neutral-800 data-[highlighted]:bg-neutral-800 !text-white hover:text-emerald-400 data-[selected]:!text-emerald-400"
                   >
                     All agents
                   </SelectItem>
@@ -177,9 +177,10 @@ export function SessionList({
                     <SelectItem
                       key={agent.id}
                       value={agent.id}
-                      className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white hover:text-[#00ff9d] data-[selected]:!text-[#00ff9d]"
+                      className="data-[selected]:bg-neutral-800 data-[highlighted]:bg-neutral-800 !text-white hover:text-emerald-400 data-[selected]:!text-emerald-400"
                     >
-                      {agent.name}
+                      {agent.name.slice(0, 15)}{" "}
+                      {agent.name.length > 15 && "..."}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -189,13 +190,13 @@ export function SessionList({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {isLoading ? (
           <div className="flex justify-center items-center h-24">
-            <Loader2 className="h-5 w-5 text-[#00ff9d] animate-spin" />
+            <Loader2 className="h-5 w-5 text-emerald-400 animate-spin" />
           </div>
         ) : sortedSessions.length > 0 ? (
-          <div className="divide-y divide-[#333]">
+          <div className="px-4 pt-2 space-y-2">
             {sortedSessions.map((session) => {
               const agentId = session.id.split("_")[1];
               const agentInfo = agents.find((a) => a.id === agentId);
@@ -204,26 +205,27 @@ export function SessionList({
               return (
                 <div
                   key={session.id}
-                  className={`p-3 hover:bg-[#222] cursor-pointer ${
-                    selectedSession === session.id ? "bg-[#2a2a2a]" : ""
+                  className={`p-3 rounded-md cursor-pointer transition-colors group relative ${
+                    selectedSession === session.id
+                      ? "bg-emerald-800/20 border border-emerald-600/40"
+                      : "bg-neutral-800 hover:bg-neutral-700 border border-transparent"
                   }`}
                   onClick={() => setSelectedSession(session.id)}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 rounded-full bg-[#00ff9d] mr-2"></div>
-                      <div className="text-white font-medium truncate max-w-[200px]">
-                        {externalId}
-                      </div>
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></div>
+                    <div className="text-neutral-200 font-medium truncate max-w-[180px]">
+                      {externalId}
                     </div>
+                  </div>
+                  <div className="mt-1 flex items-center gap-2">
                     {agentInfo && (
-                      <Badge className="bg-[#333] text-[#00ff9d] border-none text-xs">
-                        {agentInfo.name}
+                      <Badge className="bg-neutral-700 text-emerald-400 border-neutral-600 text-xs">
+                        {agentInfo.name.slice(0, 15)}
+                        {agentInfo.name.length > 15 && "..."}
                       </Badge>
                     )}
-                  </div>
-                  <div className="mt-1">
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-neutral-500 ml-auto">
                       {formatDateTime(session.update_time)}
                     </div>
                   </div>
@@ -232,15 +234,15 @@ export function SessionList({
             })}
           </div>
         ) : searchTerm || selectedAgentFilter !== "all" ? (
-          <div className="p-4 text-center text-gray-400">
+          <div className="text-center py-4 text-neutral-400">
             No results found
           </div>
         ) : (
-          <div className="p-4 text-center text-gray-400">
+          <div className="text-center py-4 text-neutral-400">
             Click "New" to start
           </div>
         )}
       </div>
     </div>
   );
-} 
+}

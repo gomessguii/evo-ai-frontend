@@ -73,7 +73,7 @@ export function MoveAgentDialog({
       <DialogContent className="sm:max-w-[500px] bg-[#1a1a1a] border-[#333] text-white">
         <DialogHeader>
           <DialogTitle>Move Agent</DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             Choose a folder to move the agent "{agent?.name}"
           </DialogDescription>
         </DialogHeader>
@@ -81,14 +81,14 @@ export function MoveAgentDialog({
         <div className="py-4">
           <div className="space-y-2">
             <button
-              className="w-full text-left px-4 py-3 rounded-md flex items-center bg-[#222] border border-[#444] hover:bg-[#333] hover:border-[#00ff9d]/50 transition-colors"
+              className="w-full text-left px-4 py-3 rounded-md flex items-center bg-[#222] border border-[#444] hover:bg-[#333] hover:border-emerald-400/50 transition-colors"
               onClick={() => handleMove(null)}
               disabled={isLoading}
             >
-              <Home className="h-5 w-5 mr-3 text-gray-400" />
+              <Home className="h-5 w-5 mr-3 text-neutral-400" />
               <div>
                 <div className="font-medium">Remove from folder</div>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-neutral-400">
                   The agent will be visible in "All agents"
                 </p>
               </div>
@@ -97,15 +97,15 @@ export function MoveAgentDialog({
             {folders.map((folder) => (
               <button
                 key={folder.id}
-                className="w-full text-left px-4 py-3 rounded-md flex items-center bg-[#222] border border-[#444] hover:bg-[#333] hover:border-[#00ff9d]/50 transition-colors"
+                className="w-full text-left px-4 py-3 rounded-md flex items-center bg-[#222] border border-[#444] hover:bg-[#333] hover:border-emerald-400/50 transition-colors"
                 onClick={() => handleMove(folder.id)}
                 disabled={isLoading}
               >
-                <Folder className="h-5 w-5 mr-3 text-[#00ff9d]" />
+                <Folder className="h-5 w-5 mr-3 text-emerald-400" />
                 <div>
                   <div className="font-medium">{folder.name}</div>
                   {folder.description && (
-                    <p className="text-sm text-gray-400 truncate">
+                    <p className="text-sm text-neutral-400 truncate">
                       {folder.description}
                     </p>
                   )}
@@ -119,14 +119,14 @@ export function MoveAgentDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
           >
             Cancel
           </Button>
           {isLoading && (
             <div className="flex items-center">
-              <div className="animate-spin h-4 w-4 border-2 border-[#00ff9d] border-t-transparent rounded-full mr-2"></div>
-              <span className="text-gray-400">Moving...</span>
+              <div className="animate-spin h-4 w-4 border-2 border-emerald-400 border-t-transparent rounded-full mr-2"></div>
+              <span className="text-neutral-400">Moving...</span>
             </div>
           )}
         </DialogFooter>

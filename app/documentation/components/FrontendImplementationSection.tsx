@@ -41,29 +41,29 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
   return (
     <Card className="bg-[#1a1a1a] border-[#333] text-white">
       <CardHeader>
-        <CardTitle className="text-[#00ff9d]">Frontend implementation</CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardTitle className="text-emerald-400">Frontend implementation</CardTitle>
+        <CardDescription className="text-neutral-400">
           Practical examples for implementation in React applications
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <Tabs defaultValue="standard">
           <TabsList className="bg-[#222] border-[#333] mb-4">
-            <TabsTrigger value="standard" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+            <TabsTrigger value="standard" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
               Standard HTTP
             </TabsTrigger>
-            <TabsTrigger value="streaming" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+            <TabsTrigger value="streaming" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
               Streaming SSE
             </TabsTrigger>
-            <TabsTrigger value="react-component" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+            <TabsTrigger value="react-component" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
               React component
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value="standard">
             <div>
-              <h3 className="text-[#00ff9d] text-lg font-medium mb-2">Implementation of tasks/send</h3>
-              <p className="text-gray-300 mb-4">
+              <h3 className="text-emerald-400 text-lg font-medium mb-2">Implementation of tasks/send</h3>
+              <p className="text-neutral-300 mb-4">
                 Example of standard implementation in JavaScript/React:
               </p>
               
@@ -238,8 +238,8 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
           
           <TabsContent value="streaming">
             <div>
-              <h3 className="text-[#00ff9d] text-lg font-medium mb-2">Implementation of tasks/sendSubscribe (Streaming)</h3>
-              <p className="text-gray-300 mb-4">
+              <h3 className="text-emerald-400 text-lg font-medium mb-2">Implementation of tasks/sendSubscribe (Streaming)</h3>
+              <p className="text-neutral-300 mb-4">
                 Example of implementation of streaming with Server-Sent Events (SSE):
               </p>
               
@@ -550,7 +550,7 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
           
           <TabsContent value="react-component">
             <div className="mt-4">
-              <h4 className="font-medium text-[#00ff9d] mb-2">React component with streaming support:</h4>
+              <h4 className="font-medium text-emerald-400 mb-2">React component with streaming support:</h4>
               <div className="relative">
                 <CodeBlock
                   text={`import React, { useState, useRef } from 'react';

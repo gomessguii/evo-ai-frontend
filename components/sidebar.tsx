@@ -172,15 +172,15 @@ export default function Sidebar() {
   return (
     <div 
       className={cn(
-        "bg-[#121212] text-white flex flex-col h-full transition-all duration-300 ease-in-out", 
+        "bg-neutral-900 text-white flex flex-col h-full transition-all duration-300 ease-in-out border-r border-neutral-800", 
         isCollapsed ? "w-16" : "w-56"
       )}
     >
       <TooltipProvider delayDuration={300}>
-        <div className={cn("p-4 mb-8 flex items-center", isCollapsed ? "justify-center" : "justify-between")}>
+        <div className={cn("p-4 mb-6 flex items-center", isCollapsed ? "justify-center" : "justify-between")}>
           <Link href="/">
             {isCollapsed ? (
-              <div className="h-10 w-10 flex items-center justify-center">
+              <div className="h-10 w-10 flex items-center justify-center bg-neutral-800/50 rounded-full p-1">
                 <Image
                   src="https://evolution-api.com/files/evo/favicon.svg"
                   alt="Evolution API"
@@ -203,24 +203,24 @@ export default function Sidebar() {
             <TooltipTrigger asChild>
               <button
                 onClick={toggleSidebar}
-                className="flex items-center justify-center p-1 rounded-md text-gray-400 hover:text-[#00ff9d] hover:bg-[#1a1a1a] transition-colors"
+                className="flex items-center justify-center p-1.5 rounded-full bg-neutral-800 text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
               >
                 {isCollapsed ? (
-                  <ChevronsRight className="h-5 w-5" />
+                  <ChevronsRight className="h-4 w-4" />
                 ) : (
-                  <ChevronsLeft className="h-5 w-5" />
+                  <ChevronsLeft className="h-4 w-4" />
                 )}
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-[#1a1a1a] text-white border-[#333]">
+            <TooltipContent side="right" className="bg-neutral-800 text-white border-neutral-700">
               {isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             </TooltipContent>
           </Tooltip>
         </div>
 
-        <nav className="space-y-2 flex-1 px-2">
+        <nav className="space-y-1.5 flex-1 px-2">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || pathname.startsWith(item.href);
             
             return (
               <Tooltip key={item.href}>
@@ -228,21 +228,21 @@ export default function Sidebar() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                      "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all",
                       isCollapsed ? "justify-center" : "",
                       isActive
                         ? isCollapsed 
-                          ? "bg-[#1a1a1a] text-[#00ff9d] border-l-0 border-t-2 border-[#00ff9d]" 
-                          : "bg-[#1a1a1a] text-[#00ff9d] border-l-2 border-[#00ff9d]"
-                        : "text-gray-400 hover:text-[#00ff9d] hover:bg-[#1a1a1a]"
+                          ? "bg-emerald-500/20 text-emerald-400 border-0" 
+                          : "bg-emerald-500/10 text-emerald-400 border-l-2 border-emerald-500"
+                        : "text-neutral-400 hover:text-emerald-400 hover:bg-neutral-800"
                     )}
                   >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    {!isCollapsed && <span>{item.name}</span>}
+                    <item.icon className={cn("flex-shrink-0", isActive ? "h-5 w-5 text-emerald-400" : "h-5 w-5")} />
+                    {!isCollapsed && <span className="font-medium">{item.name}</span>}
                   </Link>
                 </TooltipTrigger>
                 {isCollapsed && (
-                  <TooltipContent side="right" className="bg-[#1a1a1a] text-white border-[#333]">
+                  <TooltipContent side="right" className="bg-neutral-800 text-white border-neutral-700">
                     {item.name}
                   </TooltipContent>
                 )}
@@ -251,27 +251,27 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <div className={cn("border-t border-gray-800 pt-4 mt-4", isCollapsed ? "px-2" : "px-4")}>
+        <div className={cn("border-t border-neutral-800 pt-4 mt-2 pb-4", isCollapsed ? "px-2" : "px-4")}>
           <div className="mb-4 relative">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={() => !isCollapsed && setUserMenuOpen(!userMenuOpen)}
                   className={cn(
-                    "w-full flex items-center transition-colors rounded-md px-3 py-2",
+                    "w-full flex items-center transition-colors rounded-md px-3 py-2.5",
                     isCollapsed ? "justify-center" : "justify-between",
                     userMenuOpen
-                      ? "bg-[#1a1a1a] text-[#00ff9d]"
-                      : "text-gray-400 hover:text-[#00ff9d] hover:bg-[#1a1a1a]"
+                      ? "bg-emerald-500/10 text-emerald-400"
+                      : "text-neutral-400 hover:text-emerald-400 hover:bg-neutral-800"
                   )}
                 >
                   <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-3")}>
-                    <User className="h-5 w-5" />
-                    {!isCollapsed && <span>My Account</span>}
+                    <User className={cn(userMenuOpen ? "text-emerald-400" : "text-neutral-400", "h-5 w-5")} />
+                    {!isCollapsed && <span className="font-medium">My Account</span>}
                   </div>
                   {!isCollapsed && (
                     userMenuOpen ? (
-                      <ChevronUp className="h-4 w-4" />
+                      <ChevronUp className="h-4 w-4 text-emerald-400" />
                     ) : (
                       <ChevronDown className="h-4 w-4" />
                     )
@@ -279,14 +279,14 @@ export default function Sidebar() {
                 </button>
               </TooltipTrigger>
               {isCollapsed && (
-                <TooltipContent side="right" className="bg-[#1a1a1a] text-white border-[#333]">
+                <TooltipContent side="right" className="bg-neutral-800 text-white border-neutral-700">
                   My Account
                 </TooltipContent>
               )}
             </Tooltip>
 
             {userMenuOpen && !isCollapsed && (
-              <div className="absolute bottom-full left-0 w-full mb-1 bg-[#1a1a1a] rounded-md overflow-hidden shadow-lg">
+              <div className="absolute bottom-full left-0 w-full mb-1 bg-neutral-800 rounded-md overflow-hidden border border-neutral-700">
                 {userMenuItems.map((item) => {
                   const isActive = pathname === item.href;
 
@@ -296,14 +296,14 @@ export default function Sidebar() {
                       href={item.href}
                       onClick={item.onClick}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2 transition-colors",
+                        "flex items-center gap-3 px-3 py-2.5 transition-colors",
                         isActive
-                          ? "bg-[#252525] text-[#00ff9d]"
-                          : "text-gray-400 hover:text-[#00ff9d] hover:bg-[#252525]"
+                          ? "bg-emerald-500/10 text-emerald-400"
+                          : "text-neutral-400 hover:text-emerald-400 hover:bg-neutral-700"
                       )}
                     >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.name}</span>
+                      <item.icon className={cn(isActive ? "text-emerald-400" : "", "h-5 w-5")} />
+                      <span className="font-medium">{item.name}</span>
                     </Link>
                   );
                 })}
@@ -313,8 +313,8 @@ export default function Sidebar() {
 
           {!isCollapsed && (
             <>
-              <div className="text-sm text-gray-400">Evo AI</div>
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-sm text-emerald-400 font-medium">Evo AI</div>
+              <div className="text-xs text-neutral-500 mt-1">
                 © {new Date().getFullYear()} Evolution API
               </div>
             </>
@@ -323,13 +323,15 @@ export default function Sidebar() {
       </TooltipProvider>
       
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
-        <DialogContent className="bg-[#1a1a1a] border-[#333] text-white">
+        <DialogContent className="bg-neutral-900 border-neutral-800 text-white">
           <DialogHeader>
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-6 w-6 text-orange-500" />
+              <div className="p-1.5 rounded-full bg-orange-500/20">
+                <AlertCircle className="h-5 w-5 text-orange-500" />
+              </div>
               <DialogTitle>Confirmation of Logout</DialogTitle>
             </div>
-            <DialogDescription className="text-gray-400">
+            <DialogDescription className="text-neutral-400">
               Are you sure you want to logout?
             </DialogDescription>
           </DialogHeader>
@@ -337,13 +339,13 @@ export default function Sidebar() {
             <Button 
               variant="outline" 
               onClick={() => setLogoutDialogOpen(false)}
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+              className="bg-neutral-800 border-neutral-700 text-neutral-300 hover:bg-neutral-700 hover:text-white"
             >
               Cancel
             </Button>
             <Button 
               onClick={handleLogout}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+              className="bg-emerald-500 text-white hover:bg-emerald-600"
             >
               Yes, logout
             </Button>

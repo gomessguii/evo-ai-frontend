@@ -102,11 +102,11 @@ export function DelayNode(props: NodeProps) {
             
             <div className="mt-2 flex items-center">
               <span className="text-lg font-semibold text-yellow-300">{delay.value}</span>
-              <span className="ml-1 text-sm text-gray-400">{delay.unit}</span>
+              <span className="ml-1 text-sm text-neutral-400">{delay.unit}</span>
             </div>
             
             {delay.description && (
-              <p className="mt-2 text-xs text-gray-400 line-clamp-2">
+              <p className="mt-2 text-xs text-neutral-400 line-clamp-2">
                 {delay.description.slice(0, 80)} {delay.description.length > 80 && '...'}
               </p>
             )}
@@ -116,11 +116,11 @@ export function DelayNode(props: NodeProps) {
         <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-yellow-700/40 bg-yellow-950/10 p-5 text-center transition-all duration-200 hover:border-yellow-600/50 hover:bg-yellow-900/20">
           <Clock className="h-8 w-8 text-yellow-700/50 mb-2" />
           <p className="text-yellow-400">No delay configured</p>
-          <p className="mt-1 text-xs text-gray-500">Click to configure</p>
+          <p className="mt-1 text-xs text-neutral-500">Click to configure</p>
         </div>
       )}
 
-      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+      <div className="mt-2 flex items-center justify-end text-sm text-neutral-400 transition-colors">
         <div className="flex items-center space-x-1 rounded-md py-1 px-2">
           <span>Next step</span>
           <ArrowRight className="h-3.5 w-3.5" />
@@ -128,7 +128,7 @@ export function DelayNode(props: NodeProps) {
         <Handle
           className={cn(
             "!w-3 !h-3 !rounded-full transition-all duration-300",
-            isBottomHandleConnected ? "!bg-yellow-500 !border-yellow-400" : "!bg-gray-400 !border-gray-500",
+            isBottomHandleConnected ? "!bg-yellow-500 !border-yellow-400" : "!bg-neutral-400 !border-neutral-500",
             selected && isBottomHandleConnected && "!bg-yellow-400 !border-yellow-300"
           )}
           style={{

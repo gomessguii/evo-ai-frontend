@@ -41,6 +41,7 @@ import {
   Loader2,
   X,
   Trash2,
+  Bot,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -452,7 +453,7 @@ Args: ${
   };
 
   const agentColors: Record<string, string> = {
-    Assistant: "bg-[#00ff9d]",
+    Assistant: "bg-emerald-400",
     Programmer: "bg-[#00cc7d]",
     Writer: "bg-[#00b8ff]",
     Researcher: "bg-[#ff9d00]",
@@ -553,14 +554,16 @@ Args: ${
       <div className="flex-1 flex flex-col overflow-hidden">
         {selectedSession || currentAgentId ? (
           <>
-            <div className="p-4 border-b border-[#333] bg-[#1a1a1a]">
+            <div className="p-4 border-b border-[#333] bg-neutral-900 shadow-md">
               {(() => {
                 const sessionInfo = getCurrentSessionInfo();
 
                 return (
                   <div className="flex justify-between items-center">
                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      <MessageSquare className="h-5 w-5 text-[#00ff9d]" />
+                      <div className="p-1 rounded-full bg-emerald-500/20">
+                        <MessageSquare className="h-5 w-5 text-emerald-400" />
+                      </div>
                       {selectedSession
                         ? `Session ${
                             sessionInfo?.externalId || selectedSession
@@ -570,7 +573,7 @@ Args: ${
 
                     <div className="flex items-center gap-2">
                       {currentAgent && (
-                        <Badge className="bg-[#00ff9d] text-black px-3 py-1 text-sm">
+                        <Badge className="bg-emerald-500 text-white px-3 py-1 text-sm border-0">
                           {currentAgent.name || currentAgentId}
                         </Badge>
                       )}
@@ -579,7 +582,7 @@ Args: ${
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-gray-400 hover:text-red-500 hover:bg-[#333]"
+                          className="h-8 w-8 text-neutral-400 hover:text-red-500 hover:bg-[#333]"
                           onClick={() => setIsDeleteDialogOpen(true)}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -593,15 +596,27 @@ Args: ${
 
             <div
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto p-4 bg-[#121212]"
+              className="flex-1 overflow-y-auto p-4 bg-neutral-950"
             >
               {isLoading ? (
-                <div className="flex justify-center items-center h-full">
-                  <Loader2 className="h-6 w-6 text-[#00ff9d] animate-spin" />
+                <div className="flex flex-col items-center justify-center h-full">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg mb-4 relative">
+                    <Loader2 className="h-6 w-6 text-white animate-spin" />
+                    <div className="absolute inset-0 rounded-full blur-md bg-emerald-400/20 animate-pulse"></div>
+                  </div>
+                  <p className="text-neutral-400 mb-2">Loading conversation...</p>
                 </div>
               ) : messages.length === 0 ? (
-                <div className="flex h-full items-center justify-center text-center text-gray-400">
-                  <p>No messages in this conversation. Start typing below.</p>
+                <div className="flex flex-col h-full items-center justify-center text-center p-6">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-700/20 flex items-center justify-center shadow-lg mb-5 border border-emerald-500/30">
+                    <MessageSquare className="h-6 w-6 text-emerald-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-neutral-300 mb-2">
+                    {currentAgent ? `Chat with ${currentAgent.name}` : "New Conversation"}
+                  </h3>
+                  <p className="text-neutral-500 text-sm max-w-md">
+                    Type your message below to start the conversation. This chat will help you interact with the agent and explore its capabilities.
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4 w-full max-w-full">
@@ -628,21 +643,17 @@ Args: ${
                     <div className="flex justify-start">
                       <div className="flex gap-3 max-w-[80%]">
                         <Avatar
-                          className={
-                            currentAgent
-                              ? getAgentColor(currentAgent.name)
-                              : "bg-[#00ff9d]"
-                          }
+                          className="bg-gradient-to-br from-purple-600 to-purple-800 shadow-md border-0"
                         >
-                          <AvatarFallback>
-                            {currentAgent?.name?.[0] || "A"}
+                          <AvatarFallback className="bg-transparent">
+                            <Bot className="h-4 w-4 text-white" />
                           </AvatarFallback>
                         </Avatar>
-                        <div className="rounded-lg p-3 bg-[#222]">
+                        <div className="rounded-lg p-3 bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700/50 shadow-md">
                           <div className="flex space-x-2">
-                            <div className="h-2 w-2 rounded-full bg-[#00ff9d] animate-bounce"></div>
-                            <div className="h-2 w-2 rounded-full bg-[#00ff9d] animate-bounce [animation-delay:0.2s]"></div>
-                            <div className="h-2 w-2 rounded-full bg-[#00ff9d] animate-bounce [animation-delay:0.4s]"></div>
+                            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce"></div>
+                            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></div>
+                            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]"></div>
                           </div>
                         </div>
                       </div>
@@ -652,26 +663,39 @@ Args: ${
               )}
             </div>
 
-            <div className="p-4 border-t border-[#333] bg-[#1a1a1a]">
-              <ChatInput
-                onSendMessage={handleSendMessageWithFiles}
-                isLoading={isSending || isLoading}
-                placeholder="Type your message..."
-              />
+            <div className="px-4 pt-4 pb-6 border-t border-[#333] bg-neutral-900 shadow-inner">
+              {isSending && !isLoading && (
+                <div className="px-4 py-2 mb-3 rounded-lg bg-neutral-800/50 border border-neutral-700/30 text-sm text-neutral-400 flex items-center shadow-sm">
+                  <div className="mr-2 relative">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-400" />
+                    <div className="absolute inset-0 blur-sm bg-emerald-400/20 rounded-full animate-pulse"></div>
+                  </div>
+                  Agent is thinking...
+                </div>
+              )}
+              <div className="rounded-lg shadow-md bg-neutral-800/20 border border-neutral-700/30 p-1">
+                <ChatInput
+                  onSendMessage={handleSendMessageWithFiles}
+                  isLoading={isSending || isLoading}
+                  placeholder="Type your message..."
+                />
+              </div>
             </div>
           </>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <MessageSquare className="h-16 w-16 text-[#00ff9d] mb-4" />
+            <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center shadow-lg mb-6 border border-emerald-500/30">
+              <MessageSquare className="h-10 w-10 text-emerald-400" />
+            </div>
             <h2 className="text-2xl font-semibold text-white mb-3">
               Select a conversation
             </h2>
-            <p className="text-gray-400 mb-6 max-w-md">
+            <p className="text-neutral-400 mb-8 max-w-md">
               Choose an existing conversation or start a new one.
             </p>
             <Button
               onClick={() => setIsNewChatDialogOpen(true)}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d] px-6 py-2"
+              className="bg-emerald-500 text-white hover:bg-emerald-600 px-6 py-6 h-auto shadow-md rounded-xl"
             >
               <Plus className="mr-2 h-5 w-5" />
               New Conversation
@@ -681,28 +705,35 @@ Args: ${
       </div>
 
       <Dialog open={isNewChatDialogOpen} onOpenChange={setIsNewChatDialogOpen}>
-        <DialogContent className="bg-[#1a1a1a] border-[#333] text-white">
+        <DialogContent className="bg-neutral-900 border-neutral-800 text-white shadow-xl">
           <DialogHeader>
-            <DialogTitle className="text-xl text-white">
-              New Conversation
-            </DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="p-1.5 rounded-full bg-emerald-500/20">
+                <MessageSquare className="h-5 w-5 text-emerald-400" />
+              </div>
+              <DialogTitle className="text-xl font-medium text-white">
+                New Conversation
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-neutral-400">
               Select an agent to start a new conversation.
             </DialogDescription>
           </DialogHeader>
 
           <div className="mt-4 space-y-4">
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500">
+                <Search className="h-4 w-4" />
+              </div>
               <Input
                 placeholder="Search agents..."
-                className="pl-8 bg-[#222] border-[#444] text-white"
+                className="pl-10 bg-neutral-800/40 border-neutral-700/50 text-white focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 shadow-inner rounded-xl"
                 value={agentSearchTerm}
                 onChange={(e) => setAgentSearchTerm(e.target.value)}
               />
               {agentSearchTerm && (
                 <button
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-emerald-500 transition-colors"
                   onClick={() => setAgentSearchTerm("")}
                 >
                   <X className="h-4 w-4" />
@@ -710,39 +741,45 @@ Args: ${
               )}
             </div>
 
-            <div className="text-sm text-gray-300 mb-2">Choose an agent:</div>
+            <div className="text-sm text-neutral-300 mb-2">Choose an agent:</div>
 
             <ScrollArea className="h-[300px] pr-2">
               {isLoading ? (
-                <div className="flex justify-center py-4">
-                  <Loader2 className="h-6 w-6 text-[#00ff9d] animate-spin" />
+                <div className="flex flex-col items-center justify-center py-8">
+                  <div className="relative">
+                    <Loader2 className="h-8 w-8 text-emerald-400 animate-spin" />
+                    <div className="absolute inset-0 rounded-full blur-md bg-emerald-400/20 animate-pulse"></div>
+                  </div>
+                  <p className="text-neutral-400 mt-4">Loading agents...</p>
                 </div>
               ) : filteredAgents.length > 0 ? (
                 <div className="space-y-2">
                   {filteredAgents.map((agent) => (
                     <div
                       key={agent.id}
-                      className="p-3 rounded-md cursor-pointer transition-colors bg-[#222] hover:bg-[#333]"
+                      className="p-3 rounded-md cursor-pointer transition-all bg-neutral-800 hover:bg-neutral-800/90 border border-neutral-700/30 hover:border-emerald-500/30 shadow-sm hover:shadow-md group"
                       onClick={() => selectAgent(agent.id)}
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <MessageSquare size={16} className="text-[#00ff9d]" />
-                        <span className="font-medium text-white">
+                        <div className="p-1 rounded-full bg-emerald-500/20 group-hover:bg-emerald-500/30 transition-colors">
+                          <MessageSquare size={14} className="text-emerald-400" />
+                        </div>
+                        <span className="font-medium text-white group-hover:text-emerald-50">
                           {agent.name}
                         </span>
                       </div>
                       <div className="flex items-center justify-between mt-1">
-                        <Badge className="text-xs bg-[#333] text-[#00ff9d] border-[#00ff9d]/30">
+                        <Badge className="text-xs bg-neutral-800/60 text-emerald-400 border border-emerald-500/30">
                           {agent.type}
                         </Badge>
                         {agent.model && (
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-neutral-400">
                             {agent.model}
                           </span>
                         )}
                       </div>
                       {agent.description && (
-                        <p className="text-xs text-gray-300 mt-2 line-clamp-2">
+                        <p className="text-xs text-neutral-300 mt-2 line-clamp-2 group-hover:text-neutral-200">
                           {agent.description}
                         </p>
                       )}
@@ -750,11 +787,11 @@ Args: ${
                   ))}
                 </div>
               ) : agentSearchTerm ? (
-                <div className="text-center py-4 text-gray-400">
+                <div className="text-center py-4 text-neutral-400">
                   No agent found with "{agentSearchTerm}"
                 </div>
               ) : (
-                <div className="text-center py-4 text-gray-400">
+                <div className="text-center py-4 text-neutral-400">
                   <p>No agents available</p>
                   <p className="text-sm mt-2">
                     Create agents in the Agent Management screen
@@ -768,7 +805,7 @@ Args: ${
             <Button
               onClick={() => setIsNewChatDialogOpen(false)}
               variant="outline"
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+              className="bg-neutral-800/40 border-neutral-700/50 text-neutral-300 hover:bg-neutral-700/50 hover:text-white hover:border-neutral-600"
             >
               Cancel
             </Button>
@@ -777,12 +814,17 @@ Args: ${
       </Dialog>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="bg-[#1a1a1a] border-[#333] text-white">
+        <DialogContent className="bg-neutral-900 border-neutral-800 text-white shadow-xl">
           <DialogHeader>
-            <DialogTitle className="text-xl text-white">
-              Delete Session
-            </DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="p-1.5 rounded-full bg-red-500/20">
+                <Trash2 className="h-5 w-5 text-red-400" />
+              </div>
+              <DialogTitle className="text-xl font-medium text-white">
+                Delete Session
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-neutral-400">
               Are you sure you want to delete this session? This action cannot
               be undone.
             </DialogDescription>
@@ -792,13 +834,13 @@ Args: ${
             <Button
               onClick={() => setIsDeleteDialogOpen(false)}
               variant="outline"
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+              className="bg-neutral-800/40 border-neutral-700/50 text-neutral-300 hover:bg-neutral-700/50 hover:text-white hover:border-neutral-600"
             >
               Cancel
             </Button>
             <Button
               onClick={handleDeleteSession}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-600 hover:bg-red-700 text-white border-0 shadow-md"
             >
               Delete
             </Button>

@@ -129,7 +129,7 @@ function ConditionForm({
       return (
         <div
           key={condition.id}
-          className="p-3 rounded-md cursor-pointer transition-colors bg-gray-800 hover:bg-gray-700 border border-gray-700 mb-2 group"
+          className="p-3 rounded-md cursor-pointer transition-colors bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 mb-2 group"
         >
           <div className="flex items-start gap-2">
             <div className="bg-blue-900/50 rounded-full p-1.5 flex-shrink-0">
@@ -137,12 +137,12 @@ function ConditionForm({
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-gray-200">Condition</h3>
+                <h3 className="font-medium text-neutral-200">Condition</h3>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => handleDelete(condition)}
-                  className="h-7 w-7 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-900/20"
+                  className="h-7 w-7 text-neutral-400 opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-900/20"
                 >
                   <Trash2 size={14} />
                 </Button>
@@ -154,10 +154,10 @@ function ConditionForm({
                 >
                   Field
                 </Badge>
-                <span className="text-sm text-gray-300 font-medium">{condition.data.field}</span>
+                <span className="text-sm text-neutral-300 font-medium">{condition.data.field}</span>
               </div>
               <div className="flex flex-wrap items-center gap-1 mt-1.5">
-                <span className="text-sm text-gray-400">{operatorText[condition.data.operator as OperatorType]}</span>
+                <span className="text-sm text-neutral-400">{operatorText[condition.data.operator as OperatorType]}</span>
                 {!["is_defined", "is_not_defined"].includes(condition.data.operator) && (
                   <span className="text-sm font-medium text-emerald-400">
                     "{condition.data.value}"
@@ -174,10 +174,10 @@ function ConditionForm({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-gray-700 flex-shrink-0">
+      <div className="p-4 border-b border-neutral-700 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-md font-medium text-gray-200">Logic Type</h3>
+            <h3 className="text-md font-medium text-neutral-200">Logic Type</h3>
             <Badge
               variant="outline"
               className="text-xs bg-blue-900/20 text-blue-400 border-blue-700/50"
@@ -199,16 +199,16 @@ function ConditionForm({
               handleUpdateNode(updatedNode);
             }}
           >
-            <SelectTrigger className="w-[120px] h-8 bg-gray-800 border-gray-700 text-gray-200">
+            <SelectTrigger className="w-[120px] h-8 bg-neutral-800 border-neutral-700 text-neutral-200">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700 text-gray-200">
+            <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
               <SelectItem value="and">ALL (AND)</SelectItem>
               <SelectItem value="or">ANY (OR)</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <p className="text-sm text-gray-400 mt-2">
+        <p className="text-sm text-neutral-400 mt-2">
           {node.data.type === "or" 
             ? "Any of the following conditions must be true to proceed."
             : "All of the following conditions must be true to proceed."}
@@ -218,7 +218,7 @@ function ConditionForm({
       <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-md font-medium text-gray-200">Conditions</h3>
+            <h3 className="text-md font-medium text-neutral-200">Conditions</h3>
             <Button
               variant="outline"
               size="sm"
@@ -237,11 +237,11 @@ function ConditionForm({
           ) : (
             <div 
               onClick={() => setOpen(true)}
-              className="flex flex-col items-center justify-center p-6 rounded-lg border-2 border-dashed border-gray-700 hover:border-blue-600/50 hover:bg-gray-800/50 transition-colors cursor-pointer text-center"
+              className="flex flex-col items-center justify-center p-6 rounded-lg border-2 border-dashed border-neutral-700 hover:border-blue-600/50 hover:bg-neutral-800/50 transition-colors cursor-pointer text-center"
             >
-              <Filter className="h-10 w-10 text-gray-500 mb-2" />
-              <p className="text-gray-400">No conditions yet</p>
-              <p className="text-sm text-gray-500 mt-1">Click to add a condition</p>
+              <Filter className="h-10 w-10 text-neutral-500 mb-2" />
+              <p className="text-neutral-400">No conditions yet</p>
+              <p className="text-sm text-neutral-500 mt-1">Click to add a condition</p>
             </div>
           )}
         </div>
@@ -255,7 +255,7 @@ function ConditionForm({
       />
 
       <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
-        <DialogContent className="bg-gray-800 border-gray-700 text-gray-200">
+        <DialogContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
           <DialogHeader>
             <DialogTitle>Confirm Delete</DialogTitle>
           </DialogHeader>
@@ -265,7 +265,7 @@ function ConditionForm({
           <DialogFooter>
             <Button
               variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
+              className="border-neutral-600 text-neutral-300 hover:bg-neutral-700"
               onClick={() => {
                 setDeleteDialog(false);
                 setConditionToDelete(null);

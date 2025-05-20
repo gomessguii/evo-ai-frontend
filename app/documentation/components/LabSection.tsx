@@ -95,18 +95,18 @@ export function LabSection({
     <>
       <Card className="bg-[#1a1a1a] border-[#333] text-white mb-6">
         <CardHeader>
-          <CardTitle className="text-[#00ff9d]">A2A Test Lab</CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardTitle className="text-emerald-400">A2A Test Lab</CardTitle>
+          <CardDescription className="text-neutral-400">
             Test your A2A agent with different communication methods
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="http" onValueChange={setLabMode}>
             <TabsList className="bg-[#222] border-[#333] mb-4">
-              <TabsTrigger value="http" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+              <TabsTrigger value="http" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
                 HTTP Request
               </TabsTrigger>
-              <TabsTrigger value="stream" className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]">
+              <TabsTrigger value="stream" className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400">
                 Streaming
               </TabsTrigger>
             </TabsList>
@@ -160,7 +160,7 @@ export function LabSection({
       {response && labMode === "http" && (
         <Card className="bg-[#1a1a1a] border-[#333] text-white">
           <CardHeader>
-            <CardTitle className="text-[#00ff9d]">Response</CardTitle>
+            <CardTitle className="text-emerald-400">Response</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="relative">

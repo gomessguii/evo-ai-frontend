@@ -167,29 +167,29 @@ export function ChatInput({
   return (
     <div className={`flex flex-col w-full ${containerClassName}`}>
       {selectedFiles.length > 0 && (
-        <div className="flex flex-wrap gap-2 px-2 mb-2">
+        <div className="flex flex-wrap gap-2 px-2 mb-3 mt-1">
           {selectedFiles.map((file, index) => (
             <div 
               key={index} 
-              className="flex items-center gap-1 bg-[#333] text-white rounded-md p-1.5 text-xs"
+              className="flex items-center gap-1.5 bg-gradient-to-br from-neutral-800 to-neutral-900 text-white rounded-lg p-2 text-xs border border-neutral-700/50 shadow-sm"
             >
               {isImageFile(file.content_type) ? (
-                <Image className="h-4 w-4 text-[#00ff9d]" />
+                <Image className="h-4 w-4 text-emerald-400" />
               ) : file.content_type === 'application/pdf' ? (
-                <FileText className="h-4 w-4 text-[#00ff9d]" />
+                <FileText className="h-4 w-4 text-emerald-400" />
               ) : (
-                <File className="h-4 w-4 text-[#00ff9d]" />
+                <File className="h-4 w-4 text-emerald-400" />
               )}
               <span className="max-w-[120px] truncate">{file.filename}</span>
-              <span className="text-gray-400">({formatFileSize(file.size)})</span>
+              <span className="text-neutral-400">({formatFileSize(file.size)})</span>
               <button 
                 onClick={() => {
                   const updatedFiles = selectedFiles.filter((_, i) => i !== index);
                   setSelectedFiles(updatedFiles);
                 }}
-                className="ml-1 text-gray-400 hover:text-white transition-colors"
+                className="ml-1 text-neutral-400 hover:text-white transition-colors bg-neutral-700/30 rounded-full p-1"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-3 w-3" />
               </button>
             </div>
           ))}
@@ -207,10 +207,10 @@ export function ChatInput({
               openFileSelector();
             }}
             type="button"
-            className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#333] text-gray-400 hover:text-[#00ff9d] transition-colors"
+            className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-neutral-800/60 text-neutral-400 hover:text-emerald-400 transition-all border border-neutral-700/30"
             title="Attach file"
           >
-            <Paperclip className="h-5 w-5" />
+            <Paperclip className="h-4 w-4" />
           </button>
         )}
         
@@ -219,14 +219,14 @@ export function ChatInput({
           onChange={autoResizeTextarea}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={`flex-1 bg-[#222] border-[#444] text-white focus-visible:ring-[#00ff9d] min-h-[40px] max-h-[240px] resize-none ${className}`}
+          className={`flex-1 bg-neutral-800/40 border-neutral-700/50 text-white focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 min-h-[40px] max-h-[240px] resize-none rounded-xl ${className}`}
           disabled={isLoading}
           rows={1}
         />
         <Button
           type="submit"
           disabled={isLoading || (!messageInput.trim() && selectedFiles.length === 0)}
-          className={`bg-[#00ff9d] text-black hover:bg-[#00cc7d] ${buttonClassName}`}
+          className={`bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 rounded-full shadow-md h-9 w-9 p-0 ${buttonClassName}`}
         >
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />

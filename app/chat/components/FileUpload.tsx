@@ -144,17 +144,17 @@ export function FileUpload({
               className="flex items-center gap-1 bg-[#333] text-white rounded-md p-1.5 text-xs group relative"
             >
               {isImageFile(file.content_type) ? (
-                <Image className="h-4 w-4 text-[#00ff9d]" />
+                <Image className="h-4 w-4 text-emerald-400" />
               ) : file.content_type === 'application/pdf' ? (
-                <FileText className="h-4 w-4 text-[#00ff9d]" />
+                <FileText className="h-4 w-4 text-emerald-400" />
               ) : (
-                <File className="h-4 w-4 text-[#00ff9d]" />
+                <File className="h-4 w-4 text-emerald-400" />
               )}
               <span className="max-w-[120px] truncate">{file.filename}</span>
-              <span className="text-gray-400">({formatFileSize(file.size)})</span>
+              <span className="text-neutral-400">({formatFileSize(file.size)})</span>
               <button 
                 onClick={() => removeFile(index)}
-                className="ml-1 text-gray-400 hover:text-white transition-colors"
+                className="ml-1 text-neutral-400 hover:text-white transition-colors"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -167,7 +167,7 @@ export function FileUpload({
         <button
           onClick={() => fileInputRef.current?.click()}
           type="button"
-          className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#333] text-gray-400 hover:text-[#00ff9d] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-[#333] text-neutral-400 hover:text-emerald-400 transition-colors"
           title="Attach file"
         >
           <Paperclip className="h-5 w-5" />

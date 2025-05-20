@@ -91,9 +91,9 @@ export function SequentialAgentConfig({
                   <div className="font-medium text-white">
                     {getAgentNameById(agentId)}
                   </div>
-                  <div className="text-sm text-gray-400">
+                  <div className="text-sm text-neutral-400">
                     Executed on{" "}
-                    <Badge className="bg-[#333] text-[#00ff9d] border-none">
+                    <Badge className="bg-[#333] text-emerald-400 border-none">
                       Position {index + 1}
                     </Badge>
                   </div>
@@ -102,12 +102,12 @@ export function SequentialAgentConfig({
             ))}
           </div>
         ) : (
-          <div className="text-center py-6 text-gray-400">
+          <div className="text-center py-6 text-neutral-400">
             Add agents in the "Sub-Agents" tab to define the execution order
           </div>
         )}
 
-        <div className="mt-3 text-sm text-gray-400">
+        <div className="mt-3 text-sm text-neutral-400">
           <p>
             The agents will be executed sequentially in the order listed above.
             The output of each agent will be provided as input to the next

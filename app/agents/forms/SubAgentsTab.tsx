@@ -76,13 +76,13 @@ export function SubAgentsTab({
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium text-white">Sub-Agents</h3>
-        <div className="text-sm text-gray-400">
+        <div className="text-sm text-neutral-400">
           {values.config?.sub_agents?.length || 0} sub-agents selected
         </div>
       </div>
 
       <div className="border border-[#444] rounded-md p-4 bg-[#222]">
-        <p className="text-sm text-gray-400 mb-4">
+        <p className="text-sm text-neutral-400 mb-4">
           Select the agents that will be used as sub-agents.
         </p>
 
@@ -96,7 +96,7 @@ export function SubAgentsTab({
                 <Badge
                   key={agentId}
                   variant="secondary"
-                  className="flex items-center gap-1 bg-[#333] text-[#00ff9d]"
+                  className="flex items-center gap-1 bg-[#333] text-emerald-400"
                 >
                   {getAgentNameById(agentId)}
                   <button
@@ -110,7 +110,7 @@ export function SubAgentsTab({
             </div>
           </div>
         ) : (
-          <div className="text-center py-4 text-gray-400 mb-4">
+          <div className="text-center py-4 text-neutral-400 mb-4">
             No sub-agents selected
           </div>
         )}
@@ -130,7 +130,7 @@ export function SubAgentsTab({
                   <span className="font-medium text-white">{agent.name}</span>
                   <Badge
                     variant="outline"
-                    className="ml-2 border-[#444] text-[#00ff9d]"
+                    className="ml-2 border-[#444] text-emerald-400"
                   >
                     {agent.type === "llm"
                       ? "LLM Agent"
@@ -156,8 +156,8 @@ export function SubAgentsTab({
                   disabled={values.config?.sub_agents?.includes(agent.id)}
                   className={
                     values.config?.sub_agents?.includes(agent.id)
-                      ? "text-gray-500 bg-[#222] hover:bg-[#333]"
-                      : "text-[#00ff9d] hover:bg-[#333] bg-[#222]"
+                      ? "text-neutral-500 bg-[#222] hover:bg-[#333]"
+                      : "text-emerald-400 hover:bg-[#333] bg-[#222]"
                   }
                 >
                   {values.config?.sub_agents?.includes(agent.id)

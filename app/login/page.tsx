@@ -287,7 +287,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center justify-center p-8">
             <CheckCircle2 className="w-12 h-12 text-green-500 mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">Registration successful!</h2>
-            <p className="text-gray-300 mb-2 text-center">
+            <p className="text-neutral-300 mb-2 text-center">
               Please check your email to confirm your account.<br />
               Redirecting to login in {redirectSeconds} seconds...
             </p>
@@ -296,7 +296,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center justify-center p-8">
             <CheckCircle2 className="w-12 h-12 text-green-500 mb-4" />
             <h2 className="text-xl font-semibold text-white mb-2">Email sent!</h2>
-            <p className="text-gray-300 mb-2 text-center">
+            <p className="text-neutral-300 mb-2 text-center">
               Check your inbox to reset your password.<br />
               Redirecting to login in {redirectSeconds} seconds...
             </p>
@@ -306,19 +306,19 @@ export default function LoginPage() {
           <TabsList className="grid w-full grid-cols-3 bg-[#222]">
             <TabsTrigger
               value="login"
-              className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+              className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
             >
               Login
             </TabsTrigger>
             <TabsTrigger
               value="register"
-              className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+              className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
             >
               Register
             </TabsTrigger>
             <TabsTrigger
               value="forgot"
-              className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+              className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
             >
               Forgot
             </TabsTrigger>
@@ -328,13 +328,13 @@ export default function LoginPage() {
             <form onSubmit={handleLogin}>
               <CardHeader>
                 <CardTitle className="text-white">Login</CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardDescription className="text-neutral-400">
                   Enter your credentials to access the system.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-300">
+                  <Label htmlFor="email" className="text-neutral-300">
                     Email
                   </Label>
                   <Input
@@ -351,7 +351,7 @@ export default function LoginPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password" className="text-gray-300">
+                    <Label htmlFor="password" className="text-neutral-300">
                       Password
                     </Label>
                   </div>
@@ -380,7 +380,7 @@ export default function LoginPage() {
                           size="sm"
                           onClick={handleResendVerification}
                           disabled={isResendingVerification}
-                          className="text-[#00ff9d] border-[#00ff9d] hover:bg-[#00ff9d]/10"
+                          className="text-emerald-400 border-emerald-400 hover:bg-emerald-400/10"
                         >
                           {isResendingVerification ? "Sending..." : "Resend verification email"}
                         </Button>
@@ -394,7 +394,7 @@ export default function LoginPage() {
               <CardFooter>
                 <Button
                   type="submit"
-                  className="w-full bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                  className="w-full bg-emerald-400 text-black hover:bg-[#00cc7d]"
                   disabled={isLoading}
                 >
                   {isLoading ? "Entering..." : "Enter"}
@@ -407,13 +407,13 @@ export default function LoginPage() {
             <form onSubmit={handleRegister}>
               <CardHeader>
                 <CardTitle className="text-white">Register</CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardDescription className="text-neutral-400">
                   Create a new account to get started.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-name" className="text-gray-300">
+                  <Label htmlFor="register-name" className="text-neutral-300">
                     Name
                   </Label>
                   <Input
@@ -429,7 +429,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-email" className="text-gray-300">
+                  <Label htmlFor="register-email" className="text-neutral-300">
                     Email
                   </Label>
                   <Input
@@ -448,7 +448,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-password" className="text-gray-300">
+                  <Label htmlFor="register-password" className="text-neutral-300">
                     Password
                   </Label>
                   <Input
@@ -468,7 +468,7 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="register-confirm-password"
-                    className="text-gray-300"
+                    className="text-neutral-300"
                   >
                     Confirm Password
                   </Label>
@@ -490,7 +490,7 @@ export default function LoginPage() {
               <CardFooter>
                 <Button
                   type="submit"
-                  className="w-full bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                  className="w-full bg-emerald-400 text-black hover:bg-[#00cc7d]"
                   disabled={isLoading}
                 >
                   {isLoading ? "Registering..." : "Register"}
@@ -503,13 +503,13 @@ export default function LoginPage() {
             <form onSubmit={handleForgotPassword}>
               <CardHeader>
                 <CardTitle className="text-white">Forgot Password</CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardDescription className="text-neutral-400">
                   Enter your email to receive a password reset link.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="forgot-email" className="text-gray-300">
+                  <Label htmlFor="forgot-email" className="text-neutral-300">
                     Email
                   </Label>
                   <Input
@@ -526,7 +526,7 @@ export default function LoginPage() {
               <CardFooter>
                 <Button
                   type="submit"
-                  className="w-full bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                  className="w-full bg-emerald-400 text-black hover:bg-[#00cc7d]"
                   disabled={isLoading}
                 >
                   {isLoading ? "Sending..." : "Send Link"}
@@ -538,14 +538,14 @@ export default function LoginPage() {
         )}
       </Card>
 
-      <div className="mt-4 text-center text-sm text-gray-500">
+      <div className="mt-4 text-center text-sm text-neutral-500">
         <p>
           By using this service, you agree to our{" "}
-          <Link href="#" className="text-[#00ff9d] hover:underline">
+          <Link href="#" className="text-emerald-400 hover:underline">
             Terms of Service
           </Link>{" "}
           e{" "}
-          <Link href="#" className="text-[#00ff9d] hover:underline">
+          <Link href="#" className="text-emerald-400 hover:underline">
             Privacy Policy
           </Link>
           .

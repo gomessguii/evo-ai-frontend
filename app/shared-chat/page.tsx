@@ -529,62 +529,65 @@ Args: ${
   };
 
   return (
-    <div className="h-screen max-h-screen bg-[#121212] flex flex-col">
-      {agent && (
-        <div className="p-4 border-b border-[#333] bg-[#1a1a1a] flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Image
-              src="https://evolution-api.com/files/evo/logo-evo-ai.svg"
-              alt="Evolution API"
-              width={60}
-              height={30}
-            />
-            <div className="h-10 w-px bg-[#333]" />
-            <div
-              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={() => setIsInfoPanelOpen(!isInfoPanelOpen)}
-            >
-              <div className="p-2 rounded-full bg-[#00ff9d]">
-                <MessageSquare className="h-5 w-5 text-black" />
-              </div>
-              <div>
-                <h1 className="text-lg font-medium text-white flex items-center gap-2">
-                  {agent.name}
-                  {isInfoPanelOpen ? (
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Info className="h-4 w-4 text-gray-400" />
-                  )}
-                </h1>
-                <p className="text-sm text-gray-400">
-                  {agent.description?.length > 100
-                    ? `${agent.description.substring(0, 100)}...`
-                    : agent.description}
-                </p>
+    <div className="flex h-screen max-h-screen bg-neutral-950">
+      <SharedSessionList
+        sessions={sessions}
+        selectedSession={selectedSession}
+        isLoading={isLoading}
+        searchTerm={sessionSearchTerm}
+        isCollapsed={isSessionsCollapsed}
+        setSearchTerm={setSessionSearchTerm}
+        setSelectedSession={handleSessionSelect}
+        onNewSession={createNewSession}
+        onToggleCollapse={() => setIsSessionsCollapsed(!isSessionsCollapsed)}
+        agentName={agent?.name || "Shared Agent"}
+      />
+
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {agent && (
+          <div className="p-4 border-b border-neutral-700 bg-neutral-900 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Image
+                src="https://evolution-api.com/files/evo/logo-evo-ai.svg"
+                alt="Evolution API"
+                width={60}
+                height={30}
+              />
+              <div className="h-10 w-px bg-neutral-800" />
+              <div
+                className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => setIsInfoPanelOpen(!isInfoPanelOpen)}
+              >
+                <div className="p-2 rounded-full bg-emerald-500/20">
+                  <MessageSquare className="h-5 w-5 text-emerald-400" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-medium text-white flex items-center gap-2">
+                    {agent.name}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 text-neutral-400 hover:text-emerald-400 p-0.5"
+                      onClick={() => setIsInfoPanelOpen(true)}
+                    >
+                      <Info className="h-4 w-4" />
+                    </Button>
+                  </h1>
+                  <p className="text-sm text-neutral-400">
+                    {agent.description?.length > 100
+                      ? `${agent.description.substring(0, 100)}...`
+                      : agent.description}
+                  </p>
+                </div>
               </div>
             </div>
+            <Badge className="bg-emerald-500 text-white px-3 py-1 text-sm border-0">
+              Shared Agent
+            </Badge>
           </div>
-          <Badge className="bg-[#00ff9d] text-black px-3 py-1">
-            Shared Agent
-          </Badge>
-        </div>
-      )}
+        )}
 
-      <div className="flex-1 flex overflow-hidden">
-        <SharedSessionList
-          sessions={sessions}
-          selectedSession={selectedSession}
-          isLoading={isLoading}
-          searchTerm={sessionSearchTerm}
-          isCollapsed={isSessionsCollapsed}
-          setSearchTerm={setSessionSearchTerm}
-          setSelectedSession={handleSessionSelect}
-          onNewSession={createNewSession}
-          onToggleCollapse={() => setIsSessionsCollapsed(!isSessionsCollapsed)}
-          agentName={agent?.name}
-        />
-
-        {selectedSession && (
+        {(selectedSession || agentParams) ? (
           <SharedChatPanel
             messages={messages}
             isLoading={isLoading}
@@ -593,81 +596,97 @@ Args: ${
             onSendMessage={handleSendMessage}
             getMessageText={getMessageText}
             containsMarkdown={containsMarkdown}
-            sessionId={selectedSession}
+            sessionId={selectedSession || undefined}
           />
-        )}
-
-        {agent && isInfoPanelOpen && (
-          <div className="lg:block w-80 border-l border-[#1e3a36] overflow-y-auto p-4 bg-[#151515] animate-in slide-in-from-right duration-300">
-            <AgentInfo agent={agent} apiKey={agentParams?.apiKey || ""} />
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-neutral-950">
+            <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center mb-6 border border-emerald-500/30">
+              <MessageSquare className="h-10 w-10 text-emerald-400" />
+            </div>
+            <h2 className="text-2xl font-semibold text-white mb-3">
+              Welcome to Shared Chat
+            </h2>
+            <p className="text-neutral-400 mb-8 max-w-md">
+              To start, please enter an agent ID and API key
+            </p>
+            <Button
+              onClick={() => setIsParamsDialogOpen(true)}
+              className="bg-emerald-500 text-white hover:bg-emerald-600 px-6 py-6 h-auto rounded-xl"
+            >
+              Connect to Agent
+            </Button>
           </div>
         )}
       </div>
 
       <Dialog open={isParamsDialogOpen} onOpenChange={setIsParamsDialogOpen}>
-        <DialogContent className="bg-[#1a1a1a] border-[#333] text-white">
+        <DialogContent className="bg-neutral-900 border-neutral-800 text-white max-w-md">
           <DialogHeader>
-            <DialogTitle>Connect to a Shared Agent</DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <div className="flex items-center gap-2 mb-1">
+              <div className="p-1.5 rounded-full bg-emerald-500/20">
+                <MessageSquare className="h-5 w-5 text-emerald-400" />
+              </div>
+              <DialogTitle className="text-xl font-medium">
+                Connect to Shared Agent
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-neutral-400">
               Enter the agent ID and API key to connect
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
-            {savedAgents.length > 0 && (
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-white">
-                  Recent Agents
-                </h3>
-                <div className="space-y-2">
-                  {savedAgents.map((savedAgent) => (
-                    <div
-                      key={savedAgent.id}
-                      className="p-3 border border-[#333] rounded-md hover:bg-[#222] cursor-pointer"
-                      onClick={() => selectSavedAgent(savedAgent)}
-                    >
-                      <div className="text-sm">{savedAgent.id}</div>
-                      <div className="text-xs text-gray-400">
-                        API Key: {savedAgent.apiKey.substring(0, 8)}...
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="pt-2 border-t border-[#333] mt-2">
-                  <h3 className="text-sm font-medium text-white mb-2">
-                    Or connect to a new agent
-                  </h3>
-                </div>
-              </div>
-            )}
-
             <div className="space-y-2">
-              <label className="text-sm text-gray-300">Agent ID</label>
+              <label className="text-sm text-neutral-300">Agent ID</label>
               <Input
                 value={manualAgentId}
                 onChange={(e) => setManualAgentId(e.target.value)}
-                className="bg-[#222] border-[#444] text-white"
-                placeholder="Enter the agent ID"
+                placeholder="Enter agent ID"
+                className="bg-neutral-800 border-neutral-700 text-white focus-visible:ring-emerald-500"
               />
             </div>
-
             <div className="space-y-2">
-              <label className="text-sm text-gray-300">API Key</label>
+              <label className="text-sm text-neutral-300">API Key</label>
               <Input
                 value={manualApiKey}
                 onChange={(e) => setManualApiKey(e.target.value)}
-                className="bg-[#222] border-[#444] text-white"
-                placeholder="Enter the API key"
+                placeholder="Enter API key"
                 type="password"
+                className="bg-neutral-800 border-neutral-700 text-white focus-visible:ring-emerald-500"
               />
             </div>
+
+            {savedAgents.length > 0 && (
+              <div className="pt-2 border-t border-neutral-700">
+                <p className="text-sm text-neutral-300 mb-2">Or select a saved agent:</p>
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {savedAgents.map((agent) => (
+                    <Button
+                      key={agent.id}
+                      variant="outline"
+                      className="w-full justify-start text-left mb-1 bg-neutral-800 border-neutral-700 hover:bg-neutral-700 text-neutral-200"
+                      onClick={() => selectSavedAgent(agent)}
+                    >
+                      <div className="truncate">{agent.id}</div>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <DialogFooter>
             <Button
+              variant="outline"
+              onClick={() => setIsParamsDialogOpen(false)}
+              className="bg-neutral-800 border-neutral-700 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+            >
+              Cancel
+            </Button>
+            <Button
               onClick={handleManualConnect}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
               disabled={!manualAgentId || !manualApiKey}
+              className="bg-emerald-500 text-white hover:bg-emerald-600"
             >
               Connect
             </Button>
@@ -675,14 +694,24 @@ Args: ${
         </DialogContent>
       </Dialog>
 
-      {isLoading && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
-          <div className="bg-[#1a1a1a] p-6 rounded-lg flex flex-col items-center">
-            <Loader2 className="h-8 w-8 text-[#00ff9d] animate-spin mb-2" />
-            <p className="text-white">Loading shared agent...</p>
+      <Dialog open={isInfoPanelOpen} onOpenChange={setIsInfoPanelOpen}>
+        <DialogContent className="bg-neutral-900 border-neutral-800 text-white max-w-3xl h-[80vh]">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-full bg-emerald-500/20">
+                <Info className="h-5 w-5 text-emerald-400" />
+              </div>
+              <DialogTitle className="text-xl font-medium">
+                {agent?.name || "Shared Agent"} Information
+              </DialogTitle>
+            </div>
+          </DialogHeader>
+          
+          <div className="flex-1 overflow-y-auto mt-2">
+            {agent && <AgentInfo agent={agent} isShared={true} />}
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

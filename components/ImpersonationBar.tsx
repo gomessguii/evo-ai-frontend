@@ -118,7 +118,7 @@ export default function ImpersonationBar() {
         </p>
         <Button
           onClick={handleExitImpersonation}
-          className="bg-black text-white hover:bg-gray-800 flex items-center gap-2"
+          className="bg-black text-white hover:bg-neutral-800 flex items-center gap-2"
         >
           <UserX className="h-4 w-4" />
           Back to admin

@@ -76,7 +76,7 @@ export function AgentChatMessageList({
                 const messageContent = getMessageText(message);
                 const isExpanded = expandedFunctions[message.id] || false;
                 const isUser = message.author === "user";
-                const agentColor = "bg-[#00ff9d]";
+                const agentColor = "bg-emerald-400";
                 const hasFunctionCall = message.content.parts.some(
                     (part) => part.functionCall || part.function_call
                 );
@@ -113,9 +113,9 @@ export function AgentChatMessageList({
                             </Avatar>
                             <div
                                 className={`rounded-lg p-3 ${isFunctionMessage || isTaskExecutor
-                                    ? "bg-[#333] text-[#00ff9d] font-mono text-sm"
+                                    ? "bg-[#333] text-emerald-400 font-mono text-sm"
                                     : isUser
-                                        ? "bg-[#00ff9d] text-black"
+                                        ? "bg-emerald-400 text-black"
                                         : "bg-[#222] text-white"
                                     } overflow-hidden relative group`}
                                 style={{
@@ -136,7 +136,7 @@ export function AgentChatMessageList({
                                                         <div className="flex-1 font-semibold">
                                                             {(messageContent as FunctionMessageContent).title}
                                                         </div>
-                                                        <div className="flex items-center justify-center w-5 h-5 text-[#00ff9d]">
+                                                        <div className="flex items-center justify-center w-5 h-5 text-emerald-400">
                                                             {isExpanded ? (
                                                                 <ChevronDown className="h-4 w-4" />
                                                             ) : (
@@ -150,7 +150,7 @@ export function AgentChatMessageList({
                                                     <div className="flex-1 font-semibold">
                                                         Task Execution
                                                     </div>
-                                                    <div className="flex items-center justify-center w-5 h-5 text-[#00ff9d]">
+                                                    <div className="flex items-center justify-center w-5 h-5 text-emerald-400">
                                                         {isExpanded ? (
                                                             <ChevronDown className="h-4 w-4" />
                                                         ) : (
@@ -184,7 +184,7 @@ export function AgentChatMessageList({
                                             "author" in messageContent &&
                                             messageContent.author !== "user" &&
                                             !isTaskExecutor && (
-                                                <div className="text-xs text-gray-400 mb-1">
+                                                <div className="text-xs text-neutral-400 mb-1">
                                                     {messageContent.author}
                                                 </div>
                                             )}
@@ -226,7 +226,7 @@ export function AgentChatMessageList({
                                                     li: ({ ...props }) => <li className="mb-1" {...props} />,
                                                     a: ({ ...props }) => (
                                                         <a
-                                                            className="text-[#00ff9d] underline hover:opacity-80 transition-opacity"
+                                                            className="text-emerald-400 underline hover:opacity-80 transition-opacity"
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             {...props}
@@ -234,7 +234,7 @@ export function AgentChatMessageList({
                                                     ),
                                                     blockquote: ({ ...props }) => (
                                                         <blockquote
-                                                            className="border-l-4 border-[#444] pl-4 py-1 italic my-3 text-gray-300"
+                                                            className="border-l-4 border-[#444] pl-4 py-1 italic my-3 text-neutral-300"
                                                             {...props}
                                                         />
                                                     ),
@@ -245,7 +245,7 @@ export function AgentChatMessageList({
                                                         if (isInline) {
                                                             return (
                                                                 <code
-                                                                    className="bg-[#333] px-1.5 py-0.5 rounded text-[#00ff9d] text-sm font-mono"
+                                                                    className="bg-[#333] px-1.5 py-0.5 rounded text-emerald-400 text-sm font-mono"
                                                                     {...props}
                                                                 >
                                                                     {children}
@@ -255,7 +255,7 @@ export function AgentChatMessageList({
                                                         
                                                         return (
                                                             <div className="my-3 relative">
-                                                                <div className="bg-[#1a1a1a] rounded-t-md border-b border-[#333] p-2 text-xs text-gray-400">
+                                                                <div className="bg-[#1a1a1a] rounded-t-md border-b border-[#333] p-2 text-xs text-neutral-400">
                                                                     <span>{match?.[1] || "Code"}</span>
                                                                 </div>
                                                                 <pre className="bg-[#1a1a1a] p-3 rounded-b-md overflow-x-auto whitespace-pre text-sm">
@@ -284,7 +284,7 @@ export function AgentChatMessageList({
                                                     ),
                                                     th: ({ ...props }) => (
                                                         <th
-                                                            className="px-4 py-2 text-left text-xs font-semibold text-gray-300"
+                                                            className="px-4 py-2 text-left text-xs font-semibold text-neutral-300"
                                                             {...props}
                                                         />
                                                     ),

@@ -205,7 +205,7 @@ export function AgentForm({
             <DialogTitle className="text-white">
               {initialValues.id ? "Edit Agent" : "New Agent"}
             </DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogDescription className="text-neutral-400">
               {initialValues.id
                 ? "Edit the existing agent information"
                 : "Fill in the information to create a new agent"}
@@ -220,19 +220,19 @@ export function AgentForm({
             <TabsList className="grid grid-cols-3 bg-[#222]">
               <TabsTrigger
                 value="basic"
-                className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+                className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
               >
                 Basic Information
               </TabsTrigger>
               <TabsTrigger
                 value="config"
-                className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+                className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
               >
                 Configuration
               </TabsTrigger>
               <TabsTrigger
                 value="subagents"
-                className="data-[state=active]:bg-[#333] data-[state=active]:text-[#00ff9d]"
+                className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
               >
                 Sub-Agents
               </TabsTrigger>
@@ -287,13 +287,13 @@ export function AgentForm({
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+              className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSave}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+              className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
               disabled={!values.name || isLoading}
             >
               {isLoading && (

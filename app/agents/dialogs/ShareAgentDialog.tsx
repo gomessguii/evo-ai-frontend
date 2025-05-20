@@ -100,7 +100,7 @@ export function ShareAgentDialog({
             <Share2 className="h-5 w-5 text-emerald-400" />
             Share Agent
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             Share this agent with others without the need to login.
           </DialogDescription>
         </DialogHeader>
@@ -122,7 +122,7 @@ export function ShareAgentDialog({
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-neutral-400">
               Any person with this link can access the agent using the included API key.
             </p>
           </div>
@@ -144,7 +144,7 @@ export function ShareAgentDialog({
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-neutral-400">
               The API key allows access to the agent. Do not share with untrusted people.
             </p>
           </div>
@@ -154,14 +154,14 @@ export function ShareAgentDialog({
           <Button
             variant="outline"
             onClick={() => window.open(shareLink, "_blank")}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white flex gap-2"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white flex gap-2"
           >
             <ExternalLink className="h-4 w-4" />
             Open Link
           </Button>
           <Button
             onClick={() => onOpenChange(false)}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+            className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
           >
             Close
           </Button>

@@ -166,7 +166,7 @@ export function BasicInfoTab({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="type" className="text-right text-gray-300">
+        <Label htmlFor="type" className="text-right text-neutral-300">
           Agent Type
         </Label>
         <div className="col-span-3">
@@ -178,7 +178,7 @@ export function BasicInfoTab({
       </div>
 
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="name" className="text-right text-gray-300">
+        <Label htmlFor="name" className="text-right text-neutral-300">
           Name
         </Label>
         <Input
@@ -192,7 +192,7 @@ export function BasicInfoTab({
 
       {values.type !== "a2a" && (
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="description" className="text-right text-gray-300">
+          <Label htmlFor="description" className="text-right text-neutral-300">
             Description
           </Label>
           <Input
@@ -217,7 +217,7 @@ export function BasicInfoTab({
       )}
 
       {values.type === "loop" && values.config?.max_iterations && (
-        <div className="space-y-1 text-xs text-gray-400">
+        <div className="space-y-1 text-xs text-neutral-400">
           <div>
             <strong>Max. Iterations:</strong> {values.config.max_iterations}
           </div>
@@ -225,7 +225,7 @@ export function BasicInfoTab({
       )}
 
       {values.type === "workflow" && (
-        <div className="space-y-1 text-xs text-gray-400">
+        <div className="space-y-1 text-xs text-neutral-400">
           <div>
             <strong>Type:</strong> Visual Flow
           </div>

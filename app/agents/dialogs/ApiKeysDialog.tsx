@@ -162,7 +162,7 @@ export function ApiKeysDialog({
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-hidden flex flex-col bg-[#1a1a1a] border-[#333]">
         <DialogHeader>
           <DialogTitle className="text-white">Manage API Keys</DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             Add and manage API keys for use in your agents
           </DialogDescription>
         </DialogHeader>
@@ -182,7 +182,7 @@ export function ApiKeysDialog({
                     setIsEditingApiKey(false);
                     setCurrentApiKey({});
                   }}
-                  className="text-gray-400 hover:text-white"
+                  className="text-neutral-400 hover:text-white"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -190,7 +190,7 @@ export function ApiKeysDialog({
 
               <div className="space-y-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right text-gray-300">
+                  <Label htmlFor="name" className="text-right text-neutral-300">
                     Name
                   </Label>
                   <Input
@@ -210,7 +210,7 @@ export function ApiKeysDialog({
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label
                     htmlFor="provider"
-                    className="text-right text-gray-300"
+                    className="text-right text-neutral-300"
                   >
                     Provider
                   </Label>
@@ -231,7 +231,7 @@ export function ApiKeysDialog({
                         <SelectItem
                           key={provider.value}
                           value={provider.value}
-                          className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-[#00ff9d] data-[selected]:!text-[#00ff9d]"
+                          className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-emerald-400 data-[selected]:!text-emerald-400"
                         >
                           {provider.label}
                         </SelectItem>
@@ -243,7 +243,7 @@ export function ApiKeysDialog({
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label
                     htmlFor="key_value"
-                    className="text-right text-gray-300"
+                    className="text-right text-neutral-300"
                   >
                     Key Value
                   </Label>
@@ -269,7 +269,7 @@ export function ApiKeysDialog({
                       variant="ghost"
                       size="sm"
                       type="button"
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 text-gray-400 hover:text-white"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 text-neutral-400 hover:text-white"
                       onClick={() => setIsApiKeyVisible(!isApiKeyVisible)}
                     >
                       <Eye className="h-4 w-4" />
@@ -281,7 +281,7 @@ export function ApiKeysDialog({
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label
                       htmlFor="is_active"
-                      className="text-right text-gray-300"
+                      className="text-right text-neutral-300"
                     >
                       Status
                     </Label>
@@ -295,9 +295,9 @@ export function ApiKeysDialog({
                             is_active: !!checked,
                           })
                         }
-                        className="mr-2 data-[state=checked]:bg-[#00ff9d] data-[state=checked]:border-[#00ff9d]"
+                        className="mr-2 data-[state=checked]:bg-emerald-400 data-[state=checked]:border-emerald-400"
                       />
-                      <Label htmlFor="is_active" className="text-gray-300">
+                      <Label htmlFor="is_active" className="text-neutral-300">
                         Active
                       </Label>
                     </div>
@@ -313,13 +313,13 @@ export function ApiKeysDialog({
                     setIsEditingApiKey(false);
                     setCurrentApiKey({});
                   }}
-                  className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+                  className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSaveApiKey}
-                  className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                  className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
                   disabled={isLoading}
                 >
                   {isLoading && (
@@ -337,7 +337,7 @@ export function ApiKeysDialog({
                 </h3>
                 <Button
                   onClick={handleAddClick}
-                  className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+                  className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   New Key
@@ -346,25 +346,25 @@ export function ApiKeysDialog({
 
               {isLoading ? (
                 <div className="flex items-center justify-center h-40">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#00ff9d]"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-400"></div>
                 </div>
               ) : apiKeys.length > 0 ? (
                 <div className="space-y-2">
                   {apiKeys.map((apiKey) => (
                     <div
                       key={apiKey.id}
-                      className="flex items-center justify-between p-3 bg-[#222] rounded-md border border-[#333] hover:border-[#00ff9d]/30"
+                      className="flex items-center justify-between p-3 bg-[#222] rounded-md border border-[#333] hover:border-emerald-400/30"
                     >
                       <div>
                         <p className="font-medium text-white">{apiKey.name}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge
                             variant="outline"
-                            className="bg-[#333] text-[#00ff9d] border-[#00ff9d]/30"
+                            className="bg-[#333] text-emerald-400 border-emerald-400/30"
                           >
                             {apiKey.provider.toUpperCase()}
                           </Badge>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-neutral-400">
                             Created on{" "}
                             {new Date(apiKey.created_at).toLocaleDateString()}
                           </p>
@@ -384,7 +384,7 @@ export function ApiKeysDialog({
                           variant="ghost"
                           size="sm"
                           onClick={() => handleEditClick(apiKey)}
-                          className="text-gray-300 hover:text-[#00ff9d] hover:bg-[#333]"
+                          className="text-neutral-300 hover:text-emerald-400 hover:bg-[#333]"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -401,15 +401,15 @@ export function ApiKeysDialog({
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-10 border border-dashed border-[#333] rounded-md bg-[#222] text-gray-400">
-                  <Key className="mx-auto h-10 w-10 text-gray-500 mb-3" />
+                <div className="text-center py-10 border border-dashed border-[#333] rounded-md bg-[#222] text-neutral-400">
+                  <Key className="mx-auto h-10 w-10 text-neutral-500 mb-3" />
                   <p>You don't have any API keys registered</p>
                   <p className="text-sm mt-1">
                     Add your API keys to use them in your agents
                   </p>
                   <Button
                     onClick={handleAddClick}
-                    className="mt-4 bg-[#333] text-[#00ff9d] hover:bg-[#444]"
+                    className="mt-4 bg-[#333] text-emerald-400 hover:bg-[#444]"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Key
@@ -424,7 +424,7 @@ export function ApiKeysDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
           >
             Close
           </Button>

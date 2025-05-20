@@ -113,7 +113,7 @@ export function LLMAgentConfig({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="role" className="text-right text-gray-300">
+        <Label htmlFor="role" className="text-right text-neutral-300">
           Role
         </Label>
         <div className="col-span-3">
@@ -129,7 +129,7 @@ export function LLMAgentConfig({
             placeholder="Ex: Research Assistant, Customer Support, etc."
             className="bg-[#222] border-[#444] text-white"
           />
-          <div className="mt-1 text-xs text-gray-400">
+          <div className="mt-1 text-xs text-neutral-400">
             <span className="inline-block h-3 w-3 mr-1">ℹ️</span>
             <span>Define the role or persona that the agent will assume</span>
           </div>
@@ -137,7 +137,7 @@ export function LLMAgentConfig({
       </div>
 
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="goal" className="text-right text-gray-300">
+        <Label htmlFor="goal" className="text-right text-neutral-300">
           Goal
         </Label>
         <div className="col-span-3">
@@ -153,7 +153,7 @@ export function LLMAgentConfig({
             placeholder="Ex: Find and organize information, Assist customers with inquiries, etc."
             className="bg-[#222] border-[#444] text-white"
           />
-          <div className="mt-1 text-xs text-gray-400">
+          <div className="mt-1 text-xs text-neutral-400">
             <span className="inline-block h-3 w-3 mr-1">ℹ️</span>
             <span>Define the main objective or purpose of this agent</span>
           </div>
@@ -161,7 +161,7 @@ export function LLMAgentConfig({
       </div>
 
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="api_key" className="text-right text-gray-300">
+        <Label htmlFor="api_key" className="text-right text-neutral-300">
           API Key
         </Label>
         <div className="col-span-3 space-y-4">
@@ -186,18 +186,18 @@ export function LLMAgentConfig({
                       <SelectItem
                         key={key.id}
                         value={key.id}
-                        className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-[#00ff9d] data-[selected]:!text-[#00ff9d]"
+                        className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-emerald-400 data-[selected]:!text-emerald-400"
                       >
                         <div className="flex items-center">
                           <span>{key.name}</span>
-                          <Badge className="ml-2 bg-[#333] text-[#00ff9d] text-xs">
+                          <Badge className="ml-2 bg-[#333] text-emerald-400 text-xs">
                             {key.provider}
                           </Badge>
                         </div>
                       </SelectItem>
                     ))
                 ) : (
-                  <div className="text-gray-500 px-2 py-1.5 pl-8">
+                  <div className="text-neutral-500 px-2 py-1.5 pl-8">
                     No API keys available
                   </div>
                 )}
@@ -208,21 +208,21 @@ export function LLMAgentConfig({
               variant="ghost"
               size="sm"
               onClick={onOpenApiKeysDialog}
-              className="ml-2 bg-[#222] text-[#00ff9d] hover:bg-[#333]"
+              className="ml-2 bg-[#222] text-emerald-400 hover:bg-[#333]"
             >
               <Plus className="h-4 w-4" />
             </Button>
           </div>
 
           {apiKeys.length === 0 && (
-            <div className="flex items-center text-xs text-gray-400">
-              <span className="inline-block h-3 w-3 mr-1 text-gray-400">i</span>
+            <div className="flex items-center text-xs text-neutral-400">
+              <span className="inline-block h-3 w-3 mr-1 text-neutral-400">i</span>
               <span>
                 You need to{" "}
                 <Button
                   variant="link"
                   onClick={onOpenApiKeysDialog}
-                  className="h-auto p-0 text-xs text-[#00ff9d]"
+                  className="h-auto p-0 text-xs text-emerald-400"
                 >
                   register API keys
                 </Button>{" "}
@@ -234,7 +234,7 @@ export function LLMAgentConfig({
       </div>
 
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="model" className="text-right text-gray-300">
+        <Label htmlFor="model" className="text-right text-neutral-300">
           Model
         </Label>
         <Select
@@ -285,7 +285,7 @@ export function LLMAgentConfig({
                   <SelectItem
                     key={model.value}
                     value={model.value}
-                    className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-[#00ff9d] data-[selected]:!text-[#00ff9d]"
+                    className="data-[selected]:bg-[#333] data-[highlighted]:bg-[#333] !text-white focus:!text-white hover:text-emerald-400 data-[selected]:!text-emerald-400"
                     data-model-item="true"
                   >
                     {model.label}
@@ -297,7 +297,7 @@ export function LLMAgentConfig({
       </div>
 
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="instruction" className="text-right text-gray-300">
+        <Label htmlFor="instruction" className="text-right text-neutral-300">
           Instructions
         </Label>
         <div className="col-span-3">
@@ -312,17 +312,17 @@ export function LLMAgentConfig({
             />
             <button
               type="button"
-              className="absolute top-3 right-5 text-gray-400 hover:text-[#00ff9d] focus:outline-none"
+              className="absolute top-3 right-5 text-neutral-400 hover:text-emerald-400 focus:outline-none"
               onClick={handleExpandInstruction}
             >
               <Maximize2 className="h-4 w-4" />
             </button>
           </div>
-          <div className="mt-1 text-xs text-gray-400">
+          <div className="mt-1 text-xs text-neutral-400">
             <span className="inline-block h-3 w-3 mr-1">ℹ️</span>
             <span>
               Characters like {"{"} and {"}"} or {"{{"} and {"}}"} are automatically escaped to avoid errors in Python.
-              <span className="ml-2 text-[#00ff9d]">Click to expand editor.</span>
+              <span className="ml-2 text-emerald-400">Click to expand editor.</span>
             </span>
           </div>
         </div>
@@ -339,7 +339,7 @@ export function LLMAgentConfig({
             <Textarea
               value={expandedInstructionText}
               onChange={(e) => setExpandedInstructionText(e.target.value)}
-              className="flex-1 min-h-full bg-[#222] border-[#444] text-white p-4 focus:border-[#00ff9d] focus:ring-[#00ff9d] focus:ring-opacity-50 resize-none"
+              className="flex-1 min-h-full bg-[#222] border-[#444] text-white p-4 focus:border-emerald-400 focus:ring-emerald-400 focus:ring-opacity-50 resize-none"
               placeholder="Enter detailed instructions for the agent..."
             />
           </div>
@@ -348,13 +348,13 @@ export function LLMAgentConfig({
             <Button
               variant="outline"
               onClick={() => setIsInstructionModalOpen(false)}
-              className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+              className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
             >
               Cancel
             </Button>
             <Button 
               onClick={handleSaveExpandedInstruction}
-              className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+              className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             >
               <Save className="h-4 w-4 mr-2" />
               Save Instructions

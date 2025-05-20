@@ -190,7 +190,7 @@ export function StreamLabForm({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="text-sm text-gray-400 mb-1 block">Agent URL</label>
+          <label className="text-sm text-neutral-400 mb-1 block">Agent URL</label>
           <Input
             value={agentUrl}
             onChange={(e) => setAgentUrl(e.target.value)}
@@ -200,7 +200,7 @@ export function StreamLabForm({
           />
         </div>
         <div>
-          <label className="text-sm text-gray-400 mb-1 block">API Key (optional)</label>
+          <label className="text-sm text-neutral-400 mb-1 block">API Key (optional)</label>
           <Input
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
@@ -212,7 +212,7 @@ export function StreamLabForm({
       </div>
       
       <div>
-        <label className="text-sm text-gray-400 mb-1 block">Message</label>
+        <label className="text-sm text-neutral-400 mb-1 block">Message</label>
         <Textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -224,13 +224,13 @@ export function StreamLabForm({
       
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm text-gray-400">
+          <label className="text-sm text-neutral-400">
             Attach Files (up to 5, max 5MB each)
           </label>
           <Button 
             variant="outline" 
             size="sm"
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
             onClick={() => fileInputRef.current?.click()}
             disabled={attachedFiles.length >= 5 || isStreaming}
           >
@@ -255,17 +255,17 @@ export function StreamLabForm({
                 className="flex items-center gap-1.5 bg-[#333] text-white rounded-md p-1.5 text-xs"
               >
                 {isImageFile(file.type) ? (
-                  <Image className="h-4 w-4 text-[#00ff9d]" />
+                  <Image className="h-4 w-4 text-emerald-400" />
                 ) : file.type === 'application/pdf' ? (
-                  <FileText className="h-4 w-4 text-[#00ff9d]" />
+                  <FileText className="h-4 w-4 text-emerald-400" />
                 ) : (
-                  <File className="h-4 w-4 text-[#00ff9d]" />
+                  <File className="h-4 w-4 text-emerald-400" />
                 )}
                 <span className="max-w-[150px] truncate">{file.name}</span>
-                <span className="text-gray-400">({formatFileSize(file.size)})</span>
+                <span className="text-neutral-400">({formatFileSize(file.size)})</span>
                 <button 
                   onClick={() => removeFile(index)}
-                  className="ml-1 text-gray-400 hover:text-white transition-colors"
+                  className="ml-1 text-neutral-400 hover:text-white transition-colors"
                   disabled={isStreaming}
                 >
                   <X className="h-3.5 w-3.5" />
@@ -280,7 +280,7 @@ export function StreamLabForm({
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="text-sm text-gray-400 mb-1 block">Session ID</label>
+          <label className="text-sm text-neutral-400 mb-1 block">Session ID</label>
           <Input
             value={sessionId}
             onChange={(e) => setSessionId(e.target.value)}
@@ -289,7 +289,7 @@ export function StreamLabForm({
           />
         </div>
         <div>
-          <label className="text-sm text-gray-400 mb-1 block">Task ID</label>
+          <label className="text-sm text-neutral-400 mb-1 block">Task ID</label>
           <Input
             value={taskId}
             onChange={(e) => setTaskId(e.target.value)}
@@ -298,7 +298,7 @@ export function StreamLabForm({
           />
         </div>
         <div>
-          <label className="text-sm text-gray-400 mb-1 block">Call ID</label>
+          <label className="text-sm text-neutral-400 mb-1 block">Call ID</label>
           <Input
             value={callId}
             onChange={(e) => setCallId(e.target.value)}
@@ -311,7 +311,7 @@ export function StreamLabForm({
       <Button 
         onClick={handleSendStreamRequest}
         disabled={isStreaming}
-        className="bg-[#00ff9d] text-black hover:bg-[#00cc7d] w-full mt-4"
+        className="bg-emerald-400 text-black hover:bg-[#00cc7d] w-full mt-4"
       >
         {isStreaming ? (
           <div className="flex items-center">
@@ -332,7 +332,7 @@ export function StreamLabForm({
             <h3 className="text-lg font-medium text-white">Response</h3>
             {renderStatusIndicator && renderStatusIndicator()}
           </div>
-          <div className="whitespace-pre-wrap text-sm font-mono text-gray-300">
+          <div className="whitespace-pre-wrap text-sm font-mono text-neutral-300">
             {streamResponse}
           </div>
           {renderTypingIndicator && renderTypingIndicator()}

@@ -69,13 +69,13 @@ export function StartNode(props: NodeProps) {
             </div>
           </div>
           
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs text-neutral-400">
             The workflow begins when a user sends a message to the agent
           </p>
         </div>
       </div>
 
-      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+      <div className="mt-2 flex items-center justify-end text-sm text-neutral-400 transition-colors">
         <div className="flex items-center space-x-1 rounded-md py-1 px-2">
           <span>Next step</span>
           <ArrowRight className="h-3.5 w-3.5" />
@@ -83,7 +83,7 @@ export function StartNode(props: NodeProps) {
         <Handle
           className={cn(
             "!w-3 !h-3 !rounded-full transition-all duration-300",
-            isSourceHandleConnected ? "!bg-emerald-500 !border-emerald-400" : "!bg-gray-400 !border-gray-500",
+            isSourceHandleConnected ? "!bg-emerald-500 !border-emerald-400" : "!bg-neutral-400 !border-neutral-500",
             selected && isSourceHandleConnected && "!bg-emerald-400 !border-emerald-300"
           )}
           style={{

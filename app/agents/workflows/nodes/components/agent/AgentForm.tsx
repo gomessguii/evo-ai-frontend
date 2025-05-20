@@ -353,21 +353,21 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
       )}
       
       <div className="flex flex-col h-full">
-        <div className="p-4 border-b border-gray-700 flex-shrink-0">
+        <div className="p-4 border-b border-neutral-700 flex-shrink-0">
           <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
             <Input
               placeholder="Search agents..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-gray-800 border-gray-700 text-gray-200 focus-visible:ring-emerald-500"
+              className="pl-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus-visible:ring-emerald-500"
             />
           </div>
         </div>
 
         <div className="flex flex-col flex-1 min-h-0">
           <div className="px-4 pt-4 pb-2 flex items-center justify-between flex-shrink-0">
-            <h3 className="text-md font-medium text-gray-200">
+            <h3 className="text-md font-medium text-neutral-200">
               {searchQuery ? "Search Results" : "Select an Agent"}
             </h3>
             <Button
@@ -402,19 +402,19 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
                     className={`p-3 rounded-md cursor-pointer transition-colors group relative ${
                       node.data.agent?.id === agent.id
                         ? "bg-emerald-800/20 border border-emerald-600/40"
-                        : "bg-gray-800 hover:bg-gray-700 border border-transparent"
+                        : "bg-neutral-800 hover:bg-neutral-700 border border-transparent"
                     }`}
                     onClick={() => handleSelectAgent(agent)}
                   >
                     <div className="flex items-start gap-2">
-                      <div className="bg-gray-700 rounded-full p-1.5 flex-shrink-0">
-                        <User size={18} className="text-gray-300" />
+                      <div className="bg-neutral-700 rounded-full p-1.5 flex-shrink-0">
+                        <User size={18} className="text-neutral-300" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <h3 className="font-medium text-gray-200 truncate">{agent.name}</h3>
+                          <h3 className="font-medium text-neutral-200 truncate">{agent.name}</h3>
                           <div 
-                            className="ml-auto text-gray-400 opacity-0 group-hover:opacity-100 hover:text-yellow-500 transition-colors p-1 rounded hover:bg-yellow-900/20"
+                            className="ml-auto text-neutral-400 opacity-0 group-hover:opacity-100 hover:text-yellow-500 transition-colors p-1 rounded hover:bg-yellow-900/20"
                             onClick={(e) => {
                               e.stopPropagation();
                               setNewAgent({
@@ -444,16 +444,16 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
                         <div className="flex items-center gap-2 mt-1">
                           <Badge
                             variant="outline"
-                            className="text-xs bg-gray-700 text-emerald-400 border-gray-600"
+                            className="text-xs bg-neutral-700 text-emerald-400 border-neutral-600"
                           >
                             {getAgentTypeName(agent.type)}
                           </Badge>
                           {agent.model && (
-                            <span className="text-xs text-gray-400">{agent.model}</span>
+                            <span className="text-xs text-neutral-400">{agent.model}</span>
                           )}
                         </div>
                         {agent.description && (
-                          <p className="text-sm text-gray-400 mt-1.5 line-clamp-2">
+                          <p className="text-sm text-neutral-400 mt-1.5 line-clamp-2">
                             {agent.description.slice(0, 30)} {agent.description.length > 30 ? "..." : ""}
                           </p>
                         )}
@@ -462,7 +462,7 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
                   </div>
                 ))
               ) : (
-                <div className="text-center py-4 text-gray-400">
+                <div className="text-center py-4 text-neutral-400">
                   No agents found
                 </div>
               )}
@@ -471,14 +471,14 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
         </div>
 
         {node.data.agent && (
-          <div className="p-4 border-t border-gray-700 flex-shrink-0">
+          <div className="p-4 border-t border-neutral-700 flex-shrink-0">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-md font-medium text-gray-200">Selected Agent</h3>
+              <h3 className="text-md font-medium text-neutral-200">Selected Agent</h3>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 bg-gray-700 hover:bg-gray-600 border-gray-600 text-gray-200"
+                  className="h-8 w-8 bg-neutral-700 hover:bg-neutral-600 border-neutral-600 text-neutral-200"
                   onClick={() => {
                     handleUpdateNode({
                       ...node,
@@ -495,7 +495,7 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 bg-gray-700 hover:bg-gray-600 border-gray-600 text-gray-200"
+                  className="h-8 w-8 bg-neutral-700 hover:bg-neutral-600 border-neutral-600 text-neutral-200"
                   onClick={handleEditAgent}
                   aria-label="Edit agent"
                 >
@@ -531,7 +531,7 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
                   <User size={18} className="text-emerald-300" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-200 truncate">{node.data.agent.name}</h3>
+                  <h3 className="font-medium text-neutral-200 truncate">{node.data.agent.name}</h3>
                   <div className="flex items-center gap-2 mt-1">
                     <Badge
                       variant="outline"
@@ -540,11 +540,11 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
                       {getAgentTypeName(node.data.agent.type)}
                     </Badge>
                     {node.data.agent.model && (
-                      <span className="text-xs text-gray-400">{node.data.agent.model}</span>
+                      <span className="text-xs text-neutral-400">{node.data.agent.model}</span>
                     )}
                   </div>
                   {node.data.agent.description && (
-                    <p className="text-sm text-gray-400 mt-1.5 line-clamp-2">
+                    <p className="text-sm text-neutral-400 mt-1.5 line-clamp-2">
                       {node.data.agent.description.slice(0, 30)} {node.data.agent.description.length > 30 ? "..." : ""}
                     </p>
                   )}

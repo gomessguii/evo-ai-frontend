@@ -274,14 +274,14 @@ export function CustomToolDialog({
           <DialogTitle className="text-white">
             {initialTool ? "Edit Custom Tool" : "Add Custom Tool"}
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-neutral-400">
             Configure the HTTP tool (custom tool) for this agent.
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-auto p-4 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-gray-300">Name</Label>
+              <Label className="text-neutral-300">Name</Label>
               <Input
                 value={tool.name || ""}
                 onChange={(e) => setTool({ ...tool, name: e.target.value })}
@@ -296,7 +296,7 @@ export function CustomToolDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-gray-300">HTTP Method</Label>
+              <Label className="text-neutral-300">HTTP Method</Label>
               <select
                 value={tool.method || "GET"}
                 onChange={(e) => setTool({ ...tool, method: e.target.value })}
@@ -311,7 +311,7 @@ export function CustomToolDialog({
             </div>
           </div>
           <div className="space-y-2">
-            <Label className="text-gray-300">Endpoint URL</Label>
+            <Label className="text-neutral-300">Endpoint URL</Label>
             <Input
               value={tool.endpoint || ""}
               onChange={(e) => setTool({ ...tool, endpoint: e.target.value })}
@@ -320,7 +320,7 @@ export function CustomToolDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-gray-300">Description</Label>
+            <Label className="text-neutral-300">Description</Label>
             <Input
               value={tool.description || ""}
               onChange={(e) => setTool({ ...tool, description: e.target.value })}
@@ -359,7 +359,7 @@ export function CustomToolDialog({
                 variant="outline"
                 size="sm"
                 onClick={handleAddHeader}
-                className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
               >
                 <Plus className="h-4 w-4 mr-1" /> Add Header
               </Button>
@@ -391,12 +391,12 @@ export function CustomToolDialog({
                     className="col-span-2 bg-[#333] border-[#444] text-white"
                     placeholder="Description"
                   />
-                  <label className="col-span-1 flex items-center gap-1 text-xs text-gray-300">
+                  <label className="col-span-1 flex items-center gap-1 text-xs text-neutral-300">
                     <input
                       type="checkbox"
                       checked={param.param.required}
                       onChange={(e) => handleBodyParamChange(param.id, "required", e.target.checked)}
-                      className="accent-[#00ff9d]"
+                      className="accent-emerald-400"
                     />
                     Required
                   </label>
@@ -414,7 +414,7 @@ export function CustomToolDialog({
                 variant="outline"
                 size="sm"
                 onClick={handleAddBodyParam}
-                className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
               >
                 <Plus className="h-4 w-4 mr-1" /> Add Body Param
               </Button>
@@ -451,7 +451,7 @@ export function CustomToolDialog({
                 variant="outline"
                 size="sm"
                 onClick={handleAddPathParam}
-                className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
               >
                 <Plus className="h-4 w-4 mr-1" /> Add Path Param
               </Button>
@@ -488,7 +488,7 @@ export function CustomToolDialog({
                 variant="outline"
                 size="sm"
                 onClick={handleAddQueryParam}
-                className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
               >
                 <Plus className="h-4 w-4 mr-1" /> Add Query Param
               </Button>
@@ -525,7 +525,7 @@ export function CustomToolDialog({
                 variant="outline"
                 size="sm"
                 onClick={handleAddValue}
-                className="w-full mt-2 border-[#00ff9d] text-[#00ff9d] hover:bg-[#00ff9d]/10 bg-[#222] hover:text-[#00ff9d]"
+                className="w-full mt-2 border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 bg-[#222] hover:text-emerald-400"
               >
                 <Plus className="h-4 w-4 mr-1" /> Add Value
               </Button>
@@ -535,7 +535,7 @@ export function CustomToolDialog({
             <h3 className="text-sm font-medium text-white">Error Handling</h3>
             <div className="border border-[#444] rounded-md p-3 bg-[#222] space-y-2">
               <div className="flex gap-4 items-center">
-                <Label className="text-gray-300">Timeout (s)</Label>
+                <Label className="text-neutral-300">Timeout (s)</Label>
                 <Input
                   type="number"
                   min={1}
@@ -545,7 +545,7 @@ export function CustomToolDialog({
                 />
               </div>
               <div className="flex gap-4 items-center">
-                <Label className="text-gray-300">Fallback Error</Label>
+                <Label className="text-neutral-300">Fallback Error</Label>
                 <Input
                   value={fallbackError}
                   onChange={(e) => setFallbackError(e.target.value)}
@@ -554,7 +554,7 @@ export function CustomToolDialog({
                 />
               </div>
               <div className="flex gap-4 items-center">
-                <Label className="text-gray-300">Fallback Message</Label>
+                <Label className="text-neutral-300">Fallback Message</Label>
                 <Input
                   value={fallbackMessage}
                   onChange={(e) => setFallbackMessage(e.target.value)}
@@ -569,13 +569,13 @@ export function CustomToolDialog({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="bg-[#222] border-[#444] text-gray-300 hover:bg-[#333] hover:text-white"
+            className="bg-[#222] border-[#444] text-neutral-300 hover:bg-[#333] hover:text-white"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-[#00ff9d] text-black hover:bg-[#00cc7d]"
+            className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
             disabled={!tool.name || !tool.endpoint}
           >
             {initialTool ? "Save Changes" : "Add Tool"}
