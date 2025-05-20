@@ -26,8 +26,8 @@
 │ who changed it and the date of modification.                                 │
 └──────────────────────────────────────────────────────────────────────────────┘
 */
-import { useState, useCallback } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAgentWebSocket } from "@/hooks/use-agent-webSocket";
@@ -37,6 +37,7 @@ import { ChatInput } from "@/app/chat/components/ChatInput";
 import { AgentChatMessageList } from "./AgentChatMessageList";
 import { ChatPart } from "@/services/sessionService";
 import { FileData } from "@/lib/file-utils";
+import { X } from "lucide-react";
 
 interface FunctionMessageContent {
     title: string;
@@ -96,6 +97,18 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
         onEvent,
         onTurnComplete,
     });
+
+    // Handle ESC key to close the panel
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && open) {
+                onOpenChange(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [onOpenChange, open]);
 
     const handleSendMessageWithFiles = (message: string, files?: FileData[]) => {
         if ((!message.trim() && (!files || files.length === 0))) return;
@@ -235,40 +248,69 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
         setExpandedFunctions((prev) => ({ ...prev, [messageId]: !prev[messageId] }));
     };
 
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="bg-[#1a1a1a] border-[#333] text-white max-w-3xl w-full overflow-hidden">
-                <DialogHeader>
-                    <DialogTitle>Test Agent: {agent.name}</DialogTitle>
-                </DialogHeader>
-                <div className="flex flex-col h-[500px]">
-                    <div className="flex items-center gap-2 mb-2">
+    if (!open) return null;
+
+    // Use React Portal to render directly to document body, bypassing all parent containers
+    const modalContent = (
+        <>
+            {/* Overlay for mobile */}
+            <div
+                className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[15] transition-opacity duration-300"
+                onClick={() => onOpenChange(false)}
+            />
+            
+            {/* Side panel */}
+            <div 
+                className="fixed right-0 top-0 z-[1000] h-full w-[400px] bg-[#1a1a1a] border-l border-[#333] shadow-xl flex flex-col transition-transform duration-300 ease-in-out transform"
+                style={{
+                    transform: open ? 'translateX(0)' : 'translateX(100%)',
+                }}
+            >
+                {/* Header */}
+                <div className="flex-shrink-0 p-4 border-b border-[#333] bg-[#1a1a1a]">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-semibold text-white">Test Agent: {agent.name}</h2>
+                        <button
+                            onClick={() => onOpenChange(false)}
+                            className="p-1 rounded-full hover:bg-gray-700 text-gray-400 hover:text-white"
+                        >
+                            <X size={18} />
+                        </button>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
                         <Badge className="bg-[#00ff9d] text-black px-3 py-1 text-sm">
                             {agent.name}
                         </Badge>
                         <span className="text-xs text-gray-400">{agent.model}</span>
                     </div>
-                    
-                    <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2">
-                        <AgentChatMessageList
-                          messages={messages}
-                          agent={agent}
-                          expandedFunctions={expandedFunctions}
-                          toggleFunctionExpansion={toggleFunctionExpansion}
-                          getMessageText={getMessageText}
-                          containsMarkdown={containsMarkdown}
-                        />
-                    </div>
-                    
-                    <div className="p-2 border-t border-[#333] bg-[#1a1a1a] mt-2">
-                        <ChatInput
-                          onSendMessage={handleSendMessageWithFiles}
-                          isLoading={isSending}
-                          placeholder="Type your message..."
-                        />
-                    </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+                
+                {/* Chat content */}
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-2">
+                    <AgentChatMessageList
+                        messages={messages}
+                        agent={agent}
+                        expandedFunctions={expandedFunctions}
+                        toggleFunctionExpansion={toggleFunctionExpansion}
+                        getMessageText={getMessageText}
+                        containsMarkdown={containsMarkdown}
+                    />
+                </div>
+                
+                {/* Message input */}
+                <div className="p-2 border-t border-[#333] bg-[#1a1a1a]">
+                    <ChatInput
+                        onSendMessage={handleSendMessageWithFiles}
+                        isLoading={isSending}
+                        placeholder="Type your message..."
+                    />
+                </div>
+            </div>
+        </>
     );
+
+    // Use createPortal to render the modal directly to the document body
+    return typeof document !== 'undefined' 
+        ? createPortal(modalContent, document.body) 
+        : null;
 } 

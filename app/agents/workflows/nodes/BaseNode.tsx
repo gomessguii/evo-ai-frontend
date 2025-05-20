@@ -28,30 +28,107 @@
 */
 import { Handle, Position } from "@xyflow/react";
 import React from "react";
-
+import { cn } from "@/lib/utils";
 import { useDnD } from "@/contexts/DnDContext";
 
 export function BaseNode({
   selected,
   hasTarget,
   children,
+  borderColor,
 }: {
   selected: boolean;
   hasTarget: boolean;
   children: React.ReactNode;
+  borderColor: string;
 }) {
   const { pointerEvents } = useDnD();
+
+  // Border and background color mapping
+  const colorStyles = {
+    blue: {
+      border: "border-blue-700/70 hover:border-blue-500",
+      gradient: "bg-gradient-to-br from-blue-950/40 to-gray-900/90", 
+      glow: "shadow-[0_0_15px_rgba(59,130,246,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(59,130,246,0.3)]"
+    },
+    orange: {
+      border: "border-orange-700/70 hover:border-orange-500",
+      gradient: "bg-gradient-to-br from-orange-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(249,115,22,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(249,115,22,0.3)]"
+    },
+    green: {
+      border: "border-green-700/70 hover:border-green-500",
+      gradient: "bg-gradient-to-br from-green-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(34,197,94,0.15)]", 
+      selectedGlow: "shadow-[0_0_25px_rgba(34,197,94,0.3)]"
+    },
+    red: {
+      border: "border-red-700/70 hover:border-red-500", 
+      gradient: "bg-gradient-to-br from-red-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(239,68,68,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(239,68,68,0.3)]"
+    },
+    yellow: {
+      border: "border-yellow-700/70 hover:border-yellow-500",
+      gradient: "bg-gradient-to-br from-yellow-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(234,179,8,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(234,179,8,0.3)]"
+    },
+    purple: {
+      border: "border-purple-700/70 hover:border-purple-500",
+      gradient: "bg-gradient-to-br from-purple-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(168,85,247,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(168,85,247,0.3)]"
+    },
+    indigo: {
+      border: "border-indigo-700/70 hover:border-indigo-500",
+      gradient: "bg-gradient-to-br from-indigo-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(99,102,241,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(99,102,241,0.3)]"
+    },
+    pink: {
+      border: "border-pink-700/70 hover:border-pink-500",
+      gradient: "bg-gradient-to-br from-pink-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(236,72,153,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(236,72,153,0.3)]"
+    },
+    emerald: {
+      border: "border-emerald-700/70 hover:border-emerald-500",
+      gradient: "bg-gradient-to-br from-emerald-950/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(16,185,129,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(16,185,129,0.3)]"
+    },
+    slate: {
+      border: "border-slate-700/70 hover:border-slate-500",
+      gradient: "bg-gradient-to-br from-slate-800/40 to-gray-900/90",
+      glow: "shadow-[0_0_15px_rgba(100,116,139,0.15)]",
+      selectedGlow: "shadow-[0_0_25px_rgba(100,116,139,0.3)]"
+    },
+  };
+
+  // Default to blue if color not in mapping
+  const colorStyle = colorStyles[borderColor as keyof typeof colorStyles] || colorStyles.blue;
+  
+  // Selected styles
+  const selectedStyle = {
+    border: "border-green-500/90",
+    glow: colorStyle.selectedGlow
+  };
 
   return (
     <>
       <div
-        className={`relative z-0 w-[350px] rounded-2xl p-4 shadow-md border border-gray-700 bg-gray-800 ${
-          selected
-            ? "border-2 border-green-500"
-            : "border-2 hover:border-2 border-gray-700 hover:border-blue-500"
-        }`}
+        className={cn(
+          "relative z-0 w-[350px] rounded-2xl p-4 border-2 backdrop-blur-sm transition-all duration-300",
+          "shadow-lg hover:shadow-xl",
+          selected ? selectedStyle.glow : colorStyle.glow,
+          selected ? selectedStyle.border : colorStyle.border,
+          colorStyle.gradient
+        )}
         style={{
-          backgroundColor: "#2c2c2da8",
+          backdropFilter: "blur(12px)",
         }}
       >
         {hasTarget && (

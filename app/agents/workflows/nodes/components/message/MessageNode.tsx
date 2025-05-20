@@ -29,8 +29,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Handle, NodeProps, Position, useEdges } from "@xyflow/react";
-import { MessageCircle, User } from "lucide-react";
-import { MessageType } from "../../nodeFunctions";
+import { MessageCircle, Text, Image, File, Video, ArrowRight } from "lucide-react";
+import { MessageType, MessageTypeEnum } from "../../nodeFunctions";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 import { BaseNode } from "../../BaseNode";
 
@@ -49,49 +51,112 @@ export function MessageNode(props: NodeProps) {
   
   const message = data.message as MessageType | undefined;
 
+  const getMessageTypeIcon = (type: string) => {
+    switch (type) {
+      case MessageTypeEnum.TEXT:
+        return <Text className="h-4 w-4 text-orange-400" />;
+      case "image":
+        return <Image className="h-4 w-4 text-blue-400" />;
+      case "file":
+        return <File className="h-4 w-4 text-emerald-400" />;
+      case "video":
+        return <Video className="h-4 w-4 text-purple-400" />;
+      default:
+        return <MessageCircle className="h-4 w-4 text-orange-400" />;
+    }
+  };
+
+  const getMessageTypeColor = (type: string) => {
+    switch (type) {
+      case MessageTypeEnum.TEXT:
+        return 'bg-orange-900/30 text-orange-400 border-orange-700/40';
+      case "image":
+        return 'bg-blue-900/30 text-blue-400 border-blue-700/40';
+      case "file":
+        return 'bg-emerald-900/30 text-emerald-400 border-emerald-700/40';
+      case "video":
+        return 'bg-purple-900/30 text-purple-400 border-purple-700/40';
+      default:
+        return 'bg-orange-900/30 text-orange-400 border-orange-700/40';
+    }
+  };
+
+  const getMessageTypeName = (type: string) => {
+    const messageTypes: Record<string, string> = {
+      text: "Text Message",
+      image: "Image",
+      file: "File",
+      video: "Video",
+    };
+    return messageTypes[type] || type;
+  };
+
   return (
-    <BaseNode hasTarget={true} selected={selected || false}>
-      <div className="mb-4 flex items-center justify-between">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="orange">
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MessageCircle size={20} className="text-gray-500 dark:text-gray-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-900/40 shadow-sm">
+            <MessageCircle className="h-5 w-5 text-orange-400" />
+          </div>
           <div>
-            <p className="text-md font-medium text-black dark:text-white">
+            <p className="text-lg font-medium text-orange-400">
               {data.label as string}
             </p>
           </div>
         </div>
-        <MessageCircle size={20} className="text-blue-500" />{" "}
       </div>
 
-      <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 p-4 text-center text-gray-400 dark:border-gray-700 dark:hover:bg-gray-700 bg-white dark:bg-transparent">
-        {message ? (
-          <div className="flex flex-col items-center">
-            <p className="font-medium text-black dark:text-white">{message.type === "text" ? "Text Message" : message.type}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{message.content}</p>
+      {message ? (
+        <div className="mb-3 rounded-lg border border-orange-700/40 bg-orange-950/10 p-3 transition-all duration-200 hover:border-orange-600/50 hover:bg-orange-900/10">
+          <div className="flex flex-col">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center">
+                {getMessageTypeIcon(message.type)}
+                <span className="ml-1.5 font-medium text-white">{getMessageTypeName(message.type)}</span>
+              </div>
+              <Badge
+                variant="outline"
+                className={cn("px-1.5 py-0 text-xs", getMessageTypeColor(message.type))}
+              >
+                {message.type}
+              </Badge>
+            </div>
+            
+            {message.content && (
+              <p className="mt-2 text-xs text-gray-400 line-clamp-2">
+                {message.content.slice(0, 80)} {message.content.length > 80 && '...'}
+              </p>
+            )}
           </div>
-        ) : (
-          "No message configured"
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-orange-700/40 bg-orange-950/10 p-5 text-center transition-all duration-200 hover:border-orange-600/50 hover:bg-orange-900/20">
+          <MessageCircle className="h-8 w-8 text-orange-700/50 mb-2" />
+          <p className="text-orange-400">No message configured</p>
+          <p className="mt-1 text-xs text-gray-500">Click to configure</p>
+        </div>
+      )}
 
-      <div className="mt-4 cursor-pointer text-right text-sm text-gray-500 dark:text-gray-400">
-        Next step
+      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+        <div className="flex items-center space-x-1 rounded-md py-1 px-2">
+          <span>Next step</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </div>
+        <Handle
+          className={cn(
+            "!w-3 !h-3 !rounded-full transition-all duration-300",
+            isBottomHandleConnected ? "!bg-orange-500 !border-orange-400" : "!bg-gray-400 !border-gray-500",
+            selected && isBottomHandleConnected && "!bg-orange-400 !border-orange-300"
+          )}
+          style={{
+            right: "-8px",
+            top: "calc(100% - 25px)",
+          }}
+          type="source"
+          position={Position.Right}
+          id="bottom-handle"
+        />
       </div>
-      <Handle
-        style={{
-          borderRadius: "50%",
-          height: "16px",
-          position: "absolute",
-          width: "16px",
-          right: "0px",
-          top: "calc(100% - 25px)",
-          backgroundColor: isBottomHandleConnected ? "#8492A6" : "#f5f5f5",
-          border: "3px solid #8492A6",
-        }}
-        type="source"
-        position={Position.Right}
-        id="bottom-handle"
-      />
     </BaseNode>
   );
 }

@@ -29,7 +29,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Handle, Node, NodeProps, Position, useEdges } from "@xyflow/react";
-import { FilterIcon } from "lucide-react";
+import { FilterIcon, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 import { BaseNode } from "../../BaseNode";
 import { ConditionType, ConditionTypeEnum } from "../../nodeFunctions";
@@ -102,41 +103,39 @@ export function ConditionNode(props: NodeProps) {
     if (condition.type === ConditionTypeEnum.PREVIOUS_OUTPUT) {
       return (
         <div
-          className="mb-4 cursor-pointer rounded-lg border-2 border-solid p-3 text-left border-gray-700 bg-gray-700 text-gray-200"
-          style={{
-            backgroundColor: "#374151a2",
-          }}
+          className="mb-3 cursor-pointer rounded-lg border border-blue-700/40 bg-blue-950/10 p-3 text-left transition-all duration-200 hover:border-blue-600/50 hover:bg-blue-900/10"
         >
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="font-medium">
+              <p className="font-medium text-gray-300">
                 O campo{" "}
-                <span className="font-semibold text-blue-600">
+                <span className="font-semibold text-blue-400">
                   {condition.data.field}
                 </span>{" "}
-                <span className="text-gray-300">
+                <span className="text-gray-400">
                   {operatorText[condition.data.operator as OperatorType]}
                 </span>{" "}
                 {!["is_defined", "is_not_defined"].includes(
                   condition.data.operator,
                 ) && (
-                  <span className="font-semibold text-green-600">
+                  <span className="font-semibold text-green-400">
                     &quot;{condition.data.value}&quot;
                   </span>
                 )}
               </p>
             </div>
             <Handle
+              className={cn(
+                "!rounded-full transition-all duration-300",
+                isConnected ? "!bg-blue-500 !border-blue-400" : "!bg-gray-400 !border-gray-500"
+              )}
               style={{
                 top: "50%",
                 right: "-5px",
                 transform: "translateY(-50%)",
-                borderRadius: "50%",
-                height: "16px",
+                height: "14px",
                 position: "relative",
-                width: "16px",
-                backgroundColor: isConnected ? "#8492A6" : "#f5f5f5",
-                border: "3px solid #8492A6",
+                width: "14px",
               }}
               type="source"
               position={Position.Right}
@@ -150,15 +149,17 @@ export function ConditionNode(props: NodeProps) {
   };
 
   return (
-    <BaseNode hasTarget={true} selected={selected || false}>
-      <div className="mb-4 flex items-center justify-between">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="blue">
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FilterIcon size={20} className="text-blue-500" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900/40 shadow-sm">
+            <FilterIcon className="h-5 w-5 text-blue-400" />
+          </div>
           <div>
-            <p className="text-md font-medium text-white">
+            <p className="text-lg font-medium text-blue-400">
               {data.label as string}
             </p>
-            <p className="text-sm text-gray-400">
+            <p className="text-xs text-gray-400">
               Matches {typeText[(data.type as "and" | "or") || "and"]}
             </p>
           </div>
@@ -170,29 +171,33 @@ export function ConditionNode(props: NodeProps) {
           <div key={condition.id}>{renderCondition(condition)}</div>
         ))
       ) : (
-        <div className="mb-4 cursor-pointer rounded-lg border-2 border-dashed p-4 text-center text-gray-400 border-gray-700 hover:bg-gray-700">
-          Add Condition
+        <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-blue-700/40 bg-blue-950/10 p-5 text-center transition-all duration-200 hover:border-blue-600/50 hover:bg-blue-900/20">
+          <FilterIcon className="h-8 w-8 text-blue-700/50 mb-2" />
+          <p className="text-blue-400">No conditions configured</p>
+          <p className="mt-1 text-xs text-gray-500">Click to add a condition</p>
         </div>
       )}
 
-      <div className="mt-4 cursor-pointer text-right text-sm text-gray-400">
-        Next step
+      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+        <div className="flex items-center space-x-1 rounded-md py-1 px-2">
+          <span>Next step</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </div>
+        <Handle
+          className={cn(
+            "!w-3 !h-3 !rounded-full transition-all duration-300",
+            isBottomHandleConnected ? "!bg-blue-500 !border-blue-400" : "!bg-gray-400 !border-gray-500",
+            selected && isBottomHandleConnected && "!bg-blue-400 !border-blue-300"
+          )}
+          style={{
+            right: "0px",
+            top: "calc(100% - 25px)",
+          }}
+          type="source"
+          position={Position.Right}
+          id="bottom-handle"
+        />
       </div>
-      <Handle
-        style={{
-          borderRadius: "50%",
-          height: "16px",
-          position: "absolute",
-          width: "16px",
-          right: "0px",
-          top: "calc(100% - 25px)",
-          backgroundColor: isBottomHandleConnected ? "#8492A6" : "#f5f5f5",
-          border: "3px solid #8492A6",
-        }}
-        type="source"
-        position={Position.Right}
-        id="bottom-handle"
-      />
     </BaseNode>
   );
 }

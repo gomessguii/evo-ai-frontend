@@ -52,21 +52,21 @@ interface AgentTypeSelectorProps {
   className?: string;
 }
 
+export const agentTypes = [
+  { value: "llm", label: "LLM Agent", icon: Code },
+  { value: "a2a", label: "A2A Agent", icon: ExternalLink },
+  { value: "sequential", label: "Sequential Agent", icon: Workflow },
+  { value: "parallel", label: "Parallel Agent", icon: GitBranch },
+  { value: "loop", label: "Loop Agent", icon: RefreshCw },
+  { value: "workflow", label: "Workflow Agent", icon: Workflow },
+  { value: "task", label: "Task Agent", icon: BookOpenCheck },
+];
+
 export function AgentTypeSelector({
   value,
   onValueChange,
   className = "",
 }: AgentTypeSelectorProps) {
-  const agentTypes = [
-    { value: "llm", label: "LLM Agent", icon: Code },
-    { value: "a2a", label: "A2A Agent", icon: ExternalLink },
-    { value: "sequential", label: "Sequential Agent", icon: Workflow },
-    { value: "parallel", label: "Parallel Agent", icon: GitBranch },
-    { value: "loop", label: "Loop Agent", icon: RefreshCw },
-    { value: "workflow", label: "Workflow Agent", icon: Workflow },
-    { value: "task", label: "Task Agent", icon: BookOpenCheck },
-  ];
-
   return (
     <Select
       value={value}

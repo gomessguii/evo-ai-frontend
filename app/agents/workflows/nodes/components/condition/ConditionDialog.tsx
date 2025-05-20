@@ -31,16 +31,35 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from "@/components/ui/dialog";
 
 import { ConditionType, ConditionTypeEnum } from "../../nodeFunctions";
+import { Button } from "@/components/ui/button";
+import { Filter, ArrowRight } from "lucide-react";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 
 const conditionTypes = [
   {
     id: "previous-output",
     name: "Previous output",
     description: "Validate the result returned by the previous node",
-    icon: "🔄",
+    icon: <Filter className="h-5 w-5 text-blue-400" />,
+    color: "bg-blue-900/30 border-blue-700/50",
   },
 ];
 
@@ -100,108 +119,162 @@ function ConditionDialog({
     onOpenChange(false);
   };
 
+  const getOperatorLabel = (value: string) => {
+    return operators.find(op => op.value === value)?.label || value;
+  };
+
+  const getFieldLabel = (value: string) => {
+    return outputFields.find(field => field.value === value)?.label || value;
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-w-4xl gap-4 bg-gray-800">
-        <div className="w-1/4 border-r pr-4 border-gray-700">
-          <h3 className="mb-4 font-bold text-white">Condition Types</h3>
-          {conditionTypes.map((type) => (
-            <div
-              key={type.id}
-              className={`mb-2 cursor-pointer rounded-lg p-2 ${
-                selectedType === type.id
-                  ? "bg-blue-900"
-                  : "hover:bg-gray-700"
-              }`}
-              onClick={() => setSelectedType(type.id)}
-            >
-              <div className="flex items-center gap-2">
-                <span>{type.icon}</span>
-                <div>
-                  <p className="font-semibold text-white">{type.name}</p>
-                  <p className="text-xs text-gray-400">
-                    {type.description}
-                  </p>
+      <DialogContent className="bg-gray-800 border-gray-700 text-gray-200 sm:max-w-[650px]">
+        <DialogHeader>
+          <DialogTitle>Add New Condition</DialogTitle>
+        </DialogHeader>
+        
+        <div className="grid gap-6 py-4">
+          <div className="grid gap-4">
+            <Label className="text-sm font-medium">Condition Type</Label>
+            <div className="grid grid-cols-1 gap-2">
+              {conditionTypes.map((type) => (
+                <div
+                  key={type.id}
+                  className={`flex items-center space-x-3 rounded-md border p-3 cursor-pointer transition-all ${
+                    selectedType === type.id
+                      ? "bg-blue-900/30 border-blue-600"
+                      : "border-gray-700 hover:border-blue-700/50 hover:bg-gray-700/50"
+                  }`}
+                  onClick={() => setSelectedType(type.id)}
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-900/40">
+                    {type.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-medium">{type.name}</h4>
+                    <p className="text-xs text-gray-400">{type.description}</p>
+                  </div>
+                  {selectedType === type.id && (
+                    <Badge className="bg-blue-600 text-gray-100">Selected</Badge>
+                  )}
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
 
-        <div className="w-3/4">
-          <h3 className="mb-4 font-bold text-white">
-            Configure Condition
-          </h3>
-
-          {selectedType === "previous-output" && (
-            <div className="space-y-4">
-              <div>
-                <label className="mb-2 block text-sm text-gray-200">
-                  Output field
-                </label>
-                <select
-                  value={selectedField}
-                  onChange={(e) => setSelectedField(e.target.value)}
-                  className="w-full rounded-lg border p-2 border-gray-600 bg-gray-700 text-white"
-                >
-                  {outputFields.map((field) => (
-                    <option key={field.value} value={field.value}>
-                      {field.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm text-gray-200">
-                  Operator
-                </label>
-                <select
-                  value={selectedOperator}
-                  onChange={(e) => setSelectedOperator(e.target.value)}
-                  className="w-full rounded-lg border p-2 border-gray-600 bg-gray-700 text-white"
-                >
-                  {operators.map((op) => (
-                    <option key={op.value} value={op.value}>
-                      {op.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {!["is_defined", "is_not_defined"].includes(selectedOperator) && (
-                <div>
-                  <label className="mb-2 block text-sm text-gray-200">
-                    Comparison value
-                  </label>
-                  <input
-                    type="text"
-                    value={comparisonValue}
-                    onChange={(e) => setComparisonValue(e.target.value)}
-                    className="w-full rounded-lg border p-2 border-gray-600 bg-gray-700 text-white"
-                  />
+          <div className="grid gap-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Configuration</Label>
+              {selectedType === "previous-output" && (
+                <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <span>Output field</span>
+                  <ArrowRight className="h-3 w-3" />
+                  <span>Operator</span>
+                  {!["is_defined", "is_not_defined"].includes(selectedOperator) && (
+                    <>
+                      <ArrowRight className="h-3 w-3" />
+                      <span>Value</span>
+                    </>
+                  )}
                 </div>
               )}
-
-              <button
-                className="mt-4 w-full rounded-lg px-4 py-2 text-white bg-blue-600 hover:bg-blue-700"
-                onClick={() => {
-                  handleConditionSave({
-                    id: uuidv4(),
-                    type: ConditionTypeEnum.PREVIOUS_OUTPUT,
-                    data: {
-                      field: selectedField,
-                      operator: selectedOperator,
-                      value: comparisonValue,
-                    },
-                  });
-                }}
-              >
-                Add Condition
-              </button>
             </div>
-          )}
+
+            {selectedType === "previous-output" && (
+              <div className="space-y-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="field">Output Field</Label>
+                  <Select 
+                    value={selectedField} 
+                    onValueChange={setSelectedField}
+                  >
+                    <SelectTrigger id="field" className="bg-gray-700 border-gray-600">
+                      <SelectValue placeholder="Select field" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-700 border-gray-600">
+                      {outputFields.map((field) => (
+                        <SelectItem key={field.value} value={field.value}>
+                          {field.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="operator">Operator</Label>
+                  <Select 
+                    value={selectedOperator} 
+                    onValueChange={setSelectedOperator}
+                  >
+                    <SelectTrigger id="operator" className="bg-gray-700 border-gray-600">
+                      <SelectValue placeholder="Select operator" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-700 border-gray-600">
+                      {operators.map((op) => (
+                        <SelectItem key={op.value} value={op.value}>
+                          {op.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {!["is_defined", "is_not_defined"].includes(selectedOperator) && (
+                  <div className="grid gap-2">
+                    <Label htmlFor="value">Comparison Value</Label>
+                    <Input
+                      id="value"
+                      value={comparisonValue}
+                      onChange={(e) => setComparisonValue(e.target.value)}
+                      className="bg-gray-700 border-gray-600"
+                    />
+                  </div>
+                )}
+
+                <div className="rounded-md bg-gray-700/50 border border-gray-600 p-3 mt-4">
+                  <div className="text-sm font-medium text-gray-400 mb-1">Preview</div>
+                  <div className="text-sm">
+                    <span className="text-blue-400 font-medium">{getFieldLabel(selectedField)}</span>
+                    {" "}
+                    <span className="text-gray-300">{getOperatorLabel(selectedOperator)}</span>
+                    {" "}
+                    {!["is_defined", "is_not_defined"].includes(selectedOperator) && (
+                      <span className="text-emerald-400 font-medium">"{comparisonValue || "(empty)"}"</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
+        <DialogFooter>
+          <Button 
+            variant="outline" 
+            onClick={() => onOpenChange(false)}
+            className="border-gray-600 text-gray-200 hover:bg-gray-700"
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={() => {
+              handleConditionSave({
+                id: uuidv4(),
+                type: ConditionTypeEnum.PREVIOUS_OUTPUT,
+                data: {
+                  field: selectedField,
+                  operator: selectedOperator,
+                  value: comparisonValue,
+                },
+              });
+            }}
+            className="bg-blue-700 hover:bg-blue-600 text-white"
+          >
+            Add Condition
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

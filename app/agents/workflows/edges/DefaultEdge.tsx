@@ -84,7 +84,12 @@ export default function DefaultEdge({
       <BaseEdge
         id={id}
         path={edgePath}
-        style={style}
+        className="edge-dashed-animated"
+        style={{
+          ...style,
+          stroke: '#10B981',
+          strokeWidth: 3,
+        }}
         markerEnd="url(#arrowhead)"
       />
 

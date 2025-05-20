@@ -28,14 +28,14 @@
 */
 "use client";
 
-import { useEffect, useState, useRef, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useState, useRef, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Canva from "./Canva";
-import { Agent } from '@/types/agent';
-import { getAgent, updateAgent } from '@/services/agentService';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Save, Download, PlayIcon } from 'lucide-react';
-import Link from 'next/link';
+import { Agent } from "@/types/agent";
+import { getAgent, updateAgent } from "@/services/agentService";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Save, Download, PlayIcon } from "lucide-react";
+import Link from "next/link";
 import { ReactFlowProvider } from "@xyflow/react";
 import { DnDProvider } from "@/contexts/DnDContext";
 import { NodeDataProvider } from "@/contexts/NodeDataContext";
@@ -45,27 +45,33 @@ import { AgentTestChatModal } from "./nodes/components/agent/AgentTestChatModal"
 
 function WorkflowsContent() {
   const searchParams = useSearchParams();
-  const agentId = searchParams.get('agentId');
+  const agentId = searchParams.get("agentId");
   const [agent, setAgent] = useState<Agent | null>(null);
   const [loading, setLoading] = useState(false);
   const canvaRef = useRef<any>(null);
   const { toast } = useToast();
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
-  
-  const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || '{}') : {};
+
+  const user =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "{}")
+      : {};
   const clientId = user?.client_id || "";
 
   useEffect(() => {
     if (agentId && clientId) {
       setLoading(true);
       getAgent(agentId, clientId)
-        .then(res => {
+        .then((res) => {
           setAgent(res.data);
           if (typeof window !== "undefined") {
-            localStorage.setItem("current_workflow_agent", JSON.stringify(res.data));
+            localStorage.setItem(
+              "current_workflow_agent",
+              JSON.stringify(res.data)
+            );
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.error("Error loading agent:", err);
         })
         .finally(() => {
@@ -84,9 +90,9 @@ function WorkflowsContent() {
 
   const handleExportFlow = () => {
     if (!canvaRef.current) return;
-    
+
     const { nodes, edges } = canvaRef.current.getFlowData();
-    
+
     const flowData = {
       nodes,
       edges,
@@ -107,116 +113,136 @@ function WorkflowsContent() {
 
   const handleSaveWorkflow = async () => {
     if (!agent || !canvaRef.current) return;
-    
+
     try {
       const { nodes, edges } = canvaRef.current.getFlowData();
-      
+
       const workflow = {
         nodes,
-        edges
+        edges,
       };
-      
+
       await updateAgent(agent.id, {
         ...agent,
         config: {
           ...agent.config,
-          workflow
-        }
+          workflow,
+        },
       });
-      
+
       toast({
         title: "Workflow saved",
         description: "The changes were saved successfully",
       });
-      
+
       canvaRef.current.setHasChanges(false);
     } catch (error) {
       console.error("Error saving workflow:", error);
       toast({
         title: "Error saving workflow",
         description: "Unable to save the changes",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6 bg-[#121212] min-h-screen rounded-lg flex items-center justify-center">
+      <div className="w-full h-screen bg-[#121212] flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="relative">
-      <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-        <Link href="/agents">
-          <Button variant="outline" className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Agents
-          </Button>
-        </Link>
-        
-        <Button 
-          variant="outline" 
-          className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
-          onClick={handleSaveWorkflow}
-        >
-          <Save className="mr-2 h-4 w-4" />
-          Save
-        </Button>
-        
-        <Button 
-          variant="outline" 
-          className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
-          onClick={handleExportFlow}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Export
-        </Button>
-        {agent && (
+    <div className="relative w-full h-screen flex flex-col">
+      {/* Header with controls */}
+      <div className="w-full bg-[#121212] py-4 px-6 z-10 flex items-center justify-between border-b border-gray-800">
+        <div className="flex items-center gap-2">
+          <Link href="/agents">
+            <Button
+              variant="outline"
+              className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Agents
+            </Button>
+          </Link>
+
+          {agent && (
+            <div className="bg-gray-800 px-4 py-2 rounded-md">
+              <h2 className="text-gray-200 font-medium">
+                {agent.name} -{" "}
+                <span className="text-gray-400 text-sm">{agent.type}</span>
+              </h2>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="bg-green-800 border-green-700 text-green-200 hover:bg-green-700"
-            onClick={() => setIsTestModalOpen(true)}
+            className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
+            onClick={handleSaveWorkflow}
           >
-            <PlayIcon className="h-4 w-4 mr-2" />
-            Test Workflow
+            <Save className="mr-2 h-4 w-4" />
+            Save
           </Button>
-        )}
+
+          <Button
+            variant="outline"
+            className="bg-gray-800 border-gray-700 text-gray-200 hover:bg-gray-700"
+            onClick={handleExportFlow}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </Button>
+          {agent && (
+            <Button
+              variant="outline"
+              className="bg-green-800 border-green-700 text-green-200 hover:bg-green-700"
+              onClick={() => setIsTestModalOpen(true)}
+            >
+              <PlayIcon className="h-4 w-4 mr-2" />
+              Test Workflow
+            </Button>
+          )}
+        </div>
       </div>
-      {agent && isTestModalOpen && (
-        <AgentTestChatModal
-          open={isTestModalOpen}
-          onOpenChange={setIsTestModalOpen}
-          agent={agent}
-        />
-      )}
-      {agent && <div className="absolute top-4 right-4 z-10 bg-gray-800 px-4 py-2 rounded-md">
-        <h2 className="text-gray-200 font-medium">{agent.name}</h2>
-        <p className="text-gray-400 text-sm">{agent.type}</p>
-      </div>}
-      <NodeDataProvider>
-        <SourceClickProvider>
-          <DnDProvider>
-            <ReactFlowProvider>
-              <Canva agent={agent} ref={canvaRef} />
-            </ReactFlowProvider>
-          </DnDProvider>
-        </SourceClickProvider>
-      </NodeDataProvider>
+
+      {/* Main content area */}
+      <div className="flex-1 relative overflow-hidden">
+        {agent && isTestModalOpen && (
+          <AgentTestChatModal
+            open={isTestModalOpen}
+            onOpenChange={setIsTestModalOpen}
+            agent={agent}
+          />
+        )}
+
+        <NodeDataProvider>
+          <SourceClickProvider>
+            <DnDProvider>
+              <ReactFlowProvider>
+                <Canva agent={agent} ref={canvaRef} />
+              </ReactFlowProvider>
+            </DnDProvider>
+          </SourceClickProvider>
+        </NodeDataProvider>
+      </div>
     </div>
   );
 }
 
 export default function WorkflowsPage() {
   return (
-    <Suspense fallback={
-      <div className="container mx-auto p-6 bg-[#121212] min-h-screen rounded-lg flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="w-full h-screen bg-[#121212] flex items-center justify-center">
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      }
+    >
       <WorkflowsContent />
     </Suspense>
   );

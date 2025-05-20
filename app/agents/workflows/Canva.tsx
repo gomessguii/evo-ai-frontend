@@ -30,7 +30,14 @@
 */
 "use client";
 
-import { useState, useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 
 import {
   Controls,
@@ -46,17 +53,20 @@ import {
   applyNodeChanges,
   NodeChange,
   OnNodesChange,
+  MiniMap,
+  Panel,
+  Background,
 } from "@xyflow/react";
 import { useDnD } from "@/contexts/DnDContext";
 
-import { Edit } from "lucide-react";
+import { Edit, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 import "@xyflow/react/dist/style.css";
 import "./canva.css";
 
 import { getHelperLines } from "./utils";
 
-import { CanvaMenu } from "./CanvaMenu";
+import { NodePanel } from "./NodePanel";
 import ContextMenu from "./ContextMenu";
 import { initialEdges, edgeTypes } from "./edges";
 import HelperLines from "./HelperLines";
@@ -68,8 +78,88 @@ import { updateAgent } from "@/services/agentService";
 import { useToast } from "@/hooks/use-toast";
 import { MessageForm } from "./nodes/components/message/MessageForm";
 import { DelayForm } from "./nodes/components/delay/DelayForm";
+import { Button } from "@/components/ui/button";
 
 const proOptions: ProOptions = { account: "paid-pro", hideAttribution: true };
+
+const NodeFormWrapper = ({
+  selectedNode,
+  editingLabel,
+  setEditingLabel,
+  handleUpdateNode,
+  setSelectedNode,
+  children,
+}: {
+  selectedNode: any;
+  editingLabel: boolean;
+  setEditingLabel: (value: boolean) => void;
+  handleUpdateNode: (node: any) => void;
+  setSelectedNode: (node: any) => void;
+  children: React.ReactNode;
+}) => {
+  // Handle ESC key to close the panel
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !editingLabel) {
+        setSelectedNode(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [setSelectedNode, editingLabel]);
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex-shrink-0 sticky top-0 z-20 bg-gray-800 shadow-md border-b border-gray-700">
+        <div className="p-4 text-center relative">
+          <button
+            className="absolute right-2 top-2 text-gray-200 hover:text-white p-1 rounded-full hover:bg-gray-700"
+            onClick={() => setSelectedNode(null)}
+            aria-label="Close panel"
+          >
+            <X size={18} />
+          </button>
+          {!editingLabel ? (
+            <div className="flex items-center justify-center text-xl font-bold text-gray-200">
+              <span>{selectedNode.data.label}</span>
+              {selectedNode.type !== "start-node" && (
+                <Edit
+                  size={16}
+                  className="ml-2 cursor-pointer hover:text-indigo-300"
+                  onClick={() => setEditingLabel(true)}
+                />
+              )}
+            </div>
+          ) : (
+            <input
+              type="text"
+              value={selectedNode.data.label}
+              className="w-full p-2 text-center text-xl font-bold bg-gray-800 text-gray-200 border border-gray-600 rounded"
+              onChange={(e) => {
+                handleUpdateNode({
+                  ...selectedNode,
+                  data: {
+                    ...selectedNode.data,
+                    label: e.target.value,
+                  },
+                });
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setEditingLabel(false);
+                }
+              }}
+              onBlur={() => setEditingLabel(false)}
+              autoFocus
+            />
+          )}
+        </div>
+      </div>
+      <div className="flex-1 min-h-0 overflow-hidden">{children}</div>
+    </div>
+  );
+};
 
 const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
   const { toast } = useToast();
@@ -79,28 +169,34 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
   const { type, setPointerEvents } = useDnD();
   const [menu, setMenu] = useState<any>(null);
   const localRef = useRef<any>(null);
-  const [externalOpen, setExternalOpen] = useState<any>(null);
-
   const [selectedNode, setSelectedNode] = useState<any>(null);
 
   const [editingLabel, setEditingLabel] = useState(false);
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const [hasChanges, setHasChanges] = useState(false);
+
+  const [nodePanelOpen, setNodePanelOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
     getFlowData: () => ({
       nodes,
-      edges
+      edges,
     }),
-    setHasChanges
+    setHasChanges,
   }));
 
   useEffect(() => {
-    if (agent?.config?.workflow && agent.config.workflow.nodes.length > 0 && agent.config.workflow.edges.length > 0) {
-      setNodes(agent.config.workflow.nodes as typeof initialNodes || initialNodes);
-      setEdges(agent.config.workflow.edges as typeof initialEdges || initialEdges);
+    if (
+      agent?.config?.workflow &&
+      agent.config.workflow.nodes.length > 0 &&
+      agent.config.workflow.edges.length > 0
+    ) {
+      setNodes(
+        (agent.config.workflow.nodes as typeof initialNodes) || initialNodes
+      );
+      setEdges(
+        (agent.config.workflow.edges as typeof initialEdges) || initialEdges
+      );
     } else {
       setNodes(initialNodes);
       setEdges(initialEdges);
@@ -111,7 +207,7 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
     if (agent?.config?.workflow) {
       const initialNodes = agent.config.workflow.nodes || [];
       const initialEdges = agent.config.workflow.edges || [];
-      
+
       if (
         JSON.stringify(nodes) !== JSON.stringify(initialNodes) ||
         JSON.stringify(edges) !== JSON.stringify(initialEdges)
@@ -147,49 +243,16 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
     (_event: any, connectionState: any) => {
       setPointerEvents("none");
 
-      if (connectionState.fromHandle.type === "target") {
+      if (connectionState.fromHandle?.type === "target") {
         return;
       }
 
       if (!connectionState.isValid) {
-        let position = {
-          x: connectionState.fromNode.position.x + 500,
-          y: connectionState.fromNode.position.y,
-        };
-
-        const spacingY = 250;
-        const tolerance = 10;
-
-        const adjustPosition = (pos: { x: number; y: number }) => {
-          const doesNodeExist = nodes.some((node) => {
-            const yDifference = Math.abs(node.position.y - pos.y);
-            return node.position.x === pos.x && yDifference < tolerance;
-          });
-
-          if (doesNodeExist) {
-            pos.y += spacingY;
-            return adjustPosition(pos);
-          }
-
-          return pos;
-        };
-
-        position = adjustPosition(position);
-
-        const data = {
-          fromNode: connectionState.fromNode,
-          position,
-          handleId: connectionState.fromHandle.id,
-          targetId: connectionState.fromNode.id,
-        };
-
-        setExternalOpen(data);
-        setTimeout(() => {
-          setIsOpen(true);
-        }, 0);
+        // Since we're using NodePanel now, we don't need to do anything here
+        // The panel will handle node creation through drag and drop
       }
     },
-    [setExternalOpen, nodes, setIsOpen, setPointerEvents]
+    [setPointerEvents]
   );
 
   const onConnectStart = useCallback(() => {
@@ -393,18 +456,15 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
   const onPaneClick = useCallback(() => {
     setMenu(null);
     setSelectedNode(null);
-    setIsOpen(false);
-  }, [setMenu, setSelectedNode, setIsOpen]);
+    setNodePanelOpen(false);
+  }, [setMenu, setSelectedNode]);
 
   return (
-    <div className="container mx-auto p-6 bg-[#121212] min-h-screen rounded-lg">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-white">Workflows</h1>
-      </div>
-
+    <div className="h-full w-full bg-[#121212]">
       <div
-        style={{ position: "relative", height: "70vh", width: "100%" }}
+        style={{ position: "relative", height: "100%", width: "100%" }}
         ref={localRef}
+        className="overflow-hidden"
       >
         <ReactFlow
           nodes={nodes}
@@ -451,71 +511,97 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
             },
           }}
         >
+          <Background color="#334155" gap={24} size={1.5} />
+          <MiniMap
+            className="bg-gray-800/80 border border-gray-700 rounded-lg shadow-lg"
+            nodeColor={(node) => {
+              switch (node.type) {
+                case "start-node":
+                  return "#10b981";
+                case "agent-node":
+                  return "#3b82f6";
+                case "message-node":
+                  return "#f97316";
+                case "condition-node":
+                  return "#3b82f6";
+                case "delay-node":
+                  return "#eab308";
+                default:
+                  return "#64748b";
+              }
+            }}
+            maskColor="rgba(15, 23, 42, 0.6)"
+          />
+
           <Controls
-            showInteractive={false}
-            showFitView={false}
+            showInteractive={true}
+            showFitView={true}
             orientation="vertical"
-            position="bottom-right"
+            position="bottom-left"
           />
           <HelperLines
             horizontal={helperLineHorizontal}
             vertical={helperLineVertical}
           />
           {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+
+          {nodePanelOpen ? (
+            <Panel position="top-right">
+              <div className="flex items-start">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setNodePanelOpen(false)}
+                  className="mr-2 h-8 w-8 rounded-full bg-slate-800 border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <NodePanel />
+              </div>
+            </Panel>
+          ) : (
+            <Panel position="top-right">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setNodePanelOpen(true)}
+                className="h-8 w-8 rounded-full bg-slate-800 border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+            </Panel>
+          )}
         </ReactFlow>
 
-        <CanvaMenu
-          externalOpen={externalOpen}
-          setExternalOpen={setExternalOpen}
-          handleAddNode={handleAddNode}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
+        {/* Overlay when form is open on smaller screens */}
+        {selectedNode && (
+          <div
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[5] transition-opacity duration-300"
+            onClick={() => setSelectedNode(null)}
+          />
+        )}
 
         <div
-          className="absolute left-0 top-0 z-10 h-full w-[380px] overflow-y-auto bg-gray-800 shadow-lg transition-transform ease-in-out"
+          className="absolute left-0 top-0 z-10 h-full w-[350px] bg-gray-900 shadow-lg transition-all duration-300 ease-in-out border-r border-gray-700 flex flex-col"
           style={{
-            transform: selectedNode ? "translateX(0)" : "translateX(-395px)",
+            transform: selectedNode ? "translateX(0)" : "translateX(-100%)",
+            opacity: selectedNode ? 1 : 0,
           }}
         >
           {selectedNode ? (
-            <>
-              <div className="bg-green-800 p-4 text-center">
-                {!editingLabel ? (
-                  <div className="flex items-center justify-center text-xl font-bold text-gray-200">
-                    <span>{selectedNode.data.label}</span>
-                    {selectedNode.type !== "start-node" && (
-                      <Edit
-                        size={16}
-                        className="ml-2 cursor-pointer hover:text-indigo-300"
-                        onClick={() => setEditingLabel(true)}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <input
-                    type="text"
-                    value={selectedNode.data.label}
-                    className="w-full p-2 text-center text-xl font-bold bg-gray-800 text-gray-200"
-                    onChange={(e) => {
-                      handleUpdateNode({
-                        ...selectedNode,
-                        data: {
-                          ...selectedNode.data,
-                          label: e.target.value,
-                        },
-                      });
-                    }}
-                    onBlur={() => setEditingLabel(false)}
-                  />
-                )}
-              </div>
+            <NodeFormWrapper
+              selectedNode={selectedNode}
+              editingLabel={editingLabel}
+              setEditingLabel={setEditingLabel}
+              handleUpdateNode={handleUpdateNode}
+              setSelectedNode={setSelectedNode}
+            >
               {selectedNode.type === "agent-node" && (
                 <AgentForm
                   selectedNode={selectedNode}
                   handleUpdateNode={handleUpdateNode}
                   setEdges={setEdges}
-                  setIsOpen={setIsOpen}
+                  setIsOpen={() => {}}
                   setSelectedNode={setSelectedNode}
                 />
               )}
@@ -524,7 +610,7 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
                   selectedNode={selectedNode}
                   handleUpdateNode={handleUpdateNode}
                   setEdges={setEdges}
-                  setIsOpen={setIsOpen}
+                  setIsOpen={() => {}}
                   setSelectedNode={setSelectedNode}
                 />
               )}
@@ -533,7 +619,7 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
                   selectedNode={selectedNode}
                   handleUpdateNode={handleUpdateNode}
                   setEdges={setEdges}
-                  setIsOpen={setIsOpen}
+                  setIsOpen={() => {}}
                   setSelectedNode={setSelectedNode}
                 />
               )}
@@ -542,11 +628,11 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
                   selectedNode={selectedNode}
                   handleUpdateNode={handleUpdateNode}
                   setEdges={setEdges}
-                  setIsOpen={setIsOpen}
+                  setIsOpen={() => {}}
                   setSelectedNode={setSelectedNode}
                 />
               )}
-            </>
+            </NodeFormWrapper>
           ) : null}
         </div>
       </div>

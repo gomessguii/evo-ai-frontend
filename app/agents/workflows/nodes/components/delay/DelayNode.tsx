@@ -32,8 +32,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Handle, NodeProps, Position, useEdges } from "@xyflow/react";
-import { Clock } from "lucide-react";
+import { Clock, ArrowRight, Timer } from "lucide-react";
 import { DelayType } from "../../nodeFunctions";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 import { BaseNode } from "../../BaseNode";
 
@@ -52,51 +54,92 @@ export function DelayNode(props: NodeProps) {
   
   const delay = data.delay as DelayType | undefined;
 
+  const getUnitLabel = (unit: string) => {
+    switch (unit) {
+      case 'seconds':
+        return 'Seconds';
+      case 'minutes':
+        return 'Minutes';
+      case 'hours':
+        return 'Hours';
+      case 'days':
+        return 'Days';
+      default:
+        return unit;
+    }
+  };
+
   return (
-    <BaseNode hasTarget={true} selected={selected || false}>
-      <div className="mb-4 flex items-center justify-between">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="yellow">
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Clock size={20} className="text-gray-500 dark:text-gray-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-900/40 shadow-sm">
+            <Clock className="h-5 w-5 text-yellow-400" />
+          </div>
           <div>
-            <p className="text-md font-medium text-black dark:text-white">
+            <p className="text-lg font-medium text-yellow-400">
               {data.label as string}
             </p>
           </div>
         </div>
-        <Clock size={20} className="text-yellow-500" />
       </div>
 
-      <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 p-4 text-center text-gray-400 dark:border-gray-700 dark:hover:bg-gray-700 bg-white dark:bg-transparent">
-        {delay ? (
-          <div className="flex flex-col items-center">
-            <p className="font-medium text-black dark:text-white">Delay: {delay.value} {delay.unit}</p>
+      {delay ? (
+        <div className="mb-3 rounded-lg border border-yellow-700/40 bg-yellow-950/10 p-3 transition-all duration-200 hover:border-yellow-600/50 hover:bg-yellow-900/10">
+          <div className="flex flex-col">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center">
+                <Timer className="h-4 w-4 text-yellow-400" />
+                <span className="ml-1.5 font-medium text-white">Delay</span>
+              </div>
+              <Badge
+                variant="outline"
+                className="px-1.5 py-0 text-xs bg-yellow-900/30 text-yellow-400 border-yellow-700/40"
+              >
+                {getUnitLabel(delay.unit)}
+              </Badge>
+            </div>
+            
+            <div className="mt-2 flex items-center">
+              <span className="text-lg font-semibold text-yellow-300">{delay.value}</span>
+              <span className="ml-1 text-sm text-gray-400">{delay.unit}</span>
+            </div>
+            
             {delay.description && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{delay.description}</p>
+              <p className="mt-2 text-xs text-gray-400 line-clamp-2">
+                {delay.description.slice(0, 80)} {delay.description.length > 80 && '...'}
+              </p>
             )}
           </div>
-        ) : (
-          "No delay configured"
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-yellow-700/40 bg-yellow-950/10 p-5 text-center transition-all duration-200 hover:border-yellow-600/50 hover:bg-yellow-900/20">
+          <Clock className="h-8 w-8 text-yellow-700/50 mb-2" />
+          <p className="text-yellow-400">No delay configured</p>
+          <p className="mt-1 text-xs text-gray-500">Click to configure</p>
+        </div>
+      )}
 
-      <div className="mt-4 cursor-pointer text-right text-sm text-gray-500 dark:text-gray-400">
-        Next step
+      <div className="mt-2 flex items-center justify-end text-sm text-gray-400 transition-colors">
+        <div className="flex items-center space-x-1 rounded-md py-1 px-2">
+          <span>Next step</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </div>
+        <Handle
+          className={cn(
+            "!w-3 !h-3 !rounded-full transition-all duration-300",
+            isBottomHandleConnected ? "!bg-yellow-500 !border-yellow-400" : "!bg-gray-400 !border-gray-500",
+            selected && isBottomHandleConnected && "!bg-yellow-400 !border-yellow-300"
+          )}
+          style={{
+            right: "-8px",
+            top: "calc(100% - 25px)",
+          }}
+          type="source"
+          position={Position.Right}
+          id="bottom-handle"
+        />
       </div>
-      <Handle
-        style={{
-          borderRadius: "50%",
-          height: "16px",
-          position: "absolute",
-          width: "16px",
-          right: "0px",
-          top: "calc(100% - 25px)",
-          backgroundColor: isBottomHandleConnected ? "#8492A6" : "#f5f5f5",
-          border: "3px solid #8492A6",
-        }}
-        type="source"
-        position={Position.Right}
-        id="bottom-handle"
-      />
     </BaseNode>
   );
 } 

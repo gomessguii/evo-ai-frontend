@@ -34,7 +34,7 @@ import { listAgents, listFolders, Folder, getAgent } from "@/services/agentServi
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { User, Loader2, Search, FolderIcon, Trash2, Play, MessageSquare, PlayIcon } from "lucide-react";
+import { User, Loader2, Search, FolderIcon, Trash2, Play, MessageSquare, PlayIcon, Plus, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { AgentForm as GlobalAgentForm } from "@/app/agents/forms/AgentForm";
 import { ApiKey, listApiKeys } from "@/services/agentService";
@@ -55,13 +55,15 @@ import {
 const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || '{}') : {};
 const clientId: string = user?.client_id ? String(user.client_id) : "";
 
-function AgentForm({
-  selectedNode,
-  handleUpdateNode,
-  setEdges,
-  setIsOpen,
-  setSelectedNode,
-}: {
+const agentListStyles = {
+  scrollbarWidth: 'none', /* Firefox */
+  msOverflowStyle: 'none', /* IE and Edge */
+  '::-webkit-scrollbar': {
+    display: 'none' /* Chrome, Safari and Opera */
+  }
+};
+
+export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen, setSelectedNode }: {
   selectedNode: any;
   handleUpdateNode: any;
   setEdges: any;
@@ -74,7 +76,7 @@ function AgentForm({
   const [loadingCurrentAgent, setLoadingCurrentAgent] = useState(false);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [allAgents, setAllAgents] = useState<Agent[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [folders, setFolders] = useState<Folder[]>([]);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [agentFolderId, setAgentFolderId] = useState<string | null>(null);
@@ -169,15 +171,16 @@ function AgentForm({
   }, [clientId, currentAgentId, selectedFolderId, loadingFolders, loadingCurrentAgent]);
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
+    if (searchQuery.trim() === "") {
       setAgents(allAgents);
     } else {
       const filtered = allAgents.filter((agent) => 
-        agent.name.toLowerCase().includes(searchTerm.toLowerCase())
+        agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        agent.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setAgents(filtered);
     }
-  }, [searchTerm, allAgents]);
+  }, [searchQuery, allAgents]);
 
   useEffect(() => {
     if (!clientId) return;
@@ -311,206 +314,14 @@ function AgentForm({
     setIsAgentDialogOpen(true);
   };
 
-  const renderForm = () => {
-    return (
-      <div className="pb-4 pl-8 pr-8 pt-2 text-white">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium">Select an Agent</h3>
-          <Button
-            size="sm"
-            className="bg-green-700 hover:bg-green-800 text-white"
-            onClick={handleOpenAgentDialog}
-          >
-            + Create new agent
-          </Button>
-        </div>
-        
-        <div className="flex gap-2 mb-4">
-          <div className="relative flex-1">
-            <Input
-              type="text"
-              placeholder="Search for an agent..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-gray-700 border-gray-600 text-gray-200 focus:border-green-500 py-2 pl-10"
-            />
-            <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            {searchTerm && (
-              <button
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200"
-                onClick={() => setSearchTerm("")}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            )}
-          </div>
-          
-          <Select
-            value={selectedFolderId || "all"}
-            onValueChange={handleFolderChange}
-          >
-            <SelectTrigger className="w-[180px] bg-gray-700 border-gray-600 text-gray-200 focus:border-green-500">
-              <SelectValue placeholder="All Folders" />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700 text-gray-200">
-              <SelectItem value="all">All Folders</SelectItem>
-              {folders.map((folder) => (
-                <SelectItem key={folder.id} value={folder.id}>
-                  {folder.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        
-        {agentFolderId && selectedFolderId !== agentFolderId && (
-          <div className="mb-4 p-2 bg-green-800/20 border border-green-700/40 rounded-md text-xs text-green-400">
-            <div className="flex items-center gap-2">
-              <FolderIcon size={12} />
-              <span>
-                Showing agents from {selectedFolderId ? `folder "${getFolderNameById(selectedFolderId)}"` : "all folders"}. Current workflow agent is in folder "{getFolderNameById(agentFolderId)}".
-              </span>
-            </div>
-            <Button 
-              variant="link" 
-              size="sm" 
-              className="text-green-400 p-0 h-auto mt-1"
-              onClick={() => setSelectedFolderId(agentFolderId)}
-            >
-              Show agents from the same folder as current workflow
-            </Button>
-          </div>
-        )}
-        
-        {loading ? (
-          <div className="flex justify-center items-center py-8">
-            <Loader2 className="animate-spin h-8 w-8 text-gray-400" />
-          </div>
-        ) : agents.length > 0 ? (
-          <ScrollArea className="h-[350px] pr-4">
-            <div className="space-y-2">
-              {agents.map((agent) => (
-                <div
-                  key={agent.id}
-                  className={`p-3 rounded-md cursor-pointer transition-colors ${
-                    node.data.agent?.id === agent.id
-                      ? "bg-green-800 border border-green-600"
-                      : "bg-gray-700 hover:bg-gray-600"
-                  }`}
-                  onClick={() => handleSelectAgent(agent)}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <User size={16} className="text-gray-300" />
-                    <span className="font-medium">{agent.name}</span>
-                    <div 
-                      className="ml-auto text-gray-400 hover:text-yellow-500 transition-colors p-1 rounded hover:bg-yellow-900/20"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setNewAgent({
-                          ...agent,
-                          client_id: clientId || "",
-                        });
-                        setIsEditMode(true);
-                        setIsAgentDialogOpen(true);
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                        <path d="m15 5 4 4" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-gray-500 text-green-400"
-                    >
-                      {getAgentTypeName(agent.type)}
-                    </Badge>
-                    {agent.model && (
-                      <span className="text-xs text-gray-400">{agent.model}</span>
-                    )}
-                  </div>
-                  {agent.description && (
-                    <p className="text-xs text-gray-300 mt-2 line-clamp-2">
-                      {agent.description}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        ) : (
-          <div className="text-center py-8 text-gray-400">
-            {searchTerm || selectedFolderId ? (
-              <p>
-                No agents found 
-                {searchTerm ? ` for "${searchTerm}"` : ""} 
-                {selectedFolderId ? ` in this folder` : ""}
-              </p>
-            ) : (
-              <>
-                <p>No agents available</p>
-                <p className="text-sm mt-2">
-                  Create agents in the Agent Management screen
-                </p>
-              </>
-            )}
-          </div>
-        )}
+  const filteredAgents = agents.filter(agent => 
+    agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    agent.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-        {node.data.agent && (
-          <div className="mt-4 pt-4 border-t border-gray-700">
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 border-red-500 text-red-500 hover:bg-red-900/20"
-                onClick={() => {
-                  handleUpdateNode({
-                    ...node,
-                    data: {
-                      ...node.data,
-                      agent: undefined,
-                    },
-                  });
-                }}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Remove Agent
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 border-green-500 text-green-500 hover:bg-green-900/20"
-                onClick={() => setIsTestModalOpen(true)}
-              >
-                <PlayIcon className="h-4 w-4 mr-2" />
-                Test Agent
-              </Button>
-            </div>
-            {isTestModalOpen && (
-              <AgentTestChatModal
-                open={isTestModalOpen}
-                onOpenChange={setIsTestModalOpen}
-                agent={node.data.agent}
-              />
-            )}
-          </div>
-        )}
-
+  return (
+    <>
+      {isAgentDialogOpen && (
         <GlobalAgentForm
           open={isAgentDialogOpen}
           onOpenChange={(open) => {
@@ -530,11 +341,219 @@ function AgentForm({
           getAgentNameById={(id) => allAgents.find((a) => a.id === id)?.name || id}
           clientId={clientId}
         />
+      )}
+      
+      {/* Agent Test Chat Modal - moved outside of nested divs to render properly */}
+      {isTestModalOpen && node.data.agent && (
+        <AgentTestChatModal
+          open={isTestModalOpen}
+          onOpenChange={setIsTestModalOpen}
+          agent={node.data.agent}
+        />
+      )}
+      
+      <div className="flex flex-col h-full">
+        <div className="p-4 border-b border-gray-700 flex-shrink-0">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search agents..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-gray-800 border-gray-700 text-gray-200 focus-visible:ring-emerald-500"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col flex-1 min-h-0">
+          <div className="px-4 pt-4 pb-2 flex items-center justify-between flex-shrink-0">
+            <h3 className="text-md font-medium text-gray-200">
+              {searchQuery ? "Search Results" : "Select an Agent"}
+            </h3>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 bg-emerald-800 hover:bg-emerald-700 border-emerald-700 text-emerald-100"
+              onClick={() => {
+                setNewAgent({
+                  id: "",
+                  name: "",
+                  client_id: clientId || "",
+                  type: "llm",
+                  model: "",
+                  config: {},
+                  description: "",
+                });
+                setIsEditMode(false);
+                setIsAgentDialogOpen(true);
+              }}
+              aria-label="New Agent"
+            >
+              <Plus size={14} />
+            </Button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 scrollbar-hide">
+            <div className="space-y-2 pr-2">
+              {filteredAgents.length > 0 ? (
+                filteredAgents.map((agent) => (
+                  <div
+                    key={agent.id}
+                    className={`p-3 rounded-md cursor-pointer transition-colors group relative ${
+                      node.data.agent?.id === agent.id
+                        ? "bg-emerald-800/20 border border-emerald-600/40"
+                        : "bg-gray-800 hover:bg-gray-700 border border-transparent"
+                    }`}
+                    onClick={() => handleSelectAgent(agent)}
+                  >
+                    <div className="flex items-start gap-2">
+                      <div className="bg-gray-700 rounded-full p-1.5 flex-shrink-0">
+                        <User size={18} className="text-gray-300" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-medium text-gray-200 truncate">{agent.name}</h3>
+                          <div 
+                            className="ml-auto text-gray-400 opacity-0 group-hover:opacity-100 hover:text-yellow-500 transition-colors p-1 rounded hover:bg-yellow-900/20"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setNewAgent({
+                                ...agent,
+                                client_id: clientId || "",
+                              });
+                              setIsEditMode(true);
+                              setIsAgentDialogOpen(true);
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                              <path d="m15 5 4 4" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-gray-700 text-emerald-400 border-gray-600"
+                          >
+                            {getAgentTypeName(agent.type)}
+                          </Badge>
+                          {agent.model && (
+                            <span className="text-xs text-gray-400">{agent.model}</span>
+                          )}
+                        </div>
+                        {agent.description && (
+                          <p className="text-sm text-gray-400 mt-1.5 line-clamp-2">
+                            {agent.description.slice(0, 30)} {agent.description.length > 30 ? "..." : ""}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-4 text-gray-400">
+                  No agents found
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {node.data.agent && (
+          <div className="p-4 border-t border-gray-700 flex-shrink-0">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-md font-medium text-gray-200">Selected Agent</h3>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 bg-gray-700 hover:bg-gray-600 border-gray-600 text-gray-200"
+                  onClick={() => {
+                    handleUpdateNode({
+                      ...node,
+                      data: {
+                        ...node.data,
+                        agent: null,
+                      },
+                    });
+                  }}
+                  aria-label="Clear agent"
+                >
+                  <X size={14} />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 bg-gray-700 hover:bg-gray-600 border-gray-600 text-gray-200"
+                  onClick={handleEditAgent}
+                  aria-label="Edit agent"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                    <path d="m15 5 4 4" />
+                  </svg>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 bg-emerald-800 hover:bg-emerald-700 border-emerald-700 text-emerald-100"
+                  onClick={() => setIsTestModalOpen(true)}
+                  aria-label="Test agent"
+                >
+                  <PlayIcon size={14} />
+                </Button>
+              </div>
+            </div>
+            <div className="p-3 rounded-md bg-emerald-800/20 border border-emerald-600/40">
+              <div className="flex items-start gap-2">
+                <div className="bg-emerald-900/50 rounded-full p-1.5 flex-shrink-0">
+                  <User size={18} className="text-emerald-300" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium text-gray-200 truncate">{node.data.agent.name}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-emerald-900/50 text-emerald-400 border-emerald-700/50"
+                    >
+                      {getAgentTypeName(node.data.agent.type)}
+                    </Badge>
+                    {node.data.agent.model && (
+                      <span className="text-xs text-gray-400">{node.data.agent.model}</span>
+                    )}
+                  </div>
+                  {node.data.agent.description && (
+                    <p className="text-sm text-gray-400 mt-1.5 line-clamp-2">
+                      {node.data.agent.description.slice(0, 30)} {node.data.agent.description.length > 30 ? "..." : ""}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    );
-  };
-
-  return renderForm();
+    </>
+  );
 }
-
-export { AgentForm };

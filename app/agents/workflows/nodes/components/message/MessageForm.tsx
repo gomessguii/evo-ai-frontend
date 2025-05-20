@@ -34,8 +34,27 @@ import { listAgents } from "@/services/agentService";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { User, Loader2, Search } from "lucide-react";
+import { 
+  MessageSquare, 
+  Save, 
+  Text, 
+  Image, 
+  File, 
+  Video,
+  AlertCircle
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function MessageForm({
@@ -154,41 +173,120 @@ function MessageForm({
     setNode(updatedNode);
     handleUpdateNode(updatedNode);
   };
+  
+  const messageTypeInfo = {
+    text: {
+      icon: <Text className="h-5 w-5 text-orange-400" />,
+      name: "Text Message",
+      description: "Simple text message",
+      color: "bg-orange-900/30 border-orange-700/50",
+    },
+    image: {
+      icon: <Image className="h-5 w-5 text-blue-400" />,
+      name: "Image",
+      description: "Image URL or base64",
+      color: "bg-blue-900/30 border-blue-700/50",
+    },
+    file: {
+      icon: <File className="h-5 w-5 text-emerald-400" />,
+      name: "File",
+      description: "File URL or base64",
+      color: "bg-emerald-900/30 border-emerald-700/50",
+    },
+    video: {
+      icon: <Video className="h-5 w-5 text-purple-400" />,
+      name: "Video",
+      description: "Video URL or base64",
+      color: "bg-purple-900/30 border-purple-700/50",
+    },
+  };
 
-  const renderForm = () => {
-    return (
-      <div className="pb-4 pl-8 pr-8 pt-2 text-white">
-        <h3 className="text-lg font-medium mb-4">Configure Message</h3>
-        <div className="mb-4">
-          <label className="block text-sm mb-2">Type</label>
-          <select
+  return (
+    <div className="flex flex-col h-full">
+      <div className="p-4 border-b border-gray-700 flex-shrink-0">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h3 className="text-md font-medium text-gray-200">Message Type</h3>
+            <Badge
+              variant="outline"
+              className="text-xs bg-orange-900/20 text-orange-400 border-orange-700/50"
+            >
+              {messageType === "text" ? "TEXT" : messageType.toUpperCase()}
+            </Badge>
+          </div>
+          <Select 
             value={messageType}
-            onChange={(e) => setMessageType(e.target.value)}
-            className="w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md px-3 py-2"
+            onValueChange={setMessageType}
           >
-            <option value="text">Text</option>
-          </select>
+            <SelectTrigger className="w-[120px] h-8 bg-gray-800 border-gray-700 text-gray-200">
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-gray-700 text-gray-200">
+              <SelectItem value="text">Text</SelectItem>
+              {/* Outras opções podem ser habilitadas no futuro */}
+              {/* <SelectItem value="image">Image</SelectItem>
+              <SelectItem value="file">File</SelectItem>
+              <SelectItem value="video">Video</SelectItem> */}
+            </SelectContent>
+          </Select>
         </div>
-        <div className="mb-4">
-          <label className="block text-sm mb-2">Content</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full bg-gray-700 border-gray-600 text-gray-200 rounded-md px-3 py-2 min-h-[80px]"
-            placeholder="Type your message here..."
-          />
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 min-h-0">
+        <div className="grid gap-4">
+          <div className="p-3 rounded-md bg-orange-900/10 border border-orange-700/30 mb-2">
+            <div className="flex items-start gap-2">
+              <div className="bg-orange-900/50 rounded-full p-1.5 flex-shrink-0">
+                <MessageSquare size={18} className="text-orange-300" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium text-gray-200">{messageTypeInfo.text.name}</h3>
+                <p className="text-sm text-gray-400 mt-1">{messageTypeInfo.text.description}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="content">Message Content</Label>
+            <Textarea
+              id="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Type your message here..."
+              className="min-h-[150px] bg-gray-700 border-gray-600 resize-none"
+            />
+          </div>
+
+          {content.trim() !== "" ? (
+            <div className="rounded-md bg-gray-700/50 border border-gray-600 p-3 mt-2">
+              <div className="text-sm font-medium text-gray-400 mb-1">Preview</div>
+              <div className="flex items-start gap-2 p-2 rounded-md bg-gray-800/70">
+                <div className="rounded-full bg-orange-900/30 p-1.5 mt-0.5">
+                  <MessageSquare size={15} className="text-orange-400" />
+                </div>
+                <div className="text-sm text-gray-300 whitespace-pre-wrap">{content}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-md bg-gray-700/30 border border-gray-600/50 p-4 flex flex-col items-center justify-center text-center">
+              <AlertCircle className="h-6 w-6 text-gray-500 mb-2" />
+              <p className="text-gray-400 text-sm">Your message will appear here</p>
+            </div>
+          )}
         </div>
+      </div>
+
+      <div className="p-4 border-t border-gray-700 flex-shrink-0">
         <Button
-          className="w-full bg-green-600 hover:bg-green-700 text-white"
+          className="w-full bg-orange-700 hover:bg-orange-600 text-white flex items-center gap-2 justify-center"
           onClick={handleSave}
         >
+          <Save size={16} />
           Save Message
         </Button>
       </div>
-    );
-  };
-
-  return renderForm();
+    </div>
+  );
 }
 
 export { MessageForm };
