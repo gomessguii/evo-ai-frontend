@@ -103,13 +103,13 @@ export function ConditionNode(props: NodeProps) {
     if (condition.type === ConditionTypeEnum.PREVIOUS_OUTPUT) {
       return (
         <div
-          className="mb-3 cursor-pointer rounded-lg border border-blue-700/40 bg-blue-950/10 p-3 text-left transition-all duration-200 hover:border-blue-600/50 hover:bg-blue-900/10"
+          className="mb-3 cursor-pointer rounded-lg border border-purple-700/40 bg-purple-950/10 p-3 text-left transition-all duration-200 hover:border-purple-600/50 hover:bg-purple-900/10"
         >
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="font-medium text-neutral-300">
                 O campo{" "}
-                <span className="font-semibold text-blue-400">
+                <span className="font-semibold text-purple-400">
                   {condition.data.field}
                 </span>{" "}
                 <span className="text-neutral-400">
@@ -127,7 +127,7 @@ export function ConditionNode(props: NodeProps) {
             <Handle
               className={cn(
                 "!rounded-full transition-all duration-300",
-                isConnected ? "!bg-blue-500 !border-blue-400" : "!bg-neutral-400 !border-neutral-500"
+                isConnected ? "!bg-purple-500 !border-purple-400" : "!bg-neutral-400 !border-neutral-500"
               )}
               style={{
                 top: "50%",
@@ -149,14 +149,14 @@ export function ConditionNode(props: NodeProps) {
   };
 
   return (
-    <BaseNode hasTarget={true} selected={selected || false} borderColor="blue">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="purple">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900/40 shadow-sm">
-            <FilterIcon className="h-5 w-5 text-blue-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-900/40 shadow-sm">
+            <FilterIcon className="h-5 w-5 text-purple-400" />
           </div>
           <div>
-            <p className="text-lg font-medium text-blue-400">
+            <p className="text-lg font-medium text-purple-400">
               {data.label as string}
             </p>
             <p className="text-xs text-neutral-400">
@@ -171,9 +171,9 @@ export function ConditionNode(props: NodeProps) {
           <div key={condition.id}>{renderCondition(condition)}</div>
         ))
       ) : (
-        <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-blue-700/40 bg-blue-950/10 p-5 text-center transition-all duration-200 hover:border-blue-600/50 hover:bg-blue-900/20">
-          <FilterIcon className="h-8 w-8 text-blue-700/50 mb-2" />
-          <p className="text-blue-400">No conditions configured</p>
+        <div className="mb-3 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-purple-700/40 bg-purple-950/10 p-5 text-center transition-all duration-200 hover:border-purple-600/50 hover:bg-purple-900/20">
+          <FilterIcon className="h-8 w-8 text-purple-700/50 mb-2" />
+          <p className="text-purple-400">No conditions configured</p>
           <p className="mt-1 text-xs text-neutral-500">Click to add a condition</p>
         </div>
       )}
@@ -186,8 +186,8 @@ export function ConditionNode(props: NodeProps) {
         <Handle
           className={cn(
             "!w-3 !h-3 !rounded-full transition-all duration-300",
-            isBottomHandleConnected ? "!bg-blue-500 !border-blue-400" : "!bg-neutral-400 !border-neutral-500",
-            selected && isBottomHandleConnected && "!bg-blue-400 !border-blue-300"
+            isBottomHandleConnected ? "!bg-purple-500 !border-purple-400" : "!bg-neutral-400 !border-neutral-500",
+            selected && isBottomHandleConnected && "!bg-purple-400 !border-purple-300"
           )}
           style={{
             right: "0px",
