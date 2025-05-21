@@ -137,12 +137,33 @@ export function exportAsJson(
         });
       }
       
+      // Process task agents - extract tasks and create full agent objects
+      if (agent.type === 'task' && agent.config?.tasks && Array.isArray(agent.config.tasks)) {
+        agent.config.tasks = agent.config.tasks.map((task: any) => {
+          if (task.agent_id && agentsMap.has(task.agent_id)) {
+            // Add the corresponding agent to the task
+            task.agent = processAgent({...agentsMap.get(task.agent_id)}, depth + 1);
+          }
+          return task;
+        });
+      }
+      
       // Process workflow nodes - recursively process any agent objects in agent-nodes
       if (agent.type === 'workflow' && agent.config?.workflow?.nodes && Array.isArray(agent.config.workflow.nodes)) {
         agent.config.workflow.nodes = agent.config.workflow.nodes.map((node: any) => {
           if (node.type === 'agent-node' && node.data?.agent) {
             // Process the embedded agent object
             node.data.agent = processAgent(node.data.agent, depth + 1);
+            
+            // If this is a task agent, also process its tasks
+            if (node.data.agent.type === 'task' && node.data.agent.config?.tasks && Array.isArray(node.data.agent.config.tasks)) {
+              node.data.agent.config.tasks = node.data.agent.config.tasks.map((task: any) => {
+                if (task.agent_id && agentsMap.has(task.agent_id)) {
+                  task.agent = processAgent({...agentsMap.get(task.agent_id)}, depth + 1);
+                }
+                return task;
+              });
+            }
           }
           return node;
         });
