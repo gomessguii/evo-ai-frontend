@@ -50,6 +50,7 @@ export function AgentNode(props: NodeProps) {
   const isBottomHandleConnected = isHandleConnected("bottom-handle");
   
   const agent = data.agent as Agent | undefined;
+  const isExecuting = data.isExecuting as boolean | undefined;
 
   const getAgentTypeName = (type: string) => {
     const agentTypes: Record<string, string> = {
@@ -94,7 +95,7 @@ export function AgentNode(props: NodeProps) {
   };
 
   return (
-    <BaseNode hasTarget={true} selected={selected || false} borderColor="blue">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="blue" isExecuting={isExecuting}>
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900/40 shadow-sm">

@@ -28,7 +28,7 @@
 */
 /* eslint-disable jsx-a11y/alt-text */
 import { useEdges, useNodes } from "@xyflow/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { Agent } from "@/types/agent";
 import { listAgents, listFolders, Folder, getAgent } from "@/services/agentService";
 import { Button } from "@/components/ui/button";
@@ -105,6 +105,23 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
   const [isLoading, setIsLoading] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  
+  // Acessar a referência do canvas a partir do localStorage
+  const canvasRef = useRef<any>(null);
+  
+  useEffect(() => {
+    // Quando o componente é montado, verifica se há uma referência de canvas no contexto global
+    if (typeof window !== "undefined") {
+      const workflowsPage = document.querySelector('[data-workflow-page="true"]');
+      if (workflowsPage) {
+        // Se estamos na página de workflows, tentamos acessar a ref do canvas
+        const canvasElement = workflowsPage.querySelector('[data-canvas-ref="true"]');
+        if (canvasElement && (canvasElement as any).__reactRef) {
+          canvasRef.current = (canvasElement as any).__reactRef.current;
+        }
+      }
+    }
+  }, []);
 
   const connectedNode = useMemo(() => {
     const edge = edges.find((edge: any) => edge.source === selectedNode.id);

@@ -154,5 +154,12 @@ export function useAgentWebSocket({
         }
     }, [openWebSocket]);
 
-    return { sendMessage };
+    const disconnect = useCallback(() => {
+        if (wsRef.current) {
+            wsRef.current.close();
+            wsRef.current = null;
+        }
+    }, []);
+
+    return { sendMessage, disconnect };
 }

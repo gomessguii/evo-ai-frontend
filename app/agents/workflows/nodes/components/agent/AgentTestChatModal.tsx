@@ -38,7 +38,7 @@ import { ChatMessage as ChatMessageComponent } from "@/app/chat/components/ChatM
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChatPart } from "@/services/sessionService";
 import { FileData } from "@/lib/file-utils";
-import { X, User, Bot, Zap, MessageSquare, Loader2, Code, ExternalLink, Workflow } from "lucide-react";
+import { X, User, Bot, Zap, MessageSquare, Loader2, Code, ExternalLink, Workflow, RefreshCw } from "lucide-react";
 
 interface FunctionMessageContent {
     title: string;
@@ -57,9 +57,10 @@ interface AgentTestChatModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     agent: Agent;
+    canvasRef?: React.RefObject<any>;
 }
 
-export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatModalProps) {
+export function AgentTestChatModal({ open, onOpenChange, agent, canvasRef }: AgentTestChatModalProps) {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [isSending, setIsSending] = useState(false);
     const [expandedFunctions, setExpandedFunctions] = useState<Record<string, boolean>>({});
@@ -81,18 +82,25 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
         );
     };
 
-    const [externalId] = useState(generateExternalId());
+    const [externalId, setExternalId] = useState(generateExternalId());
     const jwt = getAccessTokenFromCookie();
 
     const onEvent = useCallback((event: any) => {
         setMessages((prev) => [...prev, event]);
-    }, []);
+        
+        // Verificar se a mensagem vem de um nó de workflow e destacar o nó
+        // somente se o canvasRef estiver disponível (chamado do Test Workflow na página principal)
+        if (event.author && event.author.startsWith('workflow-node:') && canvasRef?.current) {
+            const nodeId = event.author.split(':')[1];
+            canvasRef.current.setActiveExecutionNodeId(nodeId);
+        }
+    }, [canvasRef]);
 
     const onTurnComplete = useCallback(() => {
         setIsSending(false);
     }, []);
 
-    const { sendMessage: wsSendMessage } = useAgentWebSocket({
+    const { sendMessage: wsSendMessage, disconnect } = useAgentWebSocket({
         agentId: agent.id,
         externalId,
         jwt,
@@ -121,7 +129,20 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
             }, 1200);
             return () => clearTimeout(timer);
         }
-    }, [open]);
+    }, [open, externalId]);
+
+    const handleRestartChat = () => {
+        if (disconnect) disconnect();
+        setMessages([]);
+        setExpandedFunctions({});
+        setExternalId(generateExternalId());
+        setIsInitializing(true);
+        
+        // Breve delay para mostrar o status de inicialização
+        const timer = setTimeout(() => {
+            setIsInitializing(false);
+        }, 1200);
+    };
 
     const handleSendMessageWithFiles = (message: string, files?: FileData[]) => {
         if ((!message.trim() && (!files || files.length === 0))) return;
@@ -319,12 +340,28 @@ export function AgentTestChatModal({ open, onOpenChange, agent }: AgentTestChatM
                                 </div>
                             </div>
                         </div>
-                        <button
-                            onClick={() => onOpenChange(false)}
-                            className="p-1.5 rounded-full hover:bg-neutral-700/50 text-neutral-400 hover:text-white transition-colors"
-                        >
-                            <X size={18} />
-                        </button>
+                        <div className="flex items-center space-x-2">
+                            <button
+                                onClick={handleRestartChat}
+                                className="p-1.5 rounded-full hover:bg-neutral-700/50 text-neutral-400 hover:text-white transition-colors group relative"
+                                title="Restart chat"
+                                disabled={isInitializing}
+                            >
+                                <RefreshCw size={18} className={isInitializing ? "animate-spin text-emerald-400" : ""} />
+                                <span className="absolute -bottom-8 right-0 bg-neutral-800 text-neutral-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">
+                                    Restart chat
+                                </span>
+                            </button>
+                            <button
+                                onClick={() => onOpenChange(false)}
+                                className="p-1.5 rounded-full hover:bg-neutral-700/50 text-neutral-400 hover:text-white transition-colors group relative"
+                            >
+                                <X size={18} />
+                                <span className="absolute -bottom-8 right-0 bg-neutral-800 text-neutral-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">
+                                    Close
+                                </span>
+                            </button>
+                        </div>
                     </div>
                     
                     {agent.description && (

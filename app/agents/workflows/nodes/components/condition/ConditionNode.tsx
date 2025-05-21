@@ -80,6 +80,7 @@ const operatorText: Record<OperatorType, string> = {
 export function ConditionNode(props: NodeProps) {
   const { selected, data } = props;
   const edges = useEdges();
+  const isExecuting = data.isExecuting as boolean | undefined;
 
   const typeText = {
     and: "all of the following conditions",
@@ -149,7 +150,7 @@ export function ConditionNode(props: NodeProps) {
   };
 
   return (
-    <BaseNode hasTarget={true} selected={selected || false} borderColor="purple">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="purple" isExecuting={isExecuting}>
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-900/40 shadow-sm">

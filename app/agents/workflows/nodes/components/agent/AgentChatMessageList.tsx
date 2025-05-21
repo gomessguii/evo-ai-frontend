@@ -91,6 +91,9 @@ export function AgentChatMessageList({
                 
                 const inlineDataParts = message.content.parts.filter(part => part.inline_data);
                 const hasInlineData = inlineDataParts.length > 0;
+                
+                const isWorkflowNode = message.author && message.author.startsWith('workflow-node:');
+                const nodeId = isWorkflowNode ? message.author.split(':')[1] : null;
 
                 return (
                     <div
@@ -121,9 +124,22 @@ export function AgentChatMessageList({
                                 style={{
                                     wordBreak: "break-word",
                                     maxWidth: "calc(100% - 3rem)",
-                                    width: "100%"
+                                    width: "100%",
+                                    ...(isWorkflowNode ? {
+                                        borderLeft: '3px solid #05d472',
+                                        boxShadow: '0 0 10px rgba(5, 212, 114, 0.2)'
+                                    } : {})
                                 }}
                             >
+                                {isWorkflowNode && (
+                                    <div className="text-xs text-emerald-500 mb-1 flex items-center space-x-1 bg-emerald-950/30 p-1 rounded">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1">
+                                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                                        </svg>
+                                        <span>Node {nodeId} is running</span>
+                                    </div>
+                                )}
+                                
                                 {isFunctionMessage || isTaskExecutor ? (
                                     <div className="w-full">
                                         <div

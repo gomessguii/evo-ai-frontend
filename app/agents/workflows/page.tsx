@@ -155,7 +155,7 @@ function WorkflowsContent() {
   }
 
   return (
-    <div className="relative w-full h-screen flex flex-col">
+    <div className="relative w-full h-screen flex flex-col" data-workflow-page="true">
       {/* Header with controls */}
       <div className="w-full bg-[#121212] py-4 px-6 z-10 flex items-center justify-between border-b border-neutral-800">
         <div className="flex items-center gap-2">
@@ -217,6 +217,7 @@ function WorkflowsContent() {
             open={isTestModalOpen}
             onOpenChange={setIsTestModalOpen}
             agent={agent}
+            canvasRef={canvaRef} // Passamos a referência do canvas para permitir a visualização dos nós em execução
           />
         )}
 
@@ -224,7 +225,7 @@ function WorkflowsContent() {
           <SourceClickProvider>
             <DnDProvider>
               <ReactFlowProvider>
-                <Canva agent={agent} ref={canvaRef} />
+                <Canva agent={agent} ref={canvaRef} data-canvas-ref="true" />
               </ReactFlowProvider>
             </DnDProvider>
           </SourceClickProvider>

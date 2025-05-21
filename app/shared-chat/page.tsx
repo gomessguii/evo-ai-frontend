@@ -469,7 +469,7 @@ Args: ${
 
   const externalId = selectedSession || generateExternalId();
 
-  const { sendMessage: wsSendMessage } = useAgentWebSocket({
+  const { sendMessage: wsSendMessage, disconnect: _ } = useAgentWebSocket({
     agentId: agentParams?.id || "",
     externalId,
     apiKey: agentParams?.apiKey,

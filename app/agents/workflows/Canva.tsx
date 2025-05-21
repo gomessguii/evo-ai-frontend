@@ -170,6 +170,9 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
   const [menu, setMenu] = useState<any>(null);
   const localRef = useRef<any>(null);
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [activeExecutionNodeId, setActiveExecutionNodeId] = useState<
+    string | null
+  >(null);
 
   const [editingLabel, setEditingLabel] = useState(false);
 
@@ -183,7 +186,19 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
       edges,
     }),
     setHasChanges,
+    setActiveExecutionNodeId,
   }));
+
+  // Effect para limpar o nó ativo após um timeout
+  useEffect(() => {
+    if (activeExecutionNodeId) {
+      const timer = setTimeout(() => {
+        setActiveExecutionNodeId(null);
+      }, 5000); // Aumentar para 5 segundos para dar mais tempo de visualização
+
+      return () => clearTimeout(timer);
+    }
+  }, [activeExecutionNodeId]);
 
   useEffect(() => {
     if (
@@ -202,6 +217,35 @@ const Canva = forwardRef(({ agent }: { agent: Agent | null }, ref) => {
       setEdges(initialEdges);
     }
   }, [agent, setNodes, setEdges]);
+
+  // Atualizar os nós quando o nó ativo muda para adicionar classe visual
+  useEffect(() => {
+    if (nodes.length > 0) {
+      setNodes((nds: any) =>
+        nds.map((node: any) => {
+          if (node.id === activeExecutionNodeId) {
+            // Adiciona uma classe para destacar o nó ativo
+            return {
+              ...node,
+              className: "active-execution-node",
+              data: {
+                ...node.data,
+                isExecuting: true,
+              },
+            };
+          } else {
+            // Remove a classe de destaque
+            const { isExecuting, ...restData } = node.data || {};
+            return {
+              ...node,
+              className: "",
+              data: restData,
+            };
+          }
+        })
+      );
+    }
+  }, [activeExecutionNodeId, setNodes]);
 
   useEffect(() => {
     if (agent?.config?.workflow) {

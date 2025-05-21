@@ -38,8 +38,8 @@ import { BaseNode } from "../../BaseNode";
 
 export function MessageNode(props: NodeProps) {
   const { selected, data } = props;
-
   const edges = useEdges();
+  const isExecuting = data.isExecuting as boolean | undefined;
 
   const isHandleConnected = (handleId: string) => {
     return edges.some(
@@ -92,7 +92,7 @@ export function MessageNode(props: NodeProps) {
   };
 
   return (
-    <BaseNode hasTarget={true} selected={selected || false} borderColor="orange">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="orange" isExecuting={isExecuting}>
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-900/40 shadow-sm">

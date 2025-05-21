@@ -526,7 +526,7 @@ Args: ${
     [selectedSession]
   );
 
-  const { sendMessage: wsSendMessage } = useAgentWebSocket({
+  const { sendMessage: wsSendMessage, disconnect: _ } = useAgentWebSocket({
     agentId,
     externalId,
     jwt,

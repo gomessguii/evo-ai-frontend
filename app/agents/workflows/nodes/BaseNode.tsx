@@ -36,11 +36,13 @@ export function BaseNode({
   hasTarget,
   children,
   borderColor,
+  isExecuting
 }: {
   selected: boolean;
   hasTarget: boolean;
   children: React.ReactNode;
   borderColor: string;
+  isExecuting?: boolean;
 }) {
   const { pointerEvents } = useDnD();
 
@@ -116,6 +118,12 @@ export function BaseNode({
     border: "border-green-500/90",
     glow: colorStyle.selectedGlow
   };
+  
+  // Executing styles
+  const executingStyle = {
+    border: "border-emerald-500",
+    glow: "shadow-[0_0_25px_rgba(5,212,114,0.5)]"
+  };
 
   return (
     <>
@@ -123,13 +131,15 @@ export function BaseNode({
         className={cn(
           "relative z-0 w-[350px] rounded-2xl p-4 border-2 backdrop-blur-sm transition-all duration-300",
           "shadow-lg hover:shadow-xl",
-          selected ? selectedStyle.glow : colorStyle.glow,
-          selected ? selectedStyle.border : colorStyle.border,
-          colorStyle.gradient
+          isExecuting ? executingStyle.glow : selected ? selectedStyle.glow : colorStyle.glow,
+          isExecuting ? executingStyle.border : selected ? selectedStyle.border : colorStyle.border,
+          colorStyle.gradient,
+          isExecuting && "active-execution-node"
         )}
         style={{
           backdropFilter: "blur(12px)",
         }}
+        data-is-executing={isExecuting ? "true" : "false"}
       >
         {hasTarget && (
           <Handle

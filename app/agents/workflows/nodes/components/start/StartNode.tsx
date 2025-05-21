@@ -43,13 +43,14 @@ export type StartNodeType = Node<
 export function StartNode(props: NodeProps) {
   const { selected, data } = props;
   const edges = useEdges();
+  const isExecuting = data.isExecuting as boolean | undefined;
 
   const isSourceHandleConnected = edges.some(
     (edge) => edge.source === props.id
   );
 
   return (
-    <BaseNode hasTarget={true} selected={selected || false} borderColor="emerald">
+    <BaseNode hasTarget={true} selected={selected || false} borderColor="emerald" isExecuting={isExecuting}>
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-900/40 shadow-sm">
