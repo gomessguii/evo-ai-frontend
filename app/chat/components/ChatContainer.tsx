@@ -182,6 +182,7 @@ export function ChatContainer({
           onSendMessage={onSendMessage}
           isLoading={isLoading}
           placeholder="Type your message..."
+          autoFocus={true}
         />
       </div>
     </div>

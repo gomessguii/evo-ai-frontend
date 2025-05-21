@@ -69,6 +69,7 @@ import { ChatMessage as ChatMessageComponent } from "./components/ChatMessage";
 import { SessionList } from "./components/SessionList";
 import { ChatInput } from "./components/ChatInput";
 import { FileData } from "@/lib/file-utils";
+import { AgentInfoDialog } from "./components/AgentInfoDialog";
 
 interface FunctionMessageContent {
   title: string;
@@ -93,6 +94,7 @@ export default function Chat() {
   const [expandedFunctions, setExpandedFunctions] = useState<
     Record<string, boolean>
   >({});
+  const [isAgentInfoDialogOpen, setIsAgentInfoDialogOpen] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -517,6 +519,21 @@ Args: ${
     setIsSending(false);
   }, []);
 
+  const handleAgentInfoClick = () => {
+    setIsAgentInfoDialogOpen(true);
+  };
+
+  const handleAgentUpdated = (updatedAgent: any) => {
+    setAgents(agents.map(agent => 
+      agent.id === updatedAgent.id ? updatedAgent : agent
+    ));
+    
+    toast({
+      title: "Agent updated successfully",
+      description: "The agent has been updated with the new settings.",
+    });
+  };
+
   const jwt = getAccessTokenFromCookie();
 
   const agentId = useMemo(() => currentAgentId || "", [currentAgentId]);
@@ -573,7 +590,10 @@ Args: ${
 
                     <div className="flex items-center gap-2">
                       {currentAgent && (
-                        <Badge className="bg-emerald-500 text-white px-3 py-1 text-sm border-0">
+                        <Badge 
+                          className="bg-emerald-500 text-white px-3 py-1 text-sm border-0 cursor-pointer hover:bg-emerald-600 transition-colors"
+                          onClick={handleAgentInfoClick}
+                        >
                           {currentAgent.name || currentAgentId}
                         </Badge>
                       )}
@@ -678,6 +698,7 @@ Args: ${
                   onSendMessage={handleSendMessageWithFiles}
                   isLoading={isSending || isLoading}
                   placeholder="Type your message..."
+                  autoFocus={true}
                 />
               </div>
             </div>
@@ -847,6 +868,14 @@ Args: ${
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Agent Info Dialog */}
+      <AgentInfoDialog 
+        agent={currentAgent}
+        open={isAgentInfoDialogOpen}
+        onOpenChange={setIsAgentInfoDialogOpen}
+        onAgentUpdated={handleAgentUpdated}
+      />
     </div>
   );
 }

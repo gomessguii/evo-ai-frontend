@@ -79,6 +79,8 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
   const [searchQuery, setSearchQuery] = useState("");
   const [folders, setFolders] = useState<Folder[]>([]);
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [selectedAgentType, setSelectedAgentType] = useState<string | null>(null);
+  const [agentTypes, setAgentTypes] = useState<string[]>([]);
   const [agentFolderId, setAgentFolderId] = useState<string | null>(null);
   const edges = useEdges();
   const nodes = useNodes();
@@ -182,22 +184,34 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
         const filteredAgents = res.data.filter((agent: Agent) => agent.id !== currentAgentId);
         setAllAgents(filteredAgents);
         setAgents(filteredAgents);
+        
+        // Extract unique agent types
+        const types = [...new Set(filteredAgents.map(agent => agent.type))].filter(Boolean);
+        setAgentTypes(types);
       })
       .catch((error) => console.error("Error loading agents:", error))
       .finally(() => setLoading(false));
   }, [clientId, currentAgentId, selectedFolderId, loadingFolders, loadingCurrentAgent]);
 
   useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setAgents(allAgents);
-    } else {
-      const filtered = allAgents.filter((agent) => 
+    // Apply all filters: search, folder, and type
+    let filtered = allAgents;
+    
+    // Search filter is applied in a separate effect
+    if (searchQuery.trim() !== "") {
+      filtered = filtered.filter((agent) => 
         agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         agent.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setAgents(filtered);
     }
-  }, [searchQuery, allAgents]);
+    
+    // Apply agent type filter
+    if (selectedAgentType) {
+      filtered = filtered.filter(agent => agent.type === selectedAgentType);
+    }
+    
+    setAgents(filtered);
+  }, [searchQuery, selectedAgentType, allAgents]);
 
   useEffect(() => {
     if (!clientId) return;
@@ -313,6 +327,10 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
   const handleFolderChange = (value: string) => {
     setSelectedFolderId(value === "all" ? null : value);
   };
+  
+  const handleAgentTypeChange = (value: string) => {
+    setSelectedAgentType(value === "all" ? null : value);
+  };
 
   const getFolderNameById = (id: string) => {
     const folder = folders.find((f) => f.id === id);
@@ -330,11 +348,6 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
     setIsEditMode(true);
     setIsAgentDialogOpen(true);
   };
-
-  const filteredAgents = agents.filter(agent => 
-    agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    agent.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <>
@@ -371,14 +384,56 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
       
       <div className="flex flex-col h-full">
         <div className="p-4 border-b border-neutral-700 flex-shrink-0">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
-            <Input
-              placeholder="Search agents..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus-visible:ring-emerald-500"
-            />
+          <div className="mb-3">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
+              <Input
+                placeholder="Search agents..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus-visible:ring-emerald-500"
+              />
+            </div>
+          </div>
+          
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Select 
+                value={selectedFolderId ? selectedFolderId : "all"} 
+                onValueChange={handleFolderChange}
+              >
+                <SelectTrigger className="w-full h-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus:ring-emerald-500 focus:ring-offset-0">
+                  <SelectValue placeholder="All folders" />
+                </SelectTrigger>
+                <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
+                  <SelectItem value="all">All folders</SelectItem>
+                  {folders.map((folder) => (
+                    <SelectItem key={folder.id} value={folder.id}>
+                      {folder.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex-1">
+              <Select 
+                value={selectedAgentType ? selectedAgentType : "all"} 
+                onValueChange={handleAgentTypeChange}
+              >
+                <SelectTrigger className="w-full h-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus:ring-emerald-500 focus:ring-offset-0">
+                  <SelectValue placeholder="All types" />
+                </SelectTrigger>
+                <SelectContent className="bg-neutral-800 border-neutral-700 text-neutral-200">
+                  <SelectItem value="all">All types</SelectItem>
+                  {agentTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {getAgentTypeName(type)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -412,8 +467,8 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
 
           <div className="flex-1 overflow-y-auto px-4 scrollbar-hide">
             <div className="space-y-2 pr-2">
-              {filteredAgents.length > 0 ? (
-                filteredAgents.map((agent) => (
+              {agents.length > 0 ? (
+                agents.map((agent) => (
                   <div
                     key={agent.id}
                     className={`p-3 rounded-md cursor-pointer transition-colors group relative ${

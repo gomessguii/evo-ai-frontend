@@ -274,7 +274,6 @@ export function AgentForm({
                 <SubAgentsTab
                   values={values}
                   onChange={setValues}
-                  agents={agents}
                   getAgentNameById={getAgentNameById}
                   editingAgentId={initialValues.id}
                   clientId={clientId}

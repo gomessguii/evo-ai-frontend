@@ -171,6 +171,7 @@ export function SharedChatPanel({
             onSendMessage={onSendMessage}
             isLoading={isSending || isLoading}
             placeholder="Type your message..."
+            autoFocus={true}
           />
         </div>
       </div>

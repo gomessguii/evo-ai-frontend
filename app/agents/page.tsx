@@ -28,11 +28,18 @@
 */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Key, Plus, Folder } from "lucide-react";
+import { Key, Plus, Folder, Download, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { exportAsJson } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { Agent, AgentCreate } from "@/types/agent";
 import { Folder as AgentFolder } from "@/services/agentService";
@@ -52,6 +59,7 @@ import {
   updateApiKey,
   deleteApiKey,
   shareAgent,
+  importAgentFromJson,
 } from "@/services/agentService";
 import { listMCPServers } from "@/services/mcpServerService";
 import { AgentSidebar } from "./AgentSidebar";
@@ -66,6 +74,7 @@ import { ApiKeysDialog } from "./dialogs/ApiKeysDialog";
 import { ShareAgentDialog } from "./dialogs/ShareAgentDialog";
 import { MCPServer } from "@/types/mcpServer";
 import { availableModels } from "@/types/aiModels";
+import { ImportAgentDialog } from "./dialogs/ImportAgentDialog";
 
 export default function AgentsPage() {
   const { toast } = useToast();
@@ -83,6 +92,8 @@ export default function AgentsPage() {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [availableMCPs, setAvailableMCPs] = useState<MCPServer[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAgentType, setSelectedAgentType] = useState<string | null>(null);
+  const [agentTypes, setAgentTypes] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -127,6 +138,10 @@ export default function AgentsPage() {
     },
   });
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+
   useEffect(() => {
     if (!clientId) return;
     loadAgents();
@@ -161,6 +176,10 @@ export default function AgentsPage() {
       );
       setAgents(res.data);
       setFilteredAgents(res.data);
+      
+      // Extract unique agent types
+      const types = [...new Set(res.data.map(agent => agent.type))].filter(Boolean);
+      setAgentTypes(types);
     } catch (error) {
       toast({ title: "Error loading agents", variant: "destructive" });
     } finally {
@@ -190,18 +209,26 @@ export default function AgentsPage() {
   };
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setFilteredAgents(agents);
-    } else {
+    // Apply both search term and type filters
+    let filtered = [...agents];
+    
+    // Apply search term filter
+    if (searchTerm.trim() !== "") {
       const lowercaseSearch = searchTerm.toLowerCase();
-      const filtered = agents.filter(
+      filtered = filtered.filter(
         (agent) =>
           agent.name.toLowerCase().includes(lowercaseSearch) ||
           agent.description?.toLowerCase().includes(lowercaseSearch)
       );
-      setFilteredAgents(filtered);
     }
-  }, [searchTerm, agents]);
+    
+    // Apply agent type filter
+    if (selectedAgentType) {
+      filtered = filtered.filter(agent => agent.type === selectedAgentType);
+    }
+    
+    setFilteredAgents(filtered);
+  }, [searchTerm, selectedAgentType, agents]);
 
   const handleAddAgent = async (agentData: Partial<Agent>) => {
     try {
@@ -413,6 +440,70 @@ export default function AgentsPage() {
     setEditingAgent(null);
   };
 
+  // Função para exportar todos os agentes como JSON
+  const handleExportAllAgents = () => {
+    try {
+      // Criar nome do arquivo com data atual
+      const date = new Date();
+      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+      const filename = `agents-export-${formattedDate}`;
+      
+      // Usar a função utilitária para exportar
+      // Pass agents both as the data and as allAgents parameter to properly resolve references
+      const result = exportAsJson({ agents: filteredAgents }, filename, true, agents);
+      
+      if (result) {
+        toast({
+          title: "Export complete",
+          description: `${filteredAgents.length} agent(s) exported to JSON`,
+        });
+      } else {
+        throw new Error("Export failed");
+      }
+    } catch (error) {
+      console.error("Error exporting agents:", error);
+      
+      toast({
+        title: "Export failed",
+        description: "There was an error exporting the agents",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleImportAgentJSON = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !clientId) return;
+    
+    try {
+      setIsImporting(true);
+      
+      await importAgentFromJson(file, clientId);
+      
+      toast({
+        title: "Import successful",
+        description: "Agent was imported successfully",
+      });
+      
+      // Refresh the agent list
+      loadAgents();
+      
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error("Error importing agent:", error);
+      toast({
+        title: "Import failed",
+        description: "There was an error importing the agent",
+        variant: "destructive",
+      });
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <div className="container mx-auto p-6 bg-[#121212] min-h-screen flex relative">
       <AgentSidebar
@@ -463,6 +554,9 @@ export default function AgentsPage() {
               value={searchTerm}
               onChange={setSearchTerm}
               placeholder="Search agents..."
+              selectedAgentType={selectedAgentType}
+              onAgentTypeChange={setSelectedAgentType}
+              agentTypes={agentTypes}
             />
 
             <Button
@@ -472,17 +566,43 @@ export default function AgentsPage() {
               <Key className="mr-2 h-4 w-4 text-emerald-400" />
               API Keys
             </Button>
-
+            
             <Button
-              onClick={() => {
-                resetForm();
-                setIsDialogOpen(true);
-              }}
-              className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
+              onClick={handleExportAllAgents}
+              className="bg-[#222] text-white hover:bg-[#333] border border-[#444]"
+              title="Export all agents as JSON"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              New Agent
+              <Download className="mr-2 h-4 w-4 text-purple-400" />
+              Export All
             </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-emerald-400 text-black hover:bg-[#00cc7d]">
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Agent
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-zinc-900 border-zinc-700">
+                <DropdownMenuItem
+                  className="text-white hover:bg-zinc-800 cursor-pointer"
+                  onClick={() => {
+                    resetForm();
+                    setIsDialogOpen(true);
+                  }}
+                >
+                  <Plus className="h-4 w-4 mr-2 text-emerald-400" />
+                  New Agent
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-white hover:bg-zinc-800 cursor-pointer"
+                  onClick={() => setIsImportDialogOpen(true)}
+                >
+                  <Upload className="h-4 w-4 mr-2 text-indigo-400" />
+                  Import Agent JSON
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -513,7 +633,10 @@ export default function AgentsPage() {
               setIsMovingDialogOpen(true);
             }}
             onShare={handleShareAgent}
-            onClearSearch={() => setSearchTerm("")}
+            onClearSearch={() => {
+              setSearchTerm("");
+              setSelectedAgentType(null);
+            }}
             onCreateAgent={() => {
               resetForm();
               setIsDialogOpen(true);
@@ -527,7 +650,7 @@ export default function AgentsPage() {
         ) : (
           <EmptyState
             type={
-              searchTerm
+              searchTerm || selectedAgentType
                 ? "search-no-results"
                 : selectedFolderId
                 ? "empty-folder"
@@ -535,11 +658,11 @@ export default function AgentsPage() {
             }
             searchTerm={searchTerm}
             onAction={() => {
-              searchTerm
-                ? setSearchTerm("")
+              searchTerm || selectedAgentType
+                ? (setSearchTerm(""), setSelectedAgentType(null))
                 : (resetForm(), setIsDialogOpen(true));
             }}
-            actionLabel={searchTerm ? "Clear search" : "Create Agent"}
+            actionLabel={searchTerm || selectedAgentType ? "Clear filters" : "Create Agent"}
           />
         )}
       </div>
@@ -617,6 +740,14 @@ export default function AgentsPage() {
         onOpenChange={setIsShareDialogOpen}
         agent={agentToShare || ({} as Agent)}
         apiKey={sharedApiKey}
+      />
+
+      <ImportAgentDialog
+        open={isImportDialogOpen}
+        onOpenChange={setIsImportDialogOpen}
+        onSuccess={loadAgents}
+        clientId={clientId}
+        folderId={selectedFolderId}
       />
     </div>
   );

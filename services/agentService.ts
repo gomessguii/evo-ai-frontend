@@ -218,3 +218,21 @@ export const deleteApiKey = (keyId: string, clientId: string) =>
   api.delete(`/api/v1/agents/apikeys/${keyId}`, {
     headers: { "x-client-id": clientId },
   });
+
+// Import agent from JSON file
+export const importAgentFromJson = (file: File, clientId: string, folderId?: string | null) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  // Add folder_id to formData if it exists
+  if (folderId) {
+    formData.append('folder_id', folderId);
+  }
+  
+  return api.post('/api/v1/agents/import', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-client-id': clientId
+    }
+  });
+};

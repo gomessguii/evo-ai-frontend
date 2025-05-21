@@ -122,6 +122,7 @@ export function AgentList({
           getApiKeyNameById={getApiKeyNameById}
           getAgentNameById={getAgentNameById}
           folders={folders}
+          agents={agents}
         />
       ))}
     </div>

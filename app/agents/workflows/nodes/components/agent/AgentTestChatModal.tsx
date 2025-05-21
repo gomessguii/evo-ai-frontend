@@ -26,7 +26,7 @@
 │ who changed it and the date of modification.                                 │
 └──────────────────────────────────────────────────────────────────────────────┘
 */
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -65,6 +65,7 @@ export function AgentTestChatModal({ open, onOpenChange, agent, canvasRef }: Age
     const [isSending, setIsSending] = useState(false);
     const [expandedFunctions, setExpandedFunctions] = useState<Record<string, boolean>>({});
     const [isInitializing, setIsInitializing] = useState(true);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
 
     const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "{}") : {};
     const clientId = user?.client_id || "test";
@@ -296,6 +297,13 @@ export function AgentTestChatModal({ open, onOpenChange, agent, canvasRef }: Age
         }
     };
 
+    // Scroll to bottom whenever messages change
+    useEffect(() => {
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     if (!open) return null;
 
     // Use React Portal to render directly to document body, bypassing all parent containers
@@ -372,7 +380,7 @@ export function AgentTestChatModal({ open, onOpenChange, agent, canvasRef }: Age
                 </div>
                 
                 {/* Chat content */}
-                <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 bg-gradient-to-b from-neutral-900/50 to-neutral-950">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 bg-gradient-to-b from-neutral-900/50 to-neutral-950" ref={messagesContainerRef}>
                     {isInitializing ? (
                         <div className="flex flex-col items-center justify-center h-full">
                             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center shadow-lg mb-4 animate-pulse">
@@ -448,6 +456,7 @@ export function AgentTestChatModal({ open, onOpenChange, agent, canvasRef }: Age
                         onSendMessage={handleSendMessageWithFiles}
                         isLoading={isSending}
                         placeholder="Type your message..."
+                        autoFocus={true}
                     />
                 </div>
             </div>

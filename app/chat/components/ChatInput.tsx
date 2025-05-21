@@ -42,6 +42,7 @@ interface ChatInputProps {
   className?: string;
   buttonClassName?: string;
   containerClassName?: string;
+  autoFocus?: boolean;
 }
 
 export function ChatInput({
@@ -51,11 +52,27 @@ export function ChatInput({
   className = "",
   buttonClassName = "",
   containerClassName = "",
+  autoFocus = true,
 }: ChatInputProps) {
   const [messageInput, setMessageInput] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<FileData[]>([]);
   const [resetFileUpload, setResetFileUpload] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Autofocus no textarea quando o componente for montado
+  React.useEffect(() => {
+    // Pequeno timeout para garantir que o foco seja aplicado após a renderização completa
+    if (autoFocus) {
+      const timer = setTimeout(() => {
+        if (textareaRef.current && !isLoading) {
+          textareaRef.current.focus();
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, autoFocus]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +87,10 @@ export function ChatInput({
     
     setTimeout(() => {
       setResetFileUpload(false);
+      // Mantém o foco no textarea após enviar a mensagem
+      if (autoFocus && textareaRef.current) {
+        textareaRef.current.focus();
+      }
     }, 100);
     
     const textarea = document.querySelector("textarea");
@@ -222,6 +243,7 @@ export function ChatInput({
           className={`flex-1 bg-neutral-800/40 border-neutral-700/50 text-white focus-visible:ring-emerald-500/50 focus-visible:border-emerald-500/50 min-h-[40px] max-h-[240px] resize-none rounded-xl ${className}`}
           disabled={isLoading}
           rows={1}
+          ref={textareaRef}
         />
         <Button
           type="submit"

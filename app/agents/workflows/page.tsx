@@ -88,29 +88,6 @@ function WorkflowsContent() {
     };
   }, []);
 
-  const handleExportFlow = () => {
-    if (!canvaRef.current) return;
-
-    const { nodes, edges } = canvaRef.current.getFlowData();
-
-    const flowData = {
-      nodes,
-      edges,
-    };
-
-    const jsonString = JSON.stringify(flowData, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `flow.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   const handleSaveWorkflow = async () => {
     if (!agent || !canvaRef.current) return;
 
@@ -187,15 +164,6 @@ function WorkflowsContent() {
           >
             <Save className="mr-2 h-4 w-4" />
             Save
-          </Button>
-
-          <Button
-            variant="outline"
-            className="bg-neutral-800 border-neutral-700 text-neutral-200 hover:bg-neutral-700"
-            onClick={handleExportFlow}
-          >
-            <Download className="mr-2 h-4 w-4" />
-            Export
           </Button>
           {agent && (
             <Button

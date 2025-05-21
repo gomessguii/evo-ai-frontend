@@ -57,10 +57,12 @@ import {
   Trash2,
   Workflow,
   TextSelect,
+  Download,
 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { exportAsJson } from "@/lib/utils";
 
 interface AgentCardProps {
   agent: Agent;
@@ -73,6 +75,7 @@ interface AgentCardProps {
   getApiKeyNameById?: (id: string | undefined) => string | null;
   getAgentNameById?: (id: string) => string;
   folders?: Folder[];
+  agents: Agent[];
 }
 
 export function AgentCard({
@@ -86,6 +89,7 @@ export function AgentCard({
   getApiKeyNameById = () => null,
   getAgentNameById = (id) => id,
   folders = [],
+  agents,
 }: AgentCardProps) {
   const [expanded, setExpanded] = useState(false);
   const router = useRouter();
@@ -190,6 +194,20 @@ export function AgentCard({
 
   const getCreatedAtFormatted = () => {
     return new Date(agent.created_at).toLocaleDateString();
+  };
+
+  // Função para exportar o agente como JSON
+  const handleExportAgent = () => {
+    try {
+      exportAsJson(
+        agent, 
+        `agent-${agent.name.replace(/\s+/g, "-").toLowerCase()}-${agent.id.substring(0, 8)}`,
+        true,
+        agents
+      );
+    } catch (error) {
+      console.error("Error exporting agent:", error);
+    }
   };
 
   return (
@@ -326,58 +344,55 @@ export function AgentCard({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
+              className="bg-zinc-900 border-zinc-700"
+              side="bottom"
               align="end"
-              className="bg-zinc-900 border-zinc-800 text-zinc-300"
             >
-              {agent.type === "workflow" && onWorkflow && (
+              <DropdownMenuItem
+                className="text-white hover:bg-zinc-800 cursor-pointer"
+                onClick={() => onEdit(agent)}
+              >
+                <Pencil className="h-4 w-4 mr-2 text-emerald-400" />
+                Edit Agent
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-white hover:bg-zinc-800 cursor-pointer"
+                onClick={() => onMove(agent)}
+              >
+                <MoveRight className="h-4 w-4 mr-2 text-yellow-400" />
+                Move Agent
+              </DropdownMenuItem>
+              {onWorkflow && agent.type === 'workflow' && (
                 <DropdownMenuItem
-                  className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
+                  className="text-white hover:bg-zinc-800 cursor-pointer"
                   onClick={() => onWorkflow(agent.id)}
                 >
-                  <Workflow className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
-                  <span className="text-zinc-300 group-hover:text-white">Open Workflow</span>
+                  <Workflow className="h-4 w-4 mr-2 text-blue-400" />
+                  Open Workflow
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem
-                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
-                onClick={() =>
-                  router.push(
-                    `/documentation?agent_url=${agent.agent_card_url?.replace("/.well-known/agent.json", "") || ""}&api_key=${agent.config?.api_key}`
-                  )
-                }
+                className="text-white hover:bg-zinc-800 cursor-pointer"
+                onClick={handleExportAgent}
               >
-                <TextSelect className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
-                <span className="text-zinc-300 group-hover:text-white">Test A2A</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
-                onClick={() => onEdit(agent)}
-              >
-                <Pencil className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
-                <span className="text-zinc-300 group-hover:text-white">Edit</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
-                onClick={() => onMove(agent)}
-              >
-                <MoveRight className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
-                <span className="text-zinc-300 group-hover:text-white">Move to Folder</span>
+                <Download className="h-4 w-4 mr-2 text-purple-400" />
+                Export as JSON
               </DropdownMenuItem>
               {onShare && (
                 <DropdownMenuItem
-                  className="cursor-pointer hover:bg-zinc-800 focus:bg-zinc-800 text-zinc-300 hover:text-white group"
+                  className="text-white hover:bg-zinc-800 cursor-pointer"
                   onClick={() => onShare(agent)}
                 >
-                  <Share2 className="h-4 w-4 mr-2 text-zinc-300 group-hover:text-white" />
-                  <span className="text-zinc-300 group-hover:text-white">Share</span>
+                  <Share2 className="h-4 w-4 mr-2 text-blue-400" />
+                  Share Agent
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem
-                className="cursor-pointer text-red-500 hover:bg-zinc-800 hover:text-red-400 focus:bg-zinc-800 group"
+                className="text-red-500 hover:bg-zinc-800 cursor-pointer"
                 onClick={() => onDelete(agent)}
               >
-                <Trash2 className="h-4 w-4 mr-2 text-red-500 group-hover:text-red-400" />
-                <span className="text-red-500 group-hover:text-red-400">Delete</span>
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Agent
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

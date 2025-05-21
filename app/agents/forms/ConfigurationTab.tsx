@@ -627,16 +627,16 @@ export function ConfigurationTab({
           }
           initialTool={editingCustomTool}
         />
-        <AgentToolDialog
-          open={agentToolDialogOpen}
-          onOpenChange={setAgentToolDialogOpen}
-          onSave={handleAddAgentTool}
-          agents={agents.filter(
-            (a) =>
-              !values.config?.agent_tools?.includes(a.id) && a.id !== values.id
-          )}
-          clientId={clientId}
-        />
+        {agentToolDialogOpen && (
+          <AgentToolDialog
+            open={agentToolDialogOpen}
+            onOpenChange={setAgentToolDialogOpen}
+            onSave={handleAddAgentTool}
+            currentAgentId={values.id}
+            folderId={values.folder_id}
+            clientId={clientId}
+          />
+        )}
       </div>
     );
   }

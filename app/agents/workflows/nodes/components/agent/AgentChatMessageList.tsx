@@ -28,7 +28,7 @@
 */
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChevronDown, ChevronRight, Copy, Check } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -70,6 +70,15 @@ export function AgentChatMessageList({
     getMessageText,
     containsMarkdown,
 }: AgentChatMessageListProps) {
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Scroll to bottom whenever messages change
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
+
     return (
         <div className="space-y-6">
             {messages.map((message) => {
@@ -331,6 +340,8 @@ export function AgentChatMessageList({
                     </div>
                 );
             })}
+            {/* Empty div at the end for auto-scrolling */}
+            <div ref={messagesEndRef} />
         </div>
     );
 } 

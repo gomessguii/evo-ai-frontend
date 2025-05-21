@@ -42,12 +42,15 @@ import { Agent } from "@/types/agent";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { listAgents } from "@/services/agentService";
+import { Loader2 } from "lucide-react";
 
 interface AgentToolDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (tool: { id: string; envs: Record<string, string> }) => void;
-  agents: Agent[];
+  currentAgentId?: string;
+  folderId?: string | null;
   clientId: string;
 }
 
@@ -55,18 +58,47 @@ export function AgentToolDialog({
   open,
   onOpenChange,
   onSave,
-  agents,
+  currentAgentId,
+  folderId,
   clientId,
 }: AgentToolDialogProps) {
   const [selectedAgentId, setSelectedAgentId] = useState<string>("");
   const [search, setSearch] = useState("");
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (open) {
       setSelectedAgentId("");
       setSearch("");
+      loadAgents();
     }
-  }, [open]);
+  }, [open, folderId, clientId]);
+  
+  const loadAgents = async () => {
+    if (!clientId) return;
+    
+    setIsLoading(true);
+    try {
+      const res = await listAgents(
+        clientId,
+        0,
+        100,
+        folderId || undefined
+      );
+      
+      // Filter out the current agent to avoid self-reference
+      const filteredAgents = res.data.filter(agent => 
+        agent.id !== currentAgentId
+      );
+      
+      setAgents(filteredAgents);
+    } catch (error) {
+      console.error("Error loading agents:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSave = () => {
     if (!selectedAgentId) return;
@@ -95,31 +127,39 @@ export function AgentToolDialog({
             className="mb-2 bg-[#222] border-[#444] text-white placeholder:text-neutral-400"
           />
           <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-            {filteredAgents.length === 0 && (
-              <div className="text-neutral-400 text-sm text-center py-6">No agents found.</div>
-            )}
-            {filteredAgents.map((agent) => (
-              <button
-                key={agent.id}
-                type="button"
-                onClick={() => setSelectedAgentId(agent.id)}
-                className={cn(
-                  "w-full flex items-start gap-3 p-3 rounded-md border border-[#333] bg-[#232323] hover:bg-[#222] transition text-left cursor-pointer",
-                  selectedAgentId === agent.id && "border-emerald-400 bg-[#1a1a1a] shadow-md"
-                )}
-              >
-                <div className="flex-1">
-                  <div className="font-medium text-white text-base">{agent.name}</div>
-                  <div className="text-xs text-neutral-400 mt-1">
-                    {agent.description || "No description"}
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-6">
+                <Loader2 className="h-6 w-6 text-emerald-400 animate-spin" />
+                <div className="mt-2 text-sm text-neutral-400">Loading agents...</div>
+              </div>
+            ) : filteredAgents.length === 0 ? (
+              <div className="text-neutral-400 text-sm text-center py-6">
+                {search ? `No agents found matching "${search}"` : "No agents found in this folder."}
+              </div>
+            ) : (
+              filteredAgents.map((agent) => (
+                <button
+                  key={agent.id}
+                  type="button"
+                  onClick={() => setSelectedAgentId(agent.id)}
+                  className={cn(
+                    "w-full flex items-start gap-3 p-3 rounded-md border border-[#333] bg-[#232323] hover:bg-[#222] transition text-left cursor-pointer",
+                    selectedAgentId === agent.id && "border-emerald-400 bg-[#1a1a1a] shadow-md"
+                  )}
+                >
+                  <div className="flex-1">
+                    <div className="font-medium text-white text-base">{agent.name}</div>
+                    <div className="text-xs text-neutral-400 mt-1">
+                      {agent.description || "No description"}
+                    </div>
+                    <div className="text-[10px] text-neutral-500 mt-1">ID: {agent.id}</div>
                   </div>
-                  <div className="text-[10px] text-neutral-500 mt-1">ID: {agent.id}</div>
-                </div>
-                {selectedAgentId === agent.id && (
-                  <span className="ml-2 text-emerald-400 font-bold">Selected</span>
-                )}
-              </button>
-            ))}
+                  {selectedAgentId === agent.id && (
+                    <span className="ml-2 text-emerald-400 font-bold">Selected</span>
+                  )}
+                </button>
+              ))
+            )}
           </div>
         </div>
         <DialogFooter className="p-4 pt-2 border-t border-[#333]">
@@ -133,7 +173,7 @@ export function AgentToolDialog({
           <Button
             onClick={handleSave}
             className="bg-emerald-400 text-black hover:bg-[#00cc7d]"
-            disabled={!selectedAgentId}
+            disabled={!selectedAgentId || isLoading}
           >
             Add Tool
           </Button>
