@@ -628,14 +628,14 @@ export function ConfigurationTab({
           initialTool={editingCustomTool}
         />
         {agentToolDialogOpen && (
-          <AgentToolDialog
-            open={agentToolDialogOpen}
-            onOpenChange={setAgentToolDialogOpen}
-            onSave={handleAddAgentTool}
+        <AgentToolDialog
+          open={agentToolDialogOpen}
+          onOpenChange={setAgentToolDialogOpen}
+          onSave={handleAddAgentTool}
             currentAgentId={values.id}
             folderId={values.folder_id}
-            clientId={clientId}
-          />
+          clientId={clientId}
+        />
         )}
       </div>
     );

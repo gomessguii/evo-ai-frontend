@@ -227,7 +227,7 @@ export default function AgentsPage() {
       filtered = filtered.filter(agent => agent.type === selectedAgentType);
     }
     
-    setFilteredAgents(filtered);
+      setFilteredAgents(filtered);
   }, [searchTerm, selectedAgentType, agents]);
 
   const handleAddAgent = async (agentData: Partial<Agent>) => {
@@ -566,7 +566,7 @@ export default function AgentsPage() {
               <Key className="mr-2 h-4 w-4 text-emerald-400" />
               API Keys
             </Button>
-            
+
             <Button
               onClick={handleExportAllAgents}
               className="bg-[#222] text-white hover:bg-[#333] border border-[#444]"
@@ -586,13 +586,13 @@ export default function AgentsPage() {
               <DropdownMenuContent className="bg-zinc-900 border-zinc-700">
                 <DropdownMenuItem
                   className="text-white hover:bg-zinc-800 cursor-pointer"
-                  onClick={() => {
-                    resetForm();
-                    setIsDialogOpen(true);
-                  }}
-                >
+              onClick={() => {
+                resetForm();
+                setIsDialogOpen(true);
+              }}
+            >
                   <Plus className="h-4 w-4 mr-2 text-emerald-400" />
-                  New Agent
+              New Agent
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-white hover:bg-zinc-800 cursor-pointer"

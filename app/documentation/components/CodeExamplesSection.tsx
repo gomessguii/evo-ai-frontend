@@ -220,7 +220,7 @@ async function sendMessageWithFiles() {
   // Create message with text and file
   const payload = {
     jsonrpc: "2.0",
-    method: "tasks/send",
+    method: "message/send",
     params: {
       message: {
         role: "user",
@@ -274,7 +274,7 @@ BASE64_CONTENT=$(base64 -w 0 $FILE_PATH)
 read -r -d '' PAYLOAD << EOM
 {
   "jsonrpc": "2.0",
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "message": {
       "role": "user",

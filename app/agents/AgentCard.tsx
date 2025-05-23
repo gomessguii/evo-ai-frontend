@@ -58,6 +58,7 @@ import {
   Workflow,
   TextSelect,
   Download,
+  FlaskConical,
 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -97,72 +98,90 @@ export function AgentCard({
   const getAgentTypeInfo = (type: AgentType) => {
     const types: Record<
       string,
-      { label: string; icon: React.ElementType; color: string; bgColor: string; badgeClass: string }
+      {
+        label: string;
+        icon: React.ElementType;
+        color: string;
+        bgColor: string;
+        badgeClass: string;
+      }
     > = {
-      llm: { 
-        label: "LLM Agent", 
-        icon: Code, 
-        color: "#00cc7d", 
-        bgColor: "bg-green-500/10", 
-        badgeClass: "bg-green-900/30 text-green-400 border-green-600/30 hover:bg-green-900/40" 
+      llm: {
+        label: "LLM Agent",
+        icon: Code,
+        color: "#00cc7d",
+        bgColor: "bg-green-500/10",
+        badgeClass:
+          "bg-green-900/30 text-green-400 border-green-600/30 hover:bg-green-900/40",
       },
-      a2a: { 
-        label: "A2A Agent", 
-        icon: ExternalLink, 
-        color: "#6366f1", 
-        bgColor: "bg-indigo-500/10", 
-        badgeClass: "bg-indigo-900/30 text-indigo-400 border-indigo-600/30 hover:bg-indigo-900/40" 
+      a2a: {
+        label: "A2A Agent",
+        icon: ExternalLink,
+        color: "#6366f1",
+        bgColor: "bg-indigo-500/10",
+        badgeClass:
+          "bg-indigo-900/30 text-indigo-400 border-indigo-600/30 hover:bg-indigo-900/40",
       },
       sequential: {
         label: "Sequential Agent",
         icon: ArrowRight,
         color: "#f59e0b",
         bgColor: "bg-yellow-500/10",
-        badgeClass: "bg-yellow-900/30 text-yellow-400 border-yellow-600/30 hover:bg-yellow-900/40"
+        badgeClass:
+          "bg-yellow-900/30 text-yellow-400 border-yellow-600/30 hover:bg-yellow-900/40",
       },
-      parallel: { 
-        label: "Parallel Agent", 
-        icon: GitBranch, 
-        color: "#8b5cf6", 
-        bgColor: "bg-purple-500/10", 
-        badgeClass: "bg-purple-900/30 text-purple-400 border-purple-600/30 hover:bg-purple-900/40" 
+      parallel: {
+        label: "Parallel Agent",
+        icon: GitBranch,
+        color: "#8b5cf6",
+        bgColor: "bg-purple-500/10",
+        badgeClass:
+          "bg-purple-900/30 text-purple-400 border-purple-600/30 hover:bg-purple-900/40",
       },
-      loop: { 
-        label: "Loop Agent", 
-        icon: RefreshCw, 
-        color: "#ec4899", 
-        bgColor: "bg-pink-500/10", 
-        badgeClass: "bg-orange-900/30 text-orange-400 border-orange-600/30 hover:bg-orange-900/40" 
+      loop: {
+        label: "Loop Agent",
+        icon: RefreshCw,
+        color: "#ec4899",
+        bgColor: "bg-pink-500/10",
+        badgeClass:
+          "bg-orange-900/30 text-orange-400 border-orange-600/30 hover:bg-orange-900/40",
       },
-      workflow: { 
-        label: "Workflow Agent", 
-        icon: Workflow, 
-        color: "#3b82f6", 
-        bgColor: "bg-blue-500/10", 
-        badgeClass: "bg-blue-900/30 text-blue-400 border-blue-700/40 hover:bg-blue-900/40" 
+      workflow: {
+        label: "Workflow Agent",
+        icon: Workflow,
+        color: "#3b82f6",
+        bgColor: "bg-blue-500/10",
+        badgeClass:
+          "bg-blue-900/30 text-blue-400 border-blue-700/40 hover:bg-blue-900/40",
       },
-      task: { 
-        label: "Task Agent", 
-        icon: BookOpenCheck, 
-        color: "#ef4444", 
-        bgColor: "bg-red-500/10", 
-        badgeClass: "bg-red-900/30 text-red-400 border-red-600/30 hover:bg-red-900/40" 
+      task: {
+        label: "Task Agent",
+        icon: BookOpenCheck,
+        color: "#ef4444",
+        bgColor: "bg-red-500/10",
+        badgeClass:
+          "bg-red-900/30 text-red-400 border-red-600/30 hover:bg-red-900/40",
       },
     };
-    
-    return types[type] || { 
-      label: type, 
-      icon: Bot, 
-      color: "#94a3b8", 
-      bgColor: "bg-slate-500/10", 
-      badgeClass: "bg-slate-900/30 text-slate-400 border-slate-600/30 hover:bg-slate-900/40" 
-    };
+
+    return (
+      types[type] || {
+        label: type,
+        icon: Bot,
+        color: "#94a3b8",
+        bgColor: "bg-slate-500/10",
+        badgeClass:
+          "bg-slate-900/30 text-slate-400 border-slate-600/30 hover:bg-slate-900/40",
+      }
+    );
   };
 
   const getAgentTypeIcon = (type: AgentType) => {
     const typeInfo = getAgentTypeInfo(type);
     const IconComponent = typeInfo.icon;
-    return <IconComponent className="h-5 w-5" style={{ color: typeInfo.color }} />;
+    return (
+      <IconComponent className="h-5 w-5" style={{ color: typeInfo.color }} />
+    );
   };
 
   const getAgentTypeName = (type: AgentType) => {
@@ -200,8 +219,10 @@ export function AgentCard({
   const handleExportAgent = () => {
     try {
       exportAsJson(
-        agent, 
-        `agent-${agent.name.replace(/\s+/g, "-").toLowerCase()}-${agent.id.substring(0, 8)}`,
+        agent,
+        `agent-${agent.name
+          .replace(/\s+/g, "-")
+          .toLowerCase()}-${agent.id.substring(0, 8)}`,
         true,
         agents
       );
@@ -210,15 +231,48 @@ export function AgentCard({
     }
   };
 
+  // Função para testar o agente A2A no laboratório
+  const handleTestA2A = () => {
+    // Usar a URL do agent card como URL base para testes A2A
+    const agentUrl = agent.agent_card_url?.replace(
+      "/.well-known/agent.json",
+      ""
+    );
+
+    // Usar a API key diretamente do config do agente
+    const apiKey = agent.config?.api_key;
+
+    // Construir a URL com parâmetros para o laboratório de testes
+    const params = new URLSearchParams();
+
+    if (agentUrl) {
+      params.set("agent_url", agentUrl);
+    }
+
+    if (apiKey) {
+      params.set("api_key", apiKey);
+    }
+
+    // Redirecionar para o laboratório de testes na aba "lab"
+    const testUrl = `/documentation?${params.toString()}#lab`;
+
+    router.push(testUrl);
+  };
+
   return (
     <Card className="w-full overflow-hidden border border-zinc-800 shadow-lg bg-gradient-to-br from-zinc-800 to-zinc-900">
-      <div className={cn("p-4 flex justify-between items-center border-b border-zinc-800", getAgentTypeBgColor(agent.type))}>
+      <div
+        className={cn(
+          "p-4 flex justify-between items-center border-b border-zinc-800",
+          getAgentTypeBgColor(agent.type)
+        )}
+      >
         <div className="flex items-center gap-2">
           {getAgentTypeIcon(agent.type)}
           <h3 className="font-medium text-white">{agent.name}</h3>
         </div>
-        <Badge 
-          variant="outline" 
+        <Badge
+          variant="outline"
           className={cn("border", getAgentTypeBadgeClass(agent.type))}
         >
           {getAgentTypeName(agent.type)}
@@ -234,7 +288,13 @@ export function AgentCard({
           </p>
         </div>
 
-        <div className={cn("p-4 flex justify-between items-center", getAgentTypeBgColor(agent.type), "bg-opacity-20")}>
+        <div
+          className={cn(
+            "p-4 flex justify-between items-center",
+            getAgentTypeBgColor(agent.type),
+            "bg-opacity-20"
+          )}
+        >
           <div className="flex items-center gap-2">
             <span className="text-xs text-zinc-500">Model:</span>
             <span className="text-xs font-medium text-zinc-300">
@@ -244,19 +304,26 @@ export function AgentCard({
           <Button
             variant="ghost"
             size="sm"
-            className={cn(
-              "p-0 h-auto",
-              {
-                "text-green-400 hover:text-green-300": agent.type === "llm",
-                "text-indigo-400 hover:text-indigo-300": agent.type === "a2a",
-                "text-yellow-400 hover:text-yellow-300": agent.type === "sequential",
-                "text-purple-400 hover:text-purple-300": agent.type === "parallel",
-                "text-orange-400 hover:text-orange-300": agent.type === "loop",
-                "text-blue-400 hover:text-blue-300": agent.type === "workflow",
-                "text-red-400 hover:text-red-300": agent.type === "task",
-                "text-zinc-400 hover:text-white": !["llm", "a2a", "sequential", "parallel", "loop", "workflow", "task"].includes(agent.type),
-              }
-            )}
+            className={cn("p-0 h-auto", {
+              "text-green-400 hover:text-green-300": agent.type === "llm",
+              "text-indigo-400 hover:text-indigo-300": agent.type === "a2a",
+              "text-yellow-400 hover:text-yellow-300":
+                agent.type === "sequential",
+              "text-purple-400 hover:text-purple-300":
+                agent.type === "parallel",
+              "text-orange-400 hover:text-orange-300": agent.type === "loop",
+              "text-blue-400 hover:text-blue-300": agent.type === "workflow",
+              "text-red-400 hover:text-red-300": agent.type === "task",
+              "text-zinc-400 hover:text-white": ![
+                "llm",
+                "a2a",
+                "sequential",
+                "parallel",
+                "loop",
+                "workflow",
+                "task",
+              ].includes(agent.type),
+            })}
             onClick={() => setExpanded(!expanded)}
           >
             {expanded ? (
@@ -275,7 +342,10 @@ export function AgentCard({
                 <span className="text-zinc-500">Folder:</span>
                 <Badge
                   variant="outline"
-                  className={cn("h-5 px-2 bg-transparent", getAgentTypeBadgeClass(agent.type))}
+                  className={cn(
+                    "h-5 px-2 bg-transparent",
+                    getAgentTypeBadgeClass(agent.type)
+                  )}
                 >
                   {getFolderNameById(agent.folder_id)}
                 </Badge>
@@ -287,7 +357,10 @@ export function AgentCard({
                 <span className="text-zinc-500">API Key:</span>
                 <Badge
                   variant="outline"
-                  className={cn("h-5 px-2 bg-transparent", getAgentTypeBadgeClass(agent.type))}
+                  className={cn(
+                    "h-5 px-2 bg-transparent",
+                    getAgentTypeBadgeClass(agent.type)
+                  )}
                 >
                   {getApiKeyNameById(agent.api_key_id)}
                 </Badge>
@@ -350,6 +423,13 @@ export function AgentCard({
             >
               <DropdownMenuItem
                 className="text-white hover:bg-zinc-800 cursor-pointer"
+                onClick={handleTestA2A}
+              >
+                <FlaskConical className="h-4 w-4 mr-2 text-emerald-400" />
+                Test A2A
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-white hover:bg-zinc-800 cursor-pointer"
                 onClick={() => onEdit(agent)}
               >
                 <Pencil className="h-4 w-4 mr-2 text-emerald-400" />
@@ -362,7 +442,7 @@ export function AgentCard({
                 <MoveRight className="h-4 w-4 mr-2 text-yellow-400" />
                 Move Agent
               </DropdownMenuItem>
-              {onWorkflow && agent.type === 'workflow' && (
+              {onWorkflow && agent.type === "workflow" && (
                 <DropdownMenuItem
                   className="text-white hover:bg-zinc-800 cursor-pointer"
                   onClick={() => onWorkflow(agent.id)}
@@ -406,8 +486,10 @@ export function AgentCard({
               {
                 "text-green-400 hover:text-green-300": agent.type === "llm",
                 "text-indigo-400 hover:text-indigo-300": agent.type === "a2a",
-                "text-yellow-400 hover:text-yellow-300": agent.type === "sequential",
-                "text-purple-400 hover:text-purple-300": agent.type === "parallel",
+                "text-yellow-400 hover:text-yellow-300":
+                  agent.type === "sequential",
+                "text-purple-400 hover:text-purple-300":
+                  agent.type === "parallel",
                 "text-orange-400 hover:text-orange-300": agent.type === "loop",
                 "text-blue-400 hover:text-blue-300": agent.type === "workflow",
                 "text-red-400 hover:text-red-300": agent.type === "task",

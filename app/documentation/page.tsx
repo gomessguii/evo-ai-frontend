@@ -40,7 +40,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Code, BookOpen, FlaskConical } from "lucide-react";
+import { Send, Code, BookOpen, FlaskConical, Network, ChevronDown, ChevronUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
@@ -53,6 +53,8 @@ import { CodeExamplesSection } from "./components/CodeExamplesSection";
 import { HttpLabForm } from "./components/HttpLabForm";
 import { StreamLabForm } from "./components/StreamLabForm";
 import { LabSection } from "./components/LabSection";
+import { A2AComplianceCard } from "./components/A2AComplianceCard";
+import { QuickStartTemplates } from "./components/QuickStartTemplates";
 
 function DocumentationContent() {
   const { toast } = useToast();
@@ -76,6 +78,8 @@ function DocumentationContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [mainTab, setMainTab] = useState("docs");
   const [labMode, setLabMode] = useState("http");
+  const [a2aMethod, setA2aMethod] = useState("message/send");
+  const [authMethod, setAuthMethod] = useState("api-key");
 
   // Streaming states
   const [streamResponse, setStreamResponse] = useState("");
@@ -83,6 +87,11 @@ function DocumentationContent() {
   const [streamHistory, setStreamHistory] = useState<string[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamComplete, setStreamComplete] = useState(false);
+
+  // Task management states
+  const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
+  const [taskStatus, setTaskStatus] = useState<any>(null);
+  const [artifacts, setArtifacts] = useState<any[]>([]);
 
   // Debug state
   const [debugLogs, setDebugLogs] = useState<string[]>([]);
@@ -92,6 +101,22 @@ function DocumentationContent() {
   const [attachedFiles, setAttachedFiles] = useState<
     { name: string; type: string; size: number; base64: string }[]
   >([]);
+
+  // Conversation history state for multi-turn conversations
+  const [conversationHistory, setConversationHistory] = useState<any[]>([]);
+  const [contextId, setContextId] = useState<string | null>(null);
+
+  // Push notifications state
+  const [webhookUrl, setWebhookUrl] = useState("");
+  const [enableWebhooks, setEnableWebhooks] = useState(false);
+
+  // Advanced error handling state
+  const [showDetailedErrors, setShowDetailedErrors] = useState(true);
+
+  // Lab UI visibility states
+  const [showQuickStart, setShowQuickStart] = useState(true);
+  const [showCorsInfo, setShowCorsInfo] = useState(false);
+  const [showConfigStatus, setShowConfigStatus] = useState(true);
 
   // Types for A2A messages
   interface MessagePart {
@@ -125,84 +150,192 @@ function DocumentationContent() {
     if (apiKeyParam) {
       setApiKey(apiKeyParam);
     }
+    // Generate initial UUIDs
+    generateNewIds();
+    
+    // Check for hash in URL to auto-switch to lab tab
+    if (typeof window !== 'undefined' && window.location.hash === '#lab') {
+      setMainTab('lab');
+    }
   }, [agentUrlParam, apiKeyParam]);
+
+  // Generate UUID v4 as required by A2A spec
+  const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  };
+
+  // Generate new IDs
+  const generateNewIds = () => {
+    setTaskId(generateUUID());
+    setCallId(`req-${Math.random().toString(36).substring(2, 9)}`);
+  };
+
+  // Clear conversation history
+  const clearHistory = () => {
+    setConversationHistory([]);
+    setContextId(null);
+    addDebugLog("Conversation history and contextId cleared");
+    toast({
+      title: "History Cleared",
+      description: "Conversation context has been reset for new multi-turn conversation.",
+    });
+  };
+
+  // Handle template selection
+  const handleTemplateSelection = (template: any) => {
+    setA2aMethod(template.method);
+    setMessage(template.message);
+    generateNewIds();
+    
+    // Show success toast
+    toast({
+      title: "Template Applied",
+      description: `${template.name} template has been applied successfully.`,
+    });
+  };
 
   const isFilePart = (part: any): part is FilePart => {
     return part.type === "file" && part.file !== undefined;
   };
 
-  // Standard HTTP request
-  const jsonRpcRequest = {
-    jsonrpc: "2.0",
-    method: "tasks/send",
-    params: {
-      message: {
-        role: "user",
-        parts: [
-          ...(message
-            ? [
-                {
-                  type: "text",
-                  text: message,
-                },
-              ]
-            : [
-                {
-                  type: "text",
-                  text: "What is the A2A protocol?",
-                },
-              ]),
-          ...attachedFiles.map((file) => ({
-            type: "file",
-            file: {
-              name: file.name,
-              bytes: file.base64,
-              mime_type: file.type,
-            },
-          })),
-        ],
-      },
-      sessionId: sessionId,
-      id: taskId,
-    },
-    id: callId,
+  // Create A2A-compliant request based on selected method
+  const createA2ARequest = () => {
+    const currentMessage = {
+      role: "user",
+      parts: [
+        ...(message
+          ? [
+              {
+                type: "text",
+                text: message,
+              },
+            ]
+          : [
+              {
+                type: "text",
+                text: "What is the A2A protocol?",
+              },
+            ]),
+        ...attachedFiles.map((file) => ({
+          type: "file",
+          file: {
+            name: file.name,
+            mimeType: file.type, // Use mimeType as per A2A spec
+            bytes: file.base64,
+          },
+        })),
+      ],
+      messageId: taskId, // Use UUID as required by A2A spec
+    };
+
+    // Include contextId for multi-turn conversations (A2A specification)
+    const messageWithContext = contextId 
+      ? {
+          contextId: contextId,
+          message: currentMessage
+        }
+      : {
+          message: currentMessage
+        };
+
+    // Add push notification configuration if enabled (for message methods)
+    const messageParamsWithPushConfig = (a2aMethod === "message/send" || a2aMethod === "message/stream") && enableWebhooks && webhookUrl
+      ? {
+          ...messageWithContext,
+          pushNotificationConfig: {
+            webhookUrl: webhookUrl,
+            webhookAuthenticationInfo: {
+              type: "none"
+            }
+          }
+        }
+      : messageWithContext;
+
+    const baseRequest = {
+      jsonrpc: "2.0",
+      id: callId,
+      method: a2aMethod,
+    };
+
+    switch (a2aMethod) {
+      case "message/send":
+      case "message/stream":
+        return {
+          ...baseRequest,
+          params: messageParamsWithPushConfig,
+        };
+      
+      case "tasks/get":
+        return {
+          ...baseRequest,
+          params: {
+            taskId: currentTaskId || taskId,
+          },
+        };
+      
+      case "tasks/cancel":
+        return {
+          ...baseRequest,
+          params: {
+            taskId: currentTaskId || taskId,
+          },
+        };
+
+      case "tasks/pushNotificationConfig/set":
+        return {
+          ...baseRequest,
+          params: {
+            taskId: currentTaskId || taskId,
+            pushNotificationConfig: enableWebhooks && webhookUrl ? {
+              webhookUrl: webhookUrl,
+              webhookAuthenticationInfo: {
+                type: "none"
+              }
+            } : null,
+          },
+        };
+
+      case "tasks/pushNotificationConfig/get":
+        return {
+          ...baseRequest,
+          params: {
+            taskId: currentTaskId || taskId,
+          },
+        };
+
+      case "tasks/resubscribe":
+        return {
+          ...baseRequest,
+          params: {
+            taskId: currentTaskId || taskId,
+          },
+        };
+      
+      case "agent/authenticatedExtendedCard":
+        return {
+          ...baseRequest,
+          params: {},
+        };
+      
+      default:
+        return {
+          ...baseRequest,
+          params: messageParamsWithPushConfig,
+        };
+    }
   };
 
-  // Streaming request
+  // Standard HTTP request
+  const jsonRpcRequest = createA2ARequest();
+
+  // Streaming request (same as standard but with stream method)
   const streamRpcRequest = {
-    jsonrpc: "2.0",
-    method: "tasks/sendSubscribe",
-    params: {
-      message: {
-        role: "user",
-        parts: [
-          ...(message
-            ? [
-                {
-                  type: "text",
-                  text: message,
-                },
-              ]
-            : [
-                {
-                  type: "text",
-                  text: "What is the A2A protocol?",
-                },
-              ]),
-          ...attachedFiles.map((file) => ({
-            type: "file",
-            file: {
-              name: file.name,
-              bytes: file.base64,
-              mime_type: file.type,
-            },
-          })),
-        ],
-      },
-      sessionId: sessionId,
-      id: taskId,
-    },
-    id: callId,
+    ...createA2ARequest(),
+    method: "message/stream",
   };
 
   // Code examples
@@ -248,15 +381,19 @@ function DocumentationContent() {
     }
 
     setIsLoading(true);
-    addDebugLog("Sending HTTP request to: " + agentUrl);
+    addDebugLog("=== Starting A2A Request ===");
+    addDebugLog("Sending A2A request to: " + agentUrl);
+    addDebugLog(`Method: ${a2aMethod}`);
+    addDebugLog(`Authentication: ${authMethod}`);
+    addDebugLog("Note: Browser may send OPTIONS preflight request first (CORS)");
     addDebugLog(
       `Payload: ${JSON.stringify({
         ...jsonRpcRequest,
-        params: {
+        params: jsonRpcRequest.params && 'message' in jsonRpcRequest.params && jsonRpcRequest.params.message ? {
           ...jsonRpcRequest.params,
           message: {
             ...jsonRpcRequest.params.message,
-            parts: jsonRpcRequest.params.message.parts.map((part) =>
+            parts: jsonRpcRequest.params.message.parts.map((part: any) =>
               isFilePart(part)
                 ? {
                     ...part,
@@ -265,7 +402,7 @@ function DocumentationContent() {
                 : part
             ),
           },
-        },
+        } : jsonRpcRequest.params,
       })}`
     );
 
@@ -278,14 +415,30 @@ function DocumentationContent() {
     }
 
     try {
+      // Prepare headers based on authentication method
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (apiKey) {
+        if (authMethod === "bearer") {
+          headers["Authorization"] = `Bearer ${apiKey}`;
+        } else {
+          headers["x-api-key"] = apiKey;
+        }
+      }
+
+      addDebugLog(`Headers: ${JSON.stringify(headers, null, 2)}`);
+      addDebugLog("Making POST request...");
+
       const response = await fetch(agentUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(apiKey ? { "x-api-key": apiKey } : {}),
-        },
+        headers,
         body: JSON.stringify(jsonRpcRequest),
       });
+
+      addDebugLog(`Response status: ${response.status} ${response.statusText}`);
+      addDebugLog(`Response headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2)}`);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -297,17 +450,109 @@ function DocumentationContent() {
       }
 
       const data = await response.json();
-      addDebugLog("Successfully received response");
+      addDebugLog("Successfully received A2A response");
+      addDebugLog(`Response data: ${JSON.stringify(data, null, 2).substring(0, 500)}...`);
+      
+      // Handle A2A-specific response structure
+      if (data.result) {
+        const result = data.result;
+        
+        // Update task information if available
+        if (result.id) {
+          setCurrentTaskId(result.id);
+          addDebugLog(`Task ID: ${result.id}`);
+        }
+        
+        // Update task status if available
+        if (result.status) {
+          setTaskStatus(result.status);
+          addDebugLog(`Task status: ${result.status.state}`);
+        }
+        
+        // Update artifacts if available
+        if (result.artifacts && Array.isArray(result.artifacts)) {
+          setArtifacts(result.artifacts);
+          addDebugLog(`Received ${result.artifacts.length} artifact(s)`);
+        }
+
+        // Extract contextId from response for multi-turn conversations (A2A spec)
+        if (result.contextId) {
+          setContextId(result.contextId);
+          addDebugLog(`Context ID: ${result.contextId}`);
+        }
+
+        // Maintain local conversation history for UI display only
+        if (a2aMethod === "message/send" || a2aMethod === "message/stream") {
+          const userMessage = {
+            role: "user",
+            parts: [
+              ...(message
+                ? [{ type: "text", text: message }]
+                : [{ type: "text", text: "What is the A2A protocol?" }]
+              ),
+              ...attachedFiles.map((file) => ({
+                type: "file",
+                file: {
+                  name: file.name,
+                  mimeType: file.type,
+                  bytes: file.base64,
+                },
+              })),
+            ],
+            messageId: taskId,
+          };
+
+          const assistantMessage = result.status?.message || {
+            role: "assistant",
+            parts: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+            messageId: generateUUID(),
+          };
+
+          setConversationHistory(prev => [...prev, userMessage, assistantMessage]);
+          addDebugLog(`Context preserved via contextId. Local history: ${conversationHistory.length + 2} messages`);
+        }
+      }
+      
       setResponse(JSON.stringify(data, null, 2));
       setAttachedFiles([]); // Clear attached files after successful request
+      addDebugLog("=== A2A Request Completed Successfully ===");
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Unknown error";
       addDebugLog(`Request failed: ${errorMsg}`);
-      toast({
-        title: "Error sending request",
-        description: errorMsg,
-        variant: "destructive",
-      });
+      addDebugLog("=== A2A Request Failed ===");
+      
+      // Enhanced error handling for A2A protocol
+      if (showDetailedErrors) {
+        let detailedError = errorMsg;
+        
+        // Try to extract A2A-specific error information
+        if (error instanceof Error && error.message.includes("HTTP error:")) {
+          detailedError = `A2A Protocol Error: ${errorMsg}`;
+          
+          // Common A2A error scenarios
+          if (errorMsg.includes("400")) {
+            detailedError += "\n\nPossible causes:\n• Invalid JSON-RPC 2.0 format\n• Missing required A2A parameters\n• Malformed message structure";
+          } else if (errorMsg.includes("401")) {
+            detailedError += "\n\nAuthentication Error:\n• Invalid API key\n• Missing authentication header\n• Expired bearer token";
+          } else if (errorMsg.includes("404")) {
+            detailedError += "\n\nAgent Not Found:\n• Incorrect agent URL\n• Agent not deployed\n• Invalid endpoint path";
+          } else if (errorMsg.includes("500")) {
+            detailedError += "\n\nServer Error:\n• Agent internal error\n• A2A method not implemented\n• Processing failure";
+          }
+        }
+        
+        toast({
+          title: "A2A Request Failed",
+          description: detailedError,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error sending A2A request",
+          description: errorMsg,
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -405,96 +650,132 @@ function DocumentationContent() {
   const processStreamData = (data: any) => {
     // Add log to see the complete structure of the data
     addDebugLog(
-      `Processing data: ${JSON.stringify(data).substring(0, 100)}...`
+      `Processing A2A stream data: ${JSON.stringify(data).substring(0, 100)}...`
     );
 
     // Validate if data follows the JSON-RPC 2.0 format
     if (!data.jsonrpc || data.jsonrpc !== "2.0" || !data.result) {
-      addDebugLog("Invalid event format, ignoring");
+      addDebugLog("Invalid A2A event format, ignoring");
       return;
     }
 
     const result = data.result;
 
-    // Process status if available (TaskStatusUpdateEvent)
+    // Handle A2A Task object structure
+    if (result.id) {
+      setCurrentTaskId(result.id);
+      addDebugLog(`Task ID: ${result.id}`);
+    }
+
+    // Process A2A TaskStatus object
     if (result.status) {
       const status = result.status;
       const state = status.state;
 
-      addDebugLog(`Current status: ${state}`);
+      addDebugLog(`A2A Task status: ${state}`);
       setStreamStatus(state);
+      setTaskStatus(status);
 
-      // Process partial response message, if available
-      if (status.message) {
-        const message = status.message;
-        const parts = message.parts?.filter(
-          (part: any) => part.type === "text"
+      // Process message from status if available
+      if (status.message && status.message.parts) {
+        const textParts = status.message.parts.filter(
+          (part: any) => part.type === "text" && part.text
         );
 
-        if (parts && parts.length > 0) {
-          const currentMessageText = parts
+        if (textParts.length > 0) {
+          const currentMessageText = textParts
             .map((part: any) => part.text)
             .join("");
 
           addDebugLog(
-            `Current message text: "${currentMessageText.substring(0, 50)}${
+            `A2A message text: "${currentMessageText.substring(0, 50)}${
               currentMessageText.length > 50 ? "..." : ""
             }"`
           );
 
           if (currentMessageText.trim()) {
-            // If the text is not empty, display it
             setStreamResponse(currentMessageText);
           }
         }
       }
 
-      // Check if it is the final event
-      if (result.final === true) {
-        addDebugLog("Final event received");
+      // Check if task is completed according to A2A spec
+      if (state === "completed" || state === "failed" || state === "canceled") {
+        addDebugLog(`A2A Task ${state}`);
         setStreamComplete(true);
         setIsStreaming(false);
       }
     }
 
-    // Process artifact if available (TaskArtifactUpdateEvent)
-    if (result.artifact) {
-      const artifact = result.artifact;
-      addDebugLog(
-        `Received artifact with ${artifact.parts?.length || 0} parts`
-      );
+    // Process A2A Artifact objects
+    if (result.artifacts && Array.isArray(result.artifacts)) {
+      addDebugLog(`Received ${result.artifacts.length} A2A artifact(s)`);
+      setArtifacts(result.artifacts);
 
-      // Check if there are parts
-      if (artifact.parts && artifact.parts.length > 0) {
-        const parts = artifact.parts.filter(
-          (part: any) => part.type === "text" && part.text
-        );
-
-        if (parts.length > 0) {
-          const artifactText = parts.map((part: any) => part.text).join("");
-
-          addDebugLog(
-            `Artifact text: "${artifactText.substring(0, 50)}${
-              artifactText.length > 50 ? "..." : ""
-            }"`
+      // Extract text content from artifacts
+      result.artifacts.forEach((artifact: any, index: number) => {
+        if (artifact.parts && artifact.parts.length > 0) {
+          const textParts = artifact.parts.filter(
+            (part: any) => part.type === "text" && part.text
           );
 
-          if (artifactText.trim()) {
-            // Update response with the artifact content
-            setStreamResponse(artifactText);
+          if (textParts.length > 0) {
+            const artifactText = textParts.map((part: any) => part.text).join("");
 
-            if (artifact.lastChunk === true) {
-              addDebugLog("Last chunk of artifact received");
-              setStreamComplete(true);
-              setIsStreaming(false);
+            addDebugLog(
+              `A2A Artifact ${index + 1} text: "${artifactText.substring(0, 50)}${
+                artifactText.length > 50 ? "..." : ""
+              }"`
+            );
+
+            if (artifactText.trim()) {
+              // Update response with the artifact content
+              setStreamResponse(prev => prev ? `${prev}\n\n${artifactText}` : artifactText);
             }
-          } else {
-            addDebugLog("Artifact with empty text, ignoring");
           }
         }
-      } else {
-        addDebugLog("Artifact without text parts");
+      });
+    }
+
+    // Handle TaskStatusUpdateEvent and TaskArtifactUpdateEvent as per A2A spec
+    if (result.event) {
+      const eventType = result.event;
+      addDebugLog(`A2A Event type: ${eventType}`);
+
+      if (eventType === "task.status.update" && result.status) {
+        // Already handled above
+      } else if (eventType === "task.artifact.update" && result.artifact) {
+        // Handle single artifact update
+        addDebugLog("Processing A2A artifact update event");
+        
+        if (result.artifact.parts && result.artifact.parts.length > 0) {
+          const textParts = result.artifact.parts.filter(
+            (part: any) => part.type === "text" && part.text
+          );
+
+          if (textParts.length > 0) {
+            const artifactText = textParts.map((part: any) => part.text).join("");
+            
+            if (artifactText.trim()) {
+              setStreamResponse(prev => prev ? `${prev}${artifactText}` : artifactText);
+              
+              // Check if this is the last chunk
+              if (result.artifact.lastChunk === true) {
+                addDebugLog("Last chunk of A2A artifact received");
+                setStreamComplete(true);
+                setIsStreaming(false);
+              }
+            }
+          }
+        }
       }
+    }
+
+    // Check for final flag as per A2A spec
+    if (result.final === true) {
+      addDebugLog("Final A2A event received");
+      setStreamComplete(true);
+      setIsStreaming(false);
     }
   };
 
@@ -516,15 +797,17 @@ function DocumentationContent() {
     setStreamComplete(false);
 
     // Log debug info
-    addDebugLog("Setting up streaming with EventSource to: " + agentUrl);
+    addDebugLog("Setting up A2A streaming to: " + agentUrl);
+    addDebugLog(`Streaming method: message/stream`);
+    addDebugLog(`Authentication: ${authMethod}`);
     addDebugLog(
       `Streaming payload: ${JSON.stringify({
         ...streamRpcRequest,
-        params: {
+        params: streamRpcRequest.params && 'message' in streamRpcRequest.params && streamRpcRequest.params.message ? {
           ...streamRpcRequest.params,
           message: {
             ...streamRpcRequest.params.message,
-            parts: streamRpcRequest.params.message.parts.map((part) =>
+            parts: streamRpcRequest.params.message.parts.map((part: any) =>
               isFilePart(part)
                 ? {
                     ...part,
@@ -533,7 +816,7 @@ function DocumentationContent() {
                 : part
             ),
           },
-        },
+        } : streamRpcRequest.params,
       })}`
     );
 
@@ -548,13 +831,23 @@ function DocumentationContent() {
     try {
       addDebugLog("Stream URL: " + agentUrl);
 
+      // Prepare headers based on authentication method
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (apiKey) {
+        if (authMethod === "bearer") {
+          headers["Authorization"] = `Bearer ${apiKey}`;
+        } else {
+          headers["x-api-key"] = apiKey;
+        }
+      }
+
       // Make initial request to start streaming session
       const initialResponse = await fetch(agentUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(apiKey ? { "x-api-key": apiKey } : {}),
-        },
+        headers,
         body: JSON.stringify(streamRpcRequest),
       });
 
@@ -862,56 +1155,232 @@ function DocumentationContent() {
 
   return (
     <div className="container mx-auto p-6 bg-[#121212] min-h-screen">
-      <h1 className="text-4xl font-bold text-white mb-2">
-        Agent2Agent Protocol
-      </h1>
-      <p className="text-neutral-400 mb-6">
-        Documentation and testing lab for the Agent2Agent protocol
-      </p>
+      {/* Modern Header */}
+      <div className="text-center mb-8">
+        <div className="flex justify-center mb-4">
+          <div className="flex items-center space-x-3 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 px-6 py-3 rounded-full border border-emerald-500/30">
+            <Network className="h-6 w-6 text-emerald-400" />
+            <span className="font-bold text-emerald-400">A2A Protocol</span>
+            <span className="text-xs bg-emerald-500/20 px-2 py-1 rounded text-emerald-300">v0.2.1</span>
+          </div>
+        </div>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
+          Agent2Agent Protocol
+        </h1>
+        <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
+          Documentation and testing lab for the official Google Agent2Agent protocol.
+          Build, test, and validate A2A-compliant agent communications.
+        </p>
+      </div>
 
       <Tabs
         defaultValue="docs"
         className="w-full mb-8"
         onValueChange={setMainTab}
       >
-        <TabsList className="bg-[#222] border-b border-[#333] w-full justify-start mb-6">
+        <TabsList className="bg-[#121212] w-full mb-6 p-1 rounded-lg grid grid-cols-3">
           <TabsTrigger
             value="docs"
-            className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
+            className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/50 flex items-center justify-center space-x-2 px-4 py-2 rounded-md transition-all"
           >
-            <BookOpen className="h-4 w-4 mr-2" />
-            Documentation
+            <BookOpen className="h-4 w-4" />
+            <div className="text-center">
+              <div className="font-medium text-sm">Documentation</div>
+              <div className="text-xs opacity-70">Protocol specification & compliance</div>
+            </div>
           </TabsTrigger>
           <TabsTrigger
             value="lab"
-            className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
+            className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/50 flex items-center justify-center space-x-2 px-4 py-2 rounded-md transition-all"
           >
-            <FlaskConical className="h-4 w-4 mr-2" />
-            A2A Testing Lab
+            <FlaskConical className="h-4 w-4" />
+            <div className="text-center">
+              <div className="font-medium text-sm">Testing Lab</div>
+              <div className="text-xs opacity-70">Interactive A2A protocol testing</div>
+            </div>
           </TabsTrigger>
           <TabsTrigger
             value="examples"
-            className="data-[state=active]:bg-[#333] data-[state=active]:text-emerald-400"
+            className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 data-[state=active]:border-emerald-500/50 flex items-center justify-center space-x-2 px-4 py-2 rounded-md transition-all"
           >
-            <Code className="h-4 w-4 mr-2" />
-            Code Examples
+            <Code className="h-4 w-4" />
+            <div className="text-center">
+              <div className="font-medium text-sm">Code Examples</div>
+              <div className="text-xs opacity-70">Implementation samples & snippets</div>
+            </div>
           </TabsTrigger>
         </TabsList>
 
         {/* Documentation Tab - Only essential technical concepts and details */}
         <TabsContent value="docs">
           <div className="space-y-6">
+            {/* A2A Compliance Card */}
+            <A2AComplianceCard />
+            
+            {/* Main Documentation */}
             <DocumentationSection copyToClipboard={copyToClipboard} />
           </div>
         </TabsContent>
 
         {/* Lab Tab */}
         <TabsContent value="lab">
+          {/* Quick Start Templates */}
+          <div className="mb-6">
+            <div 
+              className="flex items-center justify-between cursor-pointer hover:bg-[#222]/30 p-3 rounded-lg transition-colors border border-transparent hover:border-[#333]"
+              onClick={() => setShowQuickStart(!showQuickStart)}
+            >
+              <h3 className="text-white font-semibold flex items-center">
+                <FlaskConical className="h-4 w-4 mr-2 text-purple-400" />
+                Quick Start Templates
+                <span className="ml-2 text-purple-400 text-sm">(4 templates available)</span>
+              </h3>
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-neutral-500">
+                  {showQuickStart ? 'Hide templates' : 'Show templates'}
+                </span>
+                {showQuickStart ? (
+                  <ChevronUp className="h-4 w-4 text-neutral-400 hover:text-white transition-colors" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-neutral-400 hover:text-white transition-colors" />
+                )}
+              </div>
+            </div>
+            
+            {showQuickStart && (
+              <QuickStartTemplates onSelectTemplate={handleTemplateSelection} />
+            )}
+          </div>
+          
+          {/* CORS Information */}
+          <div className="mb-6">
+            <div 
+              className="flex items-center justify-between cursor-pointer hover:bg-[#222]/30 p-3 rounded-lg transition-colors border border-transparent hover:border-[#333]"
+              onClick={() => setShowCorsInfo(!showCorsInfo)}
+            >
+              <h3 className="text-orange-400 font-semibold flex items-center text-sm">
+                ⚠️ CORS & Browser Requests
+                <span className="ml-2 text-orange-300 text-xs">(Important for cross-origin testing)</span>
+              </h3>
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-neutral-500">
+                  {showCorsInfo ? 'Hide info' : 'Show info'}
+                </span>
+                {showCorsInfo ? (
+                  <ChevronUp className="h-4 w-4 text-neutral-400 hover:text-white transition-colors" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-neutral-400 hover:text-white transition-colors" />
+                )}
+              </div>
+            </div>
+            
+            {showCorsInfo && (
+              <Card className="bg-[#1a1a1a] border-orange-400/20 text-white">
+                <CardContent className="p-4">
+                  <div className="text-sm space-y-2">
+                    <p className="text-neutral-300">
+                      <strong>Note:</strong> If you see OPTIONS requests in logs, this is normal browser behavior.
+                    </p>
+                    <ul className="space-y-1 text-neutral-400 text-xs">
+                      <li>• Browser sends OPTIONS preflight for cross-origin requests</li>
+                      <li>• OPTIONS request checks CORS permissions before actual POST</li>
+                      <li>• Your A2A server must handle OPTIONS and return proper CORS headers</li>
+                      <li>• The actual POST request with your data comes after OPTIONS</li>
+                    </ul>
+                    <div className="mt-3 p-2 bg-[#222] rounded text-xs">
+                      <strong className="text-orange-400">Server CORS Headers needed:</strong><br/>
+                      <code className="text-emerald-400">
+                        Access-Control-Allow-Origin: *<br/>
+                        Access-Control-Allow-Methods: POST, OPTIONS<br/>
+                        Access-Control-Allow-Headers: Content-Type, x-api-key, Authorization
+                      </code>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* A2A Configuration Status */}
+          <div className="mb-6">
+            <div 
+              className="flex items-center justify-between cursor-pointer hover:bg-[#222]/30 p-3 rounded-lg transition-colors border border-transparent hover:border-[#333]"
+              onClick={() => setShowConfigStatus(!showConfigStatus)}
+            >
+              <h3 className="text-emerald-400 font-semibold flex items-center text-sm">
+                🔧 Active A2A Configuration
+                <span className="ml-2 text-emerald-300 text-xs">(Real-time feature status)</span>
+              </h3>
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-neutral-500">
+                  {showConfigStatus ? 'Hide config' : 'Show config'}
+                </span>
+                {showConfigStatus ? (
+                  <ChevronUp className="h-4 w-4 text-neutral-400 hover:text-white transition-colors" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-neutral-400 hover:text-white transition-colors" />
+                )}
+              </div>
+            </div>
+            
+            {showConfigStatus && (
+              <Card className="bg-gradient-to-r from-emerald-500/5 to-blue-500/5 border-emerald-500/20 text-white">
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="bg-[#222]/50 p-3 rounded-lg">
+                      <h4 className="text-emerald-400 font-medium mb-2">Multi-turn Conversations</h4>
+                      <div className={`text-xs ${contextId ? 'text-green-400' : 'text-neutral-400'}`}>
+                        {contextId ? '✅ Active' : '⏸️ Waiting for contextId'}
+                      </div>
+                      {contextId && (
+                        <div className="text-xs text-emerald-300 mt-1 font-mono">
+                          contextId: {contextId.substring(0, 8)}...
+                        </div>
+                      )}
+                      {!contextId && (
+                        <div className="text-xs text-neutral-400 mt-1">
+                          Server will provide contextId if supported
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="bg-[#222]/50 p-3 rounded-lg">
+                      <h4 className="text-blue-400 font-medium mb-2">Push Notifications</h4>
+                      <div className={`text-xs ${enableWebhooks ? 'text-green-400' : 'text-neutral-400'}`}>
+                        {enableWebhooks ? '✅ Enabled' : '❌ Disabled'}
+                      </div>
+                      {enableWebhooks && webhookUrl && (
+                        <div className="text-xs text-blue-300 mt-1 truncate">
+                          {webhookUrl}
+                        </div>
+                      )}
+                      {enableWebhooks && !webhookUrl && (
+                        <div className="text-xs text-yellow-400 mt-1">
+                          URL not configured
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="bg-[#222]/50 p-3 rounded-lg">
+                      <h4 className="text-orange-400 font-medium mb-2">Debug Logging</h4>
+                      <div className={`text-xs ${showDetailedErrors ? 'text-green-400' : 'text-neutral-400'}`}>
+                        {showDetailedErrors ? '🔍 Detailed' : '⚡ Basic'}
+                      </div>
+                      <div className="text-xs text-neutral-400 mt-1">
+                        {showDetailedErrors ? 'Enhanced debug logs' : 'Standard logs only'}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
           <Card className="bg-[#1a1a1a] border-[#333] text-white mb-6">
             <CardHeader>
               <CardTitle className="text-emerald-400">A2A Testing Lab</CardTitle>
               <CardDescription>
-                Test your A2A agent with different communication methods
+                Test your A2A agent with different communication methods. Fully compliant with A2A v0.2.1 specification.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -948,6 +1417,20 @@ function DocumentationContent() {
                     sendRequest={sendRequest}
                     isLoading={isLoading}
                     setFiles={setAttachedFiles}
+                    a2aMethod={a2aMethod}
+                    setA2aMethod={setA2aMethod}
+                    authMethod={authMethod}
+                    setAuthMethod={setAuthMethod}
+                    generateNewIds={generateNewIds}
+                    currentTaskId={currentTaskId}
+                    conversationHistory={conversationHistory}
+                    clearHistory={clearHistory}
+                    webhookUrl={webhookUrl}
+                    setWebhookUrl={setWebhookUrl}
+                    enableWebhooks={enableWebhooks}
+                    setEnableWebhooks={setEnableWebhooks}
+                    showDetailedErrors={showDetailedErrors}
+                    setShowDetailedErrors={setShowDetailedErrors}
                   />
                 </TabsContent>
 
@@ -973,6 +1456,8 @@ function DocumentationContent() {
                     renderStatusIndicator={renderStatusIndicator}
                     renderTypingIndicator={renderTypingIndicator}
                     setFiles={setAttachedFiles}
+                    authMethod={authMethod}
+                    currentTaskId={currentTaskId}
                   />
                 </TabsContent>
               </Tabs>
@@ -991,6 +1476,58 @@ function DocumentationContent() {
               </CardContent>
             </Card>
           )}
+
+          {/* Show message if no response yet but in HTTP mode */}
+          {!response && labMode === "http" && !isLoading && (
+            <Card className="bg-[#1a1a1a] border-[#333] text-white">
+              <CardContent className="p-6 text-center">
+                <p className="text-neutral-400">
+                  Click "Send" to test your A2A agent and see the response here.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Debug Logs Section */}
+          {debugLogs.length > 0 && (
+            <Card className="bg-[#1a1a1a] border-[#333] text-white">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-blue-400">Debug Logs</CardTitle>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowDebug(!showDebug)}
+                      className="bg-[#222] border-[#444] text-white hover:bg-[#333]"
+                    >
+                      {showDebug ? "Hide" : "Show"} Logs
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDebugLogs([])}
+                      className="bg-[#222] border-[#444] text-white hover:bg-[#333]"
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </div>
+                <CardDescription>
+                  Detailed request flow - includes CORS preflight and actual requests
+                </CardDescription>
+              </CardHeader>
+              {showDebug && (
+                <CardContent>
+                  <div className="bg-[#0a0a0a] p-4 rounded-md max-h-96 overflow-y-auto">
+                    <pre className="text-xs text-green-400 whitespace-pre-wrap font-mono">
+                      {debugLogs.join('\n')}
+                    </pre>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="examples">
@@ -1007,6 +1544,54 @@ function DocumentationContent() {
           </div>
         </TabsContent>
       </Tabs>
+      
+      {/* Footer with additional resources */}
+      <Card className="bg-gradient-to-r from-emerald-500/5 to-blue-500/5 border-emerald-500/20 text-white mt-12">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div>
+              <h3 className="font-semibold text-emerald-400 mb-2">Official Resources</h3>
+              <div className="space-y-2 text-sm">
+                <a 
+                  href="https://google.github.io/A2A/specification" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                  📋 Official A2A Specification
+                </a>
+                <a 
+                  href="https://github.com/google/A2A" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                  🔗 GitHub Repository
+                </a>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold text-emerald-400 mb-2">Implementation Status</h3>
+              <div className="space-y-1 text-sm text-neutral-300">
+                <div>✅ A2A v0.2.1 Compliant</div>
+                <div>✅ All Core Methods Supported</div>
+                <div>✅ Enterprise Security Ready</div>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold text-emerald-400 mb-2">Need Help?</h3>
+              <div className="space-y-1 text-sm text-neutral-300">
+                <div>📖 Check the documentation tab</div>
+                <div>🧪 Test with the lab interface</div>
+                <div>💡 View code examples for implementation</div>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-emerald-500/20 mt-6 pt-4 text-center text-xs text-neutral-400">
+            Built with ❤️ for the Agent2Agent community • Evolution API © 2025
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

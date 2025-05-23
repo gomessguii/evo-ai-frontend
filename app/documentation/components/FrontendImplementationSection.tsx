@@ -62,7 +62,7 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
           
           <TabsContent value="standard">
             <div>
-              <h3 className="text-emerald-400 text-lg font-medium mb-2">Implementation of tasks/send</h3>
+              <h3 className="text-emerald-400 text-lg font-medium mb-2">Implementation of message/send</h3>
               <p className="text-neutral-300 mb-4">
                 Example of standard implementation in JavaScript/React:
               </p>
@@ -78,7 +78,7 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
   const requestData = {
     jsonrpc: "2.0",
     id: callId,
-    method: "tasks/send",
+    method: "message/send",
     params: {
       id: taskId,
       sessionId: "session-" + Math.random().toString(36).substring(2, 9),
@@ -161,7 +161,7 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
   const requestData = {
     jsonrpc: "2.0",
     id: callId,
-    method: "tasks/send",
+    method: "message/send",
     params: {
       id: taskId,
       sessionId: "session-" + Math.random().toString(36).substring(2, 9),
@@ -238,7 +238,7 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
           
           <TabsContent value="streaming">
             <div>
-              <h3 className="text-emerald-400 text-lg font-medium mb-2">Implementation of tasks/sendSubscribe (Streaming)</h3>
+              <h3 className="text-emerald-400 text-lg font-medium mb-2">Implementation of message/stream (Streaming)</h3>
               <p className="text-neutral-300 mb-4">
                 Example of implementation of streaming with Server-Sent Events (SSE):
               </p>
@@ -255,7 +255,7 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
   const requestData = {
     jsonrpc: "2.0",
     id: callId,
-    method: "tasks/sendSubscribe",
+    method: "message/stream",
     params: {
       id: taskId,
       sessionId: sessionId,
@@ -406,7 +406,7 @@ export function FrontendImplementationSection({ copyToClipboard }: FrontendImple
   const requestData = {
     jsonrpc: "2.0",
     id: callId,
-    method: "tasks/sendSubscribe",
+    method: "message/stream",
     params: {
       id: taskId,
       sessionId: sessionId,

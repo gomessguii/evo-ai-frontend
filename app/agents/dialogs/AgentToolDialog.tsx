@@ -138,26 +138,26 @@ export function AgentToolDialog({
               </div>
             ) : (
               filteredAgents.map((agent) => (
-                <button
-                  key={agent.id}
-                  type="button"
-                  onClick={() => setSelectedAgentId(agent.id)}
-                  className={cn(
-                    "w-full flex items-start gap-3 p-3 rounded-md border border-[#333] bg-[#232323] hover:bg-[#222] transition text-left cursor-pointer",
-                    selectedAgentId === agent.id && "border-emerald-400 bg-[#1a1a1a] shadow-md"
-                  )}
-                >
-                  <div className="flex-1">
-                    <div className="font-medium text-white text-base">{agent.name}</div>
-                    <div className="text-xs text-neutral-400 mt-1">
-                      {agent.description || "No description"}
-                    </div>
-                    <div className="text-[10px] text-neutral-500 mt-1">ID: {agent.id}</div>
+              <button
+                key={agent.id}
+                type="button"
+                onClick={() => setSelectedAgentId(agent.id)}
+                className={cn(
+                  "w-full flex items-start gap-3 p-3 rounded-md border border-[#333] bg-[#232323] hover:bg-[#222] transition text-left cursor-pointer",
+                  selectedAgentId === agent.id && "border-emerald-400 bg-[#1a1a1a] shadow-md"
+                )}
+              >
+                <div className="flex-1">
+                  <div className="font-medium text-white text-base">{agent.name}</div>
+                  <div className="text-xs text-neutral-400 mt-1">
+                    {agent.description || "No description"}
                   </div>
-                  {selectedAgentId === agent.id && (
-                    <span className="ml-2 text-emerald-400 font-bold">Selected</span>
-                  )}
-                </button>
+                  <div className="text-[10px] text-neutral-500 mt-1">ID: {agent.id}</div>
+                </div>
+                {selectedAgentId === agent.id && (
+                  <span className="ml-2 text-emerald-400 font-bold">Selected</span>
+                )}
+              </button>
               ))
             )}
           </div>

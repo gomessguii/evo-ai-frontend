@@ -45,9 +45,9 @@ export function TechnicalDetailsSection({ copyToClipboard }: TechnicalDetailsSec
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <h3 className="text-emerald-400 text-lg font-medium mb-2">Method tasks/send</h3>
+          <h3 className="text-emerald-400 text-lg font-medium mb-2">Method message/send</h3>
           <p className="text-neutral-300 mb-4">
-            The <code className="bg-[#333] px-1 rounded">tasks/send</code> method performs a standard HTTP request and waits for the complete response.
+            The <code className="bg-[#333] px-1 rounded">message/send</code> method performs a standard HTTP request and waits for the complete response.
           </p>
           
           <div className="space-y-4">
@@ -58,7 +58,7 @@ export function TechnicalDetailsSection({ copyToClipboard }: TechnicalDetailsSec
                   text={JSON.stringify({
                     jsonrpc: "2.0",
                     id: "call-123",
-                    method: "tasks/send",
+                    method: "message/send",
                     params: {
                       id: "task-456",
                       sessionId: "session-789",
@@ -82,7 +82,7 @@ export function TechnicalDetailsSection({ copyToClipboard }: TechnicalDetailsSec
                   onClick={() => copyToClipboard(JSON.stringify({
                     jsonrpc: "2.0",
                     id: "call-123",
-                    method: "tasks/send",
+                    method: "message/send",
                     params: {
                       id: "task-456",
                       sessionId: "session-789",
@@ -180,9 +180,9 @@ x-api-key: YOUR_API_KEY`)}
         <Separator className="my-6 bg-[#333]" />
 
         <div>
-          <h3 className="text-emerald-400 text-lg font-medium mb-2">Method tasks/sendSubscribe</h3>
+          <h3 className="text-emerald-400 text-lg font-medium mb-2">Method message/stream</h3>
           <p className="text-neutral-300 mb-4">
-            The <code className="bg-[#333] px-1 rounded">tasks/sendSubscribe</code> method uses Server-Sent Events (SSE) to receive real-time updates.
+            The <code className="bg-[#333] px-1 rounded">message/stream</code> method uses Server-Sent Events (SSE) to receive real-time updates.
           </p>
           
           <div className="space-y-4">
@@ -193,7 +193,7 @@ x-api-key: YOUR_API_KEY`)}
                   text={JSON.stringify({
                     jsonrpc: "2.0",
                     id: "call-123",
-                    method: "tasks/sendSubscribe",
+                    method: "message/stream",
                     params: {
                       id: "task-456",
                       sessionId: "session-789",
@@ -217,7 +217,7 @@ x-api-key: YOUR_API_KEY`)}
                   onClick={() => copyToClipboard(JSON.stringify({
                     jsonrpc: "2.0",
                     id: "call-123",
-                    method: "tasks/sendSubscribe",
+                    method: "message/stream",
                     params: {
                       id: "task-456",
                       sessionId: "session-789",

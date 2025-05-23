@@ -64,6 +64,8 @@ interface StreamLabFormProps {
   renderStatusIndicator: () => JSX.Element | null;
   renderTypingIndicator: () => JSX.Element | null;
   setFiles?: (files: AttachedFile[]) => void;
+  authMethod: string;
+  currentTaskId?: string | null;
 }
 
 export function StreamLabForm({
@@ -86,7 +88,9 @@ export function StreamLabForm({
   streamHistory,
   renderStatusIndicator,
   renderTypingIndicator,
-  setFiles = () => {}
+  setFiles = () => {},
+  authMethod,
+  currentTaskId
 }: StreamLabFormProps) {
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -188,6 +192,23 @@ export function StreamLabForm({
 
   return (
     <div className="space-y-4">
+      {/* A2A Streaming Information */}
+      <div className="p-4 bg-[#1a1a1a] border border-[#333] rounded-md">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-emerald-400">A2A Streaming Mode</span>
+          <span className="text-xs text-neutral-400">Method: message/stream</span>
+        </div>
+        <div className="text-xs text-neutral-400">
+          Authentication: {authMethod === "bearer" ? "Bearer Token" : "API Key"} header
+        </div>
+        {currentTaskId && (
+          <div className="mt-2 pt-2 border-t border-[#333]">
+            <span className="text-xs text-neutral-400">Current Task ID: </span>
+            <span className="text-xs text-emerald-400 font-mono">{currentTaskId}</span>
+          </div>
+        )}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm text-neutral-400 mb-1 block">Agent URL</label>
@@ -200,11 +221,13 @@ export function StreamLabForm({
           />
         </div>
         <div>
-          <label className="text-sm text-neutral-400 mb-1 block">API Key (optional)</label>
+          <label className="text-sm text-neutral-400 mb-1 block">
+            {authMethod === "bearer" ? "Bearer Token" : "API Key"} (optional)
+          </label>
           <Input
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Your API key"
+            placeholder={authMethod === "bearer" ? "Your Bearer token" : "Your API key"}
             className="bg-[#222] border-[#444] text-white"
             disabled={isStreaming}
           />

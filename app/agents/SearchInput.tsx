@@ -78,21 +78,21 @@ export function SearchInput({
   return (
     <div className={`relative flex items-center gap-2 ${className}`}>
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-        <Input
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          autoComplete="off"
-          className="pl-10 w-full bg-[#222] border-[#444] text-white focus:border-emerald-400 focus:ring-emerald-400/10"
-        />
-        {value && (
-          <button
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
-            onClick={() => onChange("")}
-          >
-            <X className="h-4 w-4" />
-          </button>
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+      <Input
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        autoComplete="off"
+        className="pl-10 w-full bg-[#222] border-[#444] text-white focus:border-emerald-400 focus:ring-emerald-400/10"
+      />
+      {value && (
+        <button
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+          onClick={() => onChange("")}
+        >
+          <X className="h-4 w-4" />
+        </button>
         )}
       </div>
 

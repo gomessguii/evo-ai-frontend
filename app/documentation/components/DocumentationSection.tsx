@@ -29,7 +29,23 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ClipboardCopy, Info, ExternalLink } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  ClipboardCopy, 
+  Info, 
+  ExternalLink, 
+  Users, 
+  Shield, 
+  Zap, 
+  Network,
+  FileText,
+  MessageSquare,
+  Settings,
+  AlertCircle,
+  CheckCircle2,
+  Globe
+} from "lucide-react";
 import { CodeBlock } from "@/app/documentation/components/CodeBlock";
 
 interface DocumentationSectionProps {
@@ -37,300 +53,533 @@ interface DocumentationSectionProps {
 }
 
 export function DocumentationSection({ copyToClipboard }: DocumentationSectionProps) {
+  const quickStartExample = {
+    jsonrpc: "2.0",
+    id: "req-001",
+    method: "message/send",
+    params: {
+      message: {
+        role: "user",
+        parts: [
+          {
+            type: "text",
+            text: "Hello! Can you help me analyze this data?"
+          }
+        ],
+        messageId: "6dbc13b5-bd57-4c2b-b503-24e381b6c8d6"
+      }
+    }
+  };
+
+  const streamingExample = {
+    jsonrpc: "2.0", 
+    id: "req-002",
+    method: "message/stream",
+    params: {
+      message: {
+        role: "user",
+        parts: [
+          {
+            type: "text",
+            text: "Generate a detailed report on market trends"
+          }
+        ],
+        messageId: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+      }
+    }
+  };
+
+  const fileUploadExample = {
+    jsonrpc: "2.0",
+    id: "req-003", 
+    method: "message/send",
+    params: {
+      message: {
+        role: "user",
+        parts: [
+          {
+            type: "text",
+            text: "Analyze this image and highlight any faces."
+          },
+          {
+            type: "file",
+            file: {
+              name: "input_image.png",
+              mimeType: "image/png",
+              bytes: "iVBORw0KGgoAAAANSUhEUgAAAAUA..." 
+            }
+          }
+        ],
+        messageId: "8f0dc03c-4c65-4a14-9b56-7e8b9f2d1a3c"
+      }
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <Card className="bg-[#1a1a1a] border-[#333] text-white">
-        <CardHeader>
-          <CardTitle className="text-emerald-400 flex items-center">
-            <Info className="h-5 w-5 mr-2" />
-            What is A2A?
+    <div className="space-y-8">
+      {/* Hero Section */}
+      <Card className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border-emerald-500/20 text-white">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="flex items-center space-x-2 bg-emerald-500/20 px-4 py-2 rounded-full">
+              <Network className="h-6 w-6 text-emerald-400" />
+              <span className="font-bold text-emerald-400">Agent2Agent Protocol</span>
+            </div>
+          </div>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+            The Standard for AI Agent Communication
           </CardTitle>
+          <p className="text-lg text-neutral-300 mt-4 max-w-3xl mx-auto">
+            A2A is Google's open protocol enabling seamless communication and interoperability 
+            between AI agents across different platforms, providers, and architectures.
+          </p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p>
-            The Agent2Agent (A2A) is an open protocol created by Google to allow 
-            communication and interoperability between agent applications.
-          </p>
-          <p>
-            This protocol establishes a common standard for agents built 
-            in different structures and providers to collaborate and exchange information.
-          </p>
-          <div className="flex flex-col space-y-2 mt-4">
+        <CardContent>
+          <div className="flex flex-wrap justify-center gap-4 mt-6">
+            <a 
+              href="https://google.github.io/A2A/specification" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center bg-emerald-500/20 hover:bg-emerald-500/30 px-4 py-2 rounded-lg transition-colors"
+            >
+              <FileText className="h-4 w-4 mr-2 text-emerald-400" />
+              <span className="text-emerald-400">Official Specification</span>
+              <ExternalLink className="h-3 w-3 ml-2 text-emerald-400" />
+            </a>
             <a 
               href="https://github.com/google/A2A" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-emerald-400 hover:underline flex items-center"
+              className="flex items-center bg-blue-500/20 hover:bg-blue-500/30 px-4 py-2 rounded-lg transition-colors"
             >
-              <span className="mr-2">GitHub: google/A2A</span>
-              <ExternalLink className="h-4 w-4" />
-            </a>
-            <a 
-              href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-emerald-400 hover:underline flex items-center"
-            >
-              <span className="mr-2">Google Developers Blog: A2A</span>
-              <ExternalLink className="h-4 w-4" />
+              <Globe className="h-4 w-4 mr-2 text-blue-400" />
+              <span className="text-blue-400">GitHub Repository</span>
+              <ExternalLink className="h-3 w-3 ml-2 text-blue-400" />
             </a>
           </div>
         </CardContent>
       </Card>
 
+      {/* Key Features */}
       <Card className="bg-[#1a1a1a] border-[#333] text-white">
         <CardHeader>
-          <CardTitle className="text-emerald-400">A2A Communication Methods</CardTitle>
+          <CardTitle className="text-emerald-400 flex items-center">
+            <Zap className="h-5 w-5 mr-2" />
+            Key Features & Capabilities
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex items-start space-x-3">
+              <div className="bg-emerald-500/20 p-2 rounded-lg">
+                <MessageSquare className="h-5 w-5 text-emerald-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Multi-turn Conversations</h3>
+                <p className="text-sm text-neutral-400">Support for complex, contextual dialogues between agents</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="bg-blue-500/20 p-2 rounded-lg">
+                <FileText className="h-5 w-5 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">File Exchange</h3>
+                <p className="text-sm text-neutral-400">Upload and download files with proper MIME type handling</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="bg-purple-500/20 p-2 rounded-lg">
+                <Zap className="h-5 w-5 text-purple-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Real-time Streaming</h3>
+                <p className="text-sm text-neutral-400">Server-Sent Events for live response streaming</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="bg-orange-500/20 p-2 rounded-lg">
+                <Settings className="h-5 w-5 text-orange-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Task Management</h3>
+                <p className="text-sm text-neutral-400">Track, query, and cancel long-running tasks</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="bg-red-500/20 p-2 rounded-lg">
+                <Shield className="h-5 w-5 text-red-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Enterprise Security</h3>
+                <p className="text-sm text-neutral-400">Bearer tokens, API keys, and HTTPS enforcement</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="bg-green-500/20 p-2 rounded-lg">
+                <Users className="h-5 w-5 text-green-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Agent Discovery</h3>
+                <p className="text-sm text-neutral-400">Standardized agent cards for capability discovery</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Protocol Methods */}
+      <Card className="bg-[#1a1a1a] border-[#333] text-white">
+        <CardHeader>
+          <CardTitle className="text-emerald-400">Protocol Methods</CardTitle>
+          <p className="text-neutral-400">A2A supports multiple RPC methods for different interaction patterns</p>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="messaging" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-[#222] border-[#444]">
+              <TabsTrigger value="messaging" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                Messaging
+              </TabsTrigger>
+              <TabsTrigger value="tasks" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                Task Management
+              </TabsTrigger>
+              <TabsTrigger value="discovery" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                Discovery
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="messaging" className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-[#222] p-4 rounded-lg border border-[#444]">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Badge variant="outline" className="border-emerald-500 text-emerald-400">message/send</Badge>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  </div>
+                  <h4 className="font-semibold text-white mb-2">Standard HTTP Request</h4>
+                  <p className="text-sm text-neutral-400 mb-3">
+                    Send a message and receive a complete response after processing is finished.
+                  </p>
+                  <ul className="text-xs text-neutral-400 space-y-1">
+                    <li>• Single request/response cycle</li>
+                    <li>• Best for simple queries</li>
+                    <li>• Lower complexity implementation</li>
+                    <li>• Synchronous operation</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-[#222] p-4 rounded-lg border border-[#444]">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Badge variant="outline" className="border-blue-500 text-blue-400">message/stream</Badge>
+                    <Zap className="h-4 w-4 text-blue-400" />
+                  </div>
+                  <h4 className="font-semibold text-white mb-2">Real-time Streaming</h4>
+                  <p className="text-sm text-neutral-400 mb-3">
+                    Receive partial responses in real-time via Server-Sent Events.
+                  </p>
+                  <ul className="text-xs text-neutral-400 space-y-1">
+                    <li>• Progressive response delivery</li>
+                    <li>• Better UX for long tasks</li>
+                    <li>• Live status updates</li>
+                    <li>• Asynchronous operation</li>
+                  </ul>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="tasks" className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-[#222] p-4 rounded-lg border border-[#444]">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Badge variant="outline" className="border-purple-500 text-purple-400">tasks/get</Badge>
+                    <Settings className="h-4 w-4 text-purple-400" />
+                  </div>
+                  <h4 className="font-semibold text-white mb-2">Query Task Status</h4>
+                  <p className="text-sm text-neutral-400 mb-3">
+                    Check the status, progress, and results of a specific task.
+                  </p>
+                  <ul className="text-xs text-neutral-400 space-y-1">
+                    <li>• Real-time status checking</li>
+                    <li>• Progress monitoring</li>
+                    <li>• Result retrieval</li>
+                    <li>• Error diagnosis</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-[#222] p-4 rounded-lg border border-[#444]">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Badge variant="outline" className="border-red-500 text-red-400">tasks/cancel</Badge>
+                    <AlertCircle className="h-4 w-4 text-red-400" />
+                  </div>
+                  <h4 className="font-semibold text-white mb-2">Cancel Task</h4>
+                  <p className="text-sm text-neutral-400 mb-3">
+                    Terminate a running task before completion.
+                  </p>
+                  <ul className="text-xs text-neutral-400 space-y-1">
+                    <li>• Graceful task termination</li>
+                    <li>• Resource cleanup</li>
+                    <li>• Cost optimization</li>
+                    <li>• User control</li>
+                  </ul>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="discovery" className="space-y-4">
+              <div className="bg-[#222] p-4 rounded-lg border border-[#444]">
+                <div className="flex items-center space-x-2 mb-3">
+                  <Badge variant="outline" className="border-green-500 text-green-400">agent/authenticatedExtendedCard</Badge>
+                  <Users className="h-4 w-4 text-green-400" />
+                </div>
+                <h4 className="font-semibold text-white mb-2">Agent Discovery</h4>
+                <p className="text-sm text-neutral-400 mb-3">
+                  Retrieve detailed information about agent capabilities, skills, and requirements.
+                </p>
+                <ul className="text-xs text-neutral-400 space-y-1">
+                  <li>• Agent capability discovery</li>
+                  <li>• Skill and tool enumeration</li>
+                  <li>• Authentication requirements</li>
+                  <li>• API version compatibility</li>
+                </ul>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+
+      {/* Code Examples */}
+      <Card className="bg-[#1a1a1a] border-[#333] text-white">
+        <CardHeader>
+          <CardTitle className="text-emerald-400">Quick Start Examples</CardTitle>
+          <p className="text-neutral-400">Ready-to-use JSON-RPC examples based on the official A2A specification</p>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="basic" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-[#222] border-[#444]">
+              <TabsTrigger value="basic" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                Basic Message
+              </TabsTrigger>
+              <TabsTrigger value="streaming" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                Streaming
+              </TabsTrigger>
+              <TabsTrigger value="files" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                File Upload
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="basic" className="space-y-4">
+              <div className="relative">
+                <CodeBlock
+                  text={JSON.stringify(quickStartExample, null, 2)}
+                  language="json"
+                />
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-2 right-2 text-white hover:bg-[#333]"
+                  onClick={() => copyToClipboard(JSON.stringify(quickStartExample, null, 2))}
+                >
+                  <ClipboardCopy className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                <div className="flex items-start space-x-2">
+                  <Info className="h-4 w-4 text-blue-400 mt-0.5" />
+                  <div className="text-sm">
+                    <p className="text-blue-400 font-medium">Key Points:</p>
+                    <ul className="text-blue-300 mt-1 space-y-1">
+                      <li>• Uses <code className="bg-blue-500/20 px-1 rounded">message/send</code> for standard HTTP requests</li>
+                      <li>• <code className="bg-blue-500/20 px-1 rounded">messageId</code> must be a valid UUID v4</li>
+                      <li>• Response contains task ID, status, and artifacts</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="streaming" className="space-y-4">
+              <div className="relative">
+                <CodeBlock
+                  text={JSON.stringify(streamingExample, null, 2)}
+                  language="json"
+                />
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-2 right-2 text-white hover:bg-[#333]"
+                  onClick={() => copyToClipboard(JSON.stringify(streamingExample, null, 2))}
+                >
+                  <ClipboardCopy className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
+                <div className="flex items-start space-x-2">
+                  <Zap className="h-4 w-4 text-purple-400 mt-0.5" />
+                  <div className="text-sm">
+                    <p className="text-purple-400 font-medium">Streaming Features:</p>
+                    <ul className="text-purple-300 mt-1 space-y-1">
+                      <li>• Real-time Server-Sent Events (SSE)</li>
+                      <li>• Progressive content delivery</li>
+                      <li>• Status updates: submitted → working → completed</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="files" className="space-y-4">
+              <div className="relative">
+                <CodeBlock
+                  text={JSON.stringify(fileUploadExample, null, 2)}
+                  language="json"
+                />
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-2 right-2 text-white hover:bg-[#333]"
+                  onClick={() => copyToClipboard(JSON.stringify(fileUploadExample, null, 2))}
+                >
+                  <ClipboardCopy className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                <div className="flex items-start space-x-2">
+                  <FileText className="h-4 w-4 text-green-400 mt-0.5" />
+                  <div className="text-sm">
+                    <p className="text-green-400 font-medium">File Handling:</p>
+                    <ul className="text-green-300 mt-1 space-y-1">
+                      <li>• Support for multiple file types (images, documents, etc.)</li>
+                      <li>• Base64 encoding for binary data</li>
+                      <li>• Proper MIME type specification</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+      
+      {/* Security & Best Practices */}
+      <Card className="bg-[#1a1a1a] border-[#333] text-white">
+        <CardHeader>
+          <CardTitle className="text-emerald-400 flex items-center">
+            <Shield className="h-5 w-5 mr-2" />
+            Security & Best Practices
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div>
-            <h3 className="text-emerald-400 text-lg font-medium mb-2">1. Standard HTTP (tasks/send)</h3>
-            <p className="text-neutral-300 mb-2">
-              This method sends a request and receives the complete response at once, after the agent has finished all processing.
-            </p>
-            <div className="bg-[#222] p-4 rounded-md border border-[#444] space-y-2">
-              <h4 className="font-medium text-white">Features:</h4>
-              <ul className="list-disc pl-5 space-y-1 text-neutral-300">
-                <li>Single HTTP request with complete response</li>
-                <li>Wait for the agent to finish all processing</li>
-                <li>Best for simple and quick tasks</li>
-                <li>Simpler implementation in frontend</li>
-              </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-white font-semibold mb-3 flex items-center">
+                <Shield className="h-4 w-4 mr-2 text-emerald-400" />
+                Authentication Methods
+              </h3>
+              <div className="space-y-3">
+                <div className="bg-[#222] p-3 rounded-lg border border-[#444]">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <code className="text-emerald-400 text-sm">x-api-key</code>
+                    <Badge variant="outline" className="text-xs">Recommended</Badge>
+                  </div>
+                  <p className="text-xs text-neutral-400">Custom header for API key authentication</p>
+                </div>
+                <div className="bg-[#222] p-3 rounded-lg border border-[#444]">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <code className="text-blue-400 text-sm">Authorization: Bearer</code>
+                    <Badge variant="outline" className="text-xs">Standard</Badge>
+                  </div>
+                  <p className="text-xs text-neutral-400">OAuth 2.0 Bearer token authentication</p>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-white font-semibold mb-3 flex items-center">
+                <AlertCircle className="h-4 w-4 mr-2 text-orange-400" />
+                Security Requirements
+              </h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                  <span className="text-neutral-300">HTTPS/TLS encryption required</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                  <span className="text-neutral-300">Input validation on all parameters</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                  <span className="text-neutral-300">Rate limiting and resource controls</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                  <span className="text-neutral-300">Proper CORS configuration</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div>
-            <h3 className="text-emerald-400 text-lg font-medium mb-2">2. Streaming (tasks/sendSubscribe)</h3>
-            <p className="text-neutral-300 mb-2">
-              This method uses Server-Sent Events (SSE) to provide real-time updates while the agent processes the request.
-            </p>
-            <div className="bg-[#222] p-4 rounded-md border border-[#444] space-y-2">
-              <h4 className="font-medium text-white">Features:</h4>
-              <ul className="list-disc pl-5 space-y-1 text-neutral-300">
-                <li>Partial responses in real-time</li>
-                <li>Instant feedback for the user</li>
-                <li>Best for chat interfaces and long responses</li>
-                <li>Better user experience for complex tasks</li>
-              </ul>
+          
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+            <div className="flex items-start space-x-2">
+              <AlertCircle className="h-4 w-4 text-amber-400 mt-0.5" />
+              <div className="text-sm">
+                <p className="text-amber-400 font-medium">Important:</p>
+                <p className="text-amber-300 mt-1">
+                  Always obtain API credentials out-of-band. Never include sensitive authentication 
+                  data in client-side code or version control systems.
+                </p>
+              </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
 
+      {/* A2A vs MCP */}
+      <Card className="bg-[#1a1a1a] border-[#333] text-white">
+        <CardHeader>
+          <CardTitle className="text-emerald-400 flex items-center">
+            <Network className="h-5 w-5 mr-2" />
+            A2A vs Model Context Protocol (MCP)
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="overflow-x-auto">
-            <h3 className="text-emerald-400 text-lg font-medium mb-3">Comparison between methods</h3>
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-[#222] border-b border-[#444]">
-                  <th className="p-3 text-left text-neutral-300">Feature</th>
-                  <th className="p-3 text-left text-neutral-300">tasks/send</th>
-                  <th className="p-3 text-left text-neutral-300">tasks/sendSubscribe</th>
+                  <th className="p-4 text-left text-neutral-300">Aspect</th>
+                  <th className="p-4 text-left text-emerald-400">Agent2Agent (A2A)</th>
+                  <th className="p-4 text-left text-blue-400">Model Context Protocol (MCP)</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-neutral-300">Response type</td>
-                  <td className="p-3 text-neutral-300">Single, complete</td>
-                  <td className="p-3 text-neutral-300">Partial event stream</td>
+                  <td className="p-4 text-neutral-300 font-medium">Purpose</td>
+                  <td className="p-4 text-neutral-300">Agent-to-agent communication</td>
+                  <td className="p-4 text-neutral-300">Model-to-tool/resource integration</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-neutral-300">Response time</td>
-                  <td className="p-3 text-neutral-300">After complete processing</td>
-                  <td className="p-3 text-neutral-300">Real-time, partial</td>
+                  <td className="p-4 text-neutral-300 font-medium">Use Case</td>
+                  <td className="p-4 text-neutral-300">AI agents collaborating as peers</td>
+                  <td className="p-4 text-neutral-300">AI models accessing external capabilities</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-neutral-300">Implementation complexity</td>
-                  <td className="p-3 text-neutral-300">Simple</td>
-                  <td className="p-3 text-neutral-300">Moderate</td>
+                  <td className="p-4 text-neutral-300 font-medium">Relationship</td>
+                  <td className="p-4 text-neutral-300">Partner/delegate work</td>
+                  <td className="p-4 text-neutral-300">Use specific capabilities</td>
                 </tr>
                 <tr className="border-b border-[#333]">
-                  <td className="p-3 text-neutral-300">UX for long tasks</td>
-                  <td className="p-3 text-neutral-300">Worst (long wait)</td>
-                  <td className="p-3 text-neutral-300">Better (continuous feedback)</td>
-                </tr>
-                <tr className="border-b border-[#333]">
-                  <td className="p-3 text-neutral-300">Network resource usage</td>
-                  <td className="p-3 text-neutral-300">Lower for short responses</td>
-                  <td className="p-3 text-neutral-300">More efficient for long responses</td>
-                </tr>
-                <tr className="border-b border-[#333]">
-                  <td className="p-3 text-neutral-300">Ideal use case</td>
-                  <td className="p-3 text-neutral-300">Simple APIs, integrations</td>
-                  <td className="p-3 text-neutral-300">Chat interfaces, extensive content</td>
+                  <td className="p-4 text-neutral-300 font-medium">Integration</td>
+                  <td className="p-4 text-neutral-300 text-emerald-400">✓ Can use MCP internally</td>
+                  <td className="p-4 text-neutral-300 text-blue-400">✓ Complements A2A</td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-[#1a1a1a] border-[#333] text-white">
-        <CardHeader>
-          <CardTitle className="text-emerald-400">JSON-RPC 2.0</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p>
-            The API uses the JSON-RPC 2.0 protocol for communication with A2A agents.
-            A correct JSON-RPC request has the following structure:
-          </p>
-          <div className="relative">
-            <CodeBlock
-              text={JSON.stringify({
-                jsonrpc: "2.0",
-                method: "tasks/send",
-                params: {
-                  message: {
-                    role: "user",
-                    parts: [
-                      {
-                        type: "text",
-                        text: "Your question here"
-                      }
-                    ]
-                  },
-                  sessionId: "abc-123",
-                  id: "task-456"
-                },
-                id: "call-789"
-              }, null, 2)}
-              language="json"
-            />
-            <Button
-              size="sm"
-              variant="ghost"
-              className="absolute top-2 right-2 text-white hover:bg-[#333]"
-              onClick={() => copyToClipboard(JSON.stringify({
-                jsonrpc: "2.0",
-                method: "tasks/send",
-                params: {
-                  message: {
-                    role: "user",
-                    parts: [
-                      {
-                        type: "text",
-                        text: "Your question here"
-                      }
-                    ]
-                  },
-                  sessionId: "abc-123",
-                  id: "task-456"
-                },
-                id: "call-789"
-              }, null, 2))}
-            >
-              <ClipboardCopy className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-[#1a1a1a] border-[#333] text-white">
-        <CardHeader>
-          <CardTitle className="text-emerald-400">JSON-RPC 2.0 Specification</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <h3 className="font-medium text-white">Required fields:</h3>
-            <ul className="list-disc pl-5 space-y-1">
-              <li><code className="bg-[#333] px-1 rounded">jsonrpc</code>: Protocol version (always "2.0")</li>
-              <li><code className="bg-[#333] px-1 rounded">method</code>: Method to be called (ex: "tasks/send")</li>
-              <li><code className="bg-[#333] px-1 rounded">params</code>: Call parameters</li>
-              <li><code className="bg-[#333] px-1 rounded">id</code>: Unique identifier of the call (can be string or number)</li>
-            </ul>
-          </div>
-          
-          <div className="space-y-2">
-            <h3 className="font-medium text-white">Important notes:</h3>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>The request ID will be returned in the response (important for correlation)</li>
-              <li>The message format follows the Google A2A protocol</li>
-              <li>Agents may support different features, check the Agent Card for more details</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-[#1a1a1a] border-[#333] text-white">
-        <CardHeader>
-          <CardTitle className="text-emerald-400">Response format</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-6">
-          <div>
-            <h3 className="font-medium text-white mb-2">Success response</h3>
-            <div className="relative">
-              <CodeBlock
-                text={JSON.stringify({
-                  jsonrpc: "2.0",
-                  result: {
-                    status: {
-                      message: {
-                        parts: [
-                          {
-                            type: "text",
-                            text: "Agent response here..."
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  id: "call-789"
-                }, null, 2)}
-                language="json"
-              />
-              <Button
-                size="sm"
-                variant="ghost"
-                className="absolute top-2 right-2 text-white hover:bg-[#333]"
-                onClick={() => copyToClipboard(JSON.stringify({
-                  jsonrpc: "2.0",
-                  result: {
-                    status: {
-                      message: {
-                        parts: [
-                          {
-                            type: "text",
-                            text: "Agent response here..."
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  id: "call-789"
-                }, null, 2))}
-              >
-                <ClipboardCopy className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          
-          <div>
-            <h3 className="font-medium text-white mb-2">Error response</h3>
-            <div className="relative">
-              <CodeBlock
-                text={JSON.stringify({
-                  jsonrpc: "2.0",
-                  error: {
-                    code: -32603,
-                    message: "Error message"
-                  },
-                  id: "call-789"
-                }, null, 2)}
-                language="json"
-              />
-              <Button
-                size="sm"
-                variant="ghost"
-                className="absolute top-2 right-2 text-white hover:bg-[#333]"
-                onClick={() => copyToClipboard(JSON.stringify({
-                  jsonrpc: "2.0",
-                  error: {
-                    code: -32603,
-                    message: "Error message"
-                  },
-                  id: "call-789"
-                }, null, 2))}
-              >
-                <ClipboardCopy className="h-4 w-4" />
-              </Button>
-            </div>
+          <div className="mt-4 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+            <p className="text-blue-300 text-sm">
+              <strong>Working Together:</strong> An A2A client agent might request an A2A server agent to perform a complex task. 
+              The server agent, in turn, might use MCP to interact with tools, APIs, or data sources necessary to fulfill the A2A task.
+            </p>
           </div>
         </CardContent>
       </Card>

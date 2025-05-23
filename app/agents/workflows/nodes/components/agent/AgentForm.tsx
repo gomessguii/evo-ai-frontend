@@ -210,7 +210,7 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
       filtered = filtered.filter(agent => agent.type === selectedAgentType);
     }
     
-    setAgents(filtered);
+      setAgents(filtered);
   }, [searchQuery, selectedAgentType, allAgents]);
 
   useEffect(() => {
@@ -385,14 +385,14 @@ export function AgentForm({ selectedNode, handleUpdateNode, setEdges, setIsOpen,
       <div className="flex flex-col h-full">
         <div className="p-4 border-b border-neutral-700 flex-shrink-0">
           <div className="mb-3">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
-              <Input
-                placeholder="Search agents..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus-visible:ring-emerald-500"
-              />
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-neutral-500" />
+            <Input
+              placeholder="Search agents..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-neutral-800 border-neutral-700 text-neutral-200 focus-visible:ring-emerald-500"
+            />
             </div>
           </div>
           
